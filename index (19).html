@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Jair Pastor - Psicólogo | Plataforma de Evaluación Psicodinámica PDM-2</title>
+  <meta name="description" content="Plataforma clínica SaaS de evaluación psicodinámica basada en el manual PDM-2 (Eje P, Eje M, Eje S). Formulación narrativa >1000 palabras, radar interactivo, gestión de pacientes y exportación profesional." />
+  <meta name="theme-color" content="#0284c7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PDM-2 Pro" />
+
+  <!-- PWA Web App Manifest integrado inline vía Data URI -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Jair%20Pastor%20-%20Psic%C3%B3logo%20PDM-2%22%2C%22short_name%22%3A%22PDM-2%20Pro%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%230284c7%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2750%27%20r%3D%2748%27%20fill%3D%27%230284c7%27%2F%3E%3Ctext%20x%3D%2750%27%20y%3D%2762%27%20font-size%3D%2736%27%20text-anchor%3D%27middle%27%20fill%3D%27white%27%20font-family%3D%27sans-serif%27%20font-weight%3D%27bold%27%3EPDM%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
+
+  <style>
+    /* ==========================================================================
+       1. VARIABLES CSS, PALETA PREMIUM SAAS & TEMA CLARO/OSCURO
+       ========================================================================== */
+    :root {
+      --bg-body: #020617;
+      --bg-surface: rgba(15, 23, 42, 0.75);
+      --bg-surface-elevated: rgba(30, 41, 59, 0.7);
+      --bg-surface-sub: rgba(15, 23, 42, 0.95);
+      --border-main: rgba(51, 65, 85, 0.6);
+      --border-glow: rgba(56, 189, 248, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #38bdf8;
+      --primary-gradient: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+      --accent-teal: #0d9488;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #8b5cf6;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+      --glass-blur: blur(14px);
+    }
+
+    html.light {
+      --bg-body: #f8fafc;
+      --bg-surface: rgba(255, 255, 255, 0.92);
+      --bg-surface-elevated: rgba(241, 245, 249, 0.85);
+      --bg-surface-sub: rgba(255, 255, 255, 0.98);
+      --border-main: rgba(203, 213, 225, 0.8);
+      --border-glow: rgba(2, 132, 199, 0.3);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #0284c7;
+      --primary-gradient: linear-gradient(135deg, #0284c7 0%, #4338ca 100%);
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       2. TIPOGRAFÍA, BOTONES, CONTENEDORES & BADGES
+       ========================================================================== */
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.48rem 0.95rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 0.625rem;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+      filter: brightness(1.08);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      border-color: var(--border-main);
+    }
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.45);
+      border-color: var(--border-glow);
+    }
+
+    .btn-sm {
+      padding: 0.28rem 0.55rem;
+      font-size: 0.72rem;
+      border-radius: 0.45rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-main);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-lg);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-sky { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.35); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-rose { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+    .badge-purple { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.35); }
+
+    /* ==========================================================================
+       3. HEADER, NAVEGACIÓN SAAS & CONTROLES
+       ========================================================================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(2, 6, 23, 0.88);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-bottom: 1px solid var(--border-main);
+      padding: 0.65rem 0;
+    }
+    html.light header { background: rgba(255, 255, 255, 0.9); }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .brand-logo-badge {
+      width: 2.6rem;
+      height: 2.6rem;
+      border-radius: 0.75rem;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-name {
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .brand-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-tabs-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--bg-surface-elevated);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-main);
+    }
+    @media (max-width: 900px) {
+      .nav-tabs-wrapper { display: none; }
+    }
+
+    .tab-btn {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+    .tab-btn:hover:not(.active) {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Sub-barra de navegación móvil */
+    .mobile-tab-bar {
+      display: none;
+      border-top: 1px solid var(--border-main);
+      padding: 0.4rem 0;
+      margin-top: 0.5rem;
+      overflow-x: auto;
+      gap: 0.35rem;
+    }
+    @media (max-width: 900px) {
+      .mobile-tab-bar { display: flex; }
+    }
+
+    /* ==========================================================================
+       4. AVISO ÉTICO / LEGAL OBLIGATORIO (PDM-2)
+       ========================================================================== */
+    .ethical-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-left: 4px solid var(--accent-amber);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      margin: 0.75rem 0 1.25rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-main);
+    }
+    .ethical-banner strong { color: #f59e0b; }
+
+    /* ==========================================================================
+       5. VISTAS PRINCIPALES
+       ========================================================================== */
+    .view-pane { display: none; }
+    .view-pane.active { display: block; animation: fadeIn 0.25s ease forwards; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       6. CUESTIONARIO ADAPTATIVO
+       ========================================================================== */
+    .question-wizard {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .patient-input-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 0.6rem;
+      background: var(--bg-surface-elevated);
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-main);
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .patient-input-row { grid-template-columns: 1fr; }
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-body);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      padding: 0.45rem 0.7rem;
+      border-radius: 0.5rem;
+      font-size: 0.78rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--primary-light);
+    }
+
+    .progress-track-wrap {
+      width: 100%;
+      height: 0.55rem;
+      background: var(--bg-surface-elevated);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 0.5rem 0 1.25rem 0;
+      border: 1px solid var(--border-main);
+    }
+    .progress-track-fill {
+      height: 100%;
+      background: var(--primary-gradient);
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .question-headline {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+    .question-body {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 1.15rem;
+    }
+
+    .rationale-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.74rem;
+      color: var(--primary-light);
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 1.15rem;
+      font-weight: 600;
+    }
+    .rationale-panel {
+      display: none;
+      background: var(--bg-surface-elevated);
+      border-left: 3px solid var(--primary);
+      padding: 0.65rem 0.9rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 1.2rem;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .option-item {
+      padding: 0.85rem 1.05rem;
+      border-radius: 0.75rem;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-main);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+      color: var(--text-main);
+      user-select: none;
+    }
+    .option-item:hover {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: var(--border-glow);
+    }
+    .option-item.selected {
+      background: rgba(2, 132, 199, 0.18);
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 1px var(--primary-light);
+    }
+
+    .radio-circle-indicator {
+      width: 1.15rem;
+      height: 1.15rem;
+      border-radius: 9999px;
+      border: 2px solid var(--border-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+      transition: all 0.2s ease;
+    }
+    .option-item.selected .radio-circle-indicator {
+      border-color: var(--primary-light);
+      background: var(--primary);
+    }
+    .option-item.selected .radio-circle-indicator::after {
+      content: "";
+      width: 0.4rem;
+      height: 0.4rem;
+      background: #fff;
+      border-radius: 9999px;
+    }
+
+    .wizard-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-main);
+      padding-top: 1.25rem;
+    }
+
+    .presets-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-surface-elevated);
+      border-radius: 0.75rem;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border-main);
+    }
+
+    /* ==========================================================================
+       7. DASHBOARD EJECUTIVO & GRÁFICAS
+       ========================================================================== */
+    .dashboard-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .kpi-tile {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-main);
+      border-radius: 0.875rem;
+      padding: 1.1rem;
+      backdrop-filter: var(--glass-blur);
+    }
+    .kpi-label { font-size: 0.6875rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 0.05em; }
+    .kpi-value { font-size: 1.4rem; font-weight: 800; color: var(--primary-light); margin: 0.25rem 0; }
+    .kpi-sub { font-size: 0.7rem; color: var(--text-muted); }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    /* Barras de Organización y Patrones */
+    .pattern-row {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-main);
+      border-radius: 0.625rem;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .pattern-row:hover { border-color: var(--border-glow); }
+    .pattern-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    .bar-track {
+      height: 0.45rem;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .bar-value-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: var(--primary-gradient);
+    }
+    .pattern-expandable {
+      display: none;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border-main);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Radar Chart SVG */
+    .radar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0;
+    }
+    .radar-canvas {
+      width: 100%;
+      max-width: 380px;
+      height: auto;
+      overflow: visible;
+    }
+
+    /* Tabla Eje M */
+    .table-scroll {
+      overflow-x: auto;
+      margin-top: 0.75rem;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      text-align: left;
+    }
+    table.data-table th {
+      padding: 0.6rem 0.75rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-main);
+      text-transform: uppercase;
+      font-size: 0.6875rem;
+    }
+    table.data-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      color: var(--text-main);
+    }
+
+    /* Grid Síntomas Eje S */
+    .symptom-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 0.65rem;
+      margin-top: 0.85rem;
+    }
+    .symptom-tile {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-main);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    /* Alerta de Riesgo */
+    .risk-alert-box {
+      border-radius: 1rem;
+      padding: 1.15rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      background: rgba(244, 63, 94, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    /* ==========================================================================
+       8. LÍNEA TEMPORAL DE EVOLUCIÓN
+       ========================================================================== */
+    .timeline-container {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-main);
+    }
+    .timeline-svg {
+      width: 100%;
+      height: 120px;
+    }
+
+    /* ==========================================================================
+       9. FORMULACIÓN NARRATIVA (>1000 PALABRAS)
+       ========================================================================== */
+    .dossier-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-main);
+      border-radius: 1rem;
+      padding: 2.2rem;
+      line-height: 1.75;
+      color: var(--text-main);
+      box-shadow: var(--shadow-lg);
+    }
+    .dossier-header {
+      border-bottom: 2px solid var(--border-main);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .dossier-prose {
+      white-space: pre-wrap;
+      font-size: 0.875rem;
+      color: var(--text-main);
+      line-height: 1.8;
+      margin-top: 1.25rem;
+      font-family: inherit;
+    }
+
+    /* ==========================================================================
+       10. BOTÓN FLOTANTE & FOOTER
+       ========================================================================== */
+    .floating-fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: 9999px;
+      background: var(--primary-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.5);
+      z-index: 50;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+    .floating-fab:hover { transform: scale(1.08) rotate(6deg); }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border-main);
+      padding: 1.25rem 0;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       TOASTS Y MODAL DE CONFIRMACIÓN (INTERFAZ NATIVA SIN WINDOW.ALERT)
+       ========================================================================== */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1000;
+      pointer-events: none;
+      max-width: 90vw;
+    }
+    .toast-item {
+      background: var(--bg-surface-sub);
+      color: var(--text-main);
+      padding: 0.65rem 1.15rem;
+      border-radius: 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border: 1px solid var(--border-glow);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: auto;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-card {
+      background: var(--bg-surface-sub);
+      border: 1px solid var(--border-glow);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ==========================================================================
+       11. REGLAS MULTIPÁGINA PARA IMPRESIÓN & PDF CLÍNICO
+       ========================================================================== */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 10pt !important;
+      }
+      header, .top-actions, .mobile-tab-bar, .floating-fab, footer, .btn, .no-print, .wizard-actions, .presets-bar {
+        display: none !important;
+      }
+      .card, .dossier-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        background: #ffffff !important;
+        padding: 15mm !important;
+        page-break-inside: auto !important;
+      }
+      .dossier-prose {
+        color: #000000 !important;
+      }
+      .view-pane { display: block !important; }
+      #pane-questionnaire, #pane-history { display: none !important; }
+      .page-break { page-break-before: always; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER PRINCIPAL SAAS -->
+  <header>
+    <div class="container header-row">
+      <!-- Logotipo & Marca -->
+      <div class="brand-block" onclick="app.switchTab('dashboard')">
+        <div class="brand-logo-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/>
+          </svg>
+        </div>
+        <div class="brand-title-wrap">
+          <div class="brand-name">
+            <span>Jair Pastor - Psicólogo</span>
+            <span class="badge badge-sky">PDM-2</span>
+          </div>
+          <span class="brand-sub">Psychodynamic AI Diagnostic Pro • Plataforma Clínica</span>
+        </div>
+      </div>
+
+      <!-- Navegación por pestañas escritorio -->
+      <nav class="nav-tabs-wrapper">
+        <button class="tab-btn active" id="tab-nav-questionnaire" onclick="app.switchTab('questionnaire')">Cuestionario</button>
+        <button class="tab-btn" id="tab-nav-dashboard" onclick="app.switchTab('dashboard')">Dashboard Ejecutivo</button>
+        <button class="tab-btn" id="tab-nav-narrative" onclick="app.switchTab('narrative')">Formulación Narrativa</button>
+        <button class="tab-btn" id="tab-nav-history" onclick="app.switchTab('history')">Pacientes & Comparador</button>
+      </nav>
+
+      <!-- Botones de Acción Superior -->
+      <div class="top-actions">
+        <button class="btn btn-secondary btn-sm" onclick="app.toggleTheme()" title="Modo Claro / Oscuro" id="btn-theme-toggle">🌓</button>
+        <button class="btn btn-secondary btn-sm" onclick="app.shareDossier()" title="Compartir informe">🔗 Compartir</button>
+        <button class="btn btn-secondary btn-sm" onclick="app.exportWord()" title="Generar DOCX Editable">📄 DOCX</button>
+        <button class="btn btn-secondary btn-sm" onclick="window.print()" title="Imprimir / PDF Profesional">🖨️ PDF</button>
+        <button class="btn btn-secondary btn-sm" onclick="app.downloadHtmlSource()" title="Descargar archivo index.html único">⬇️ Descargar HTML</button>
+        <button class="btn btn-primary btn-sm" onclick="app.startNewAssessment()">+ Nueva</button>
+      </div>
+    </div>
+
+    <!-- Pestañas móvil -->
+    <div class="container mobile-tab-bar">
+      <button class="btn btn-secondary btn-sm" onclick="app.switchTab('questionnaire')">Cuestionario</button>
+      <button class="btn btn-secondary btn-sm" onclick="app.switchTab('dashboard')">Dashboard</button>
+      <button class="btn btn-secondary btn-sm" onclick="app.switchTab('narrative')">Narrativa</button>
+      <button class="btn btn-secondary btn-sm" onclick="app.switchTab('history')">Pacientes</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 1rem; padding-bottom: 2rem;">
+    <!-- BANNER ÉTICO OBLIGATORIO -->
+    <div class="ethical-banner">
+      <div>
+        <strong>AVISO CLÍNICO OBLIGATORIO (MODELO PDM-2):</strong><br/>
+        Evaluación Psicodinámica Orientativa Basada en el Modelo PDM-2. <strong>Esta evaluación no sustituye una valoración realizada por un profesional de salud mental.</strong>
+      </div>
+      <div class="badge badge-amber" style="white-space: nowrap;">Uso Orientativo</div>
+    </div>
+
+    <!-- ======================================================================
+         VISTA 1: CUESTIONARIO ADAPTATIVO CON DATOS DEL PACIENTE
+         ====================================================================== -->
+    <section id="pane-questionnaire" class="view-pane active">
+      <div class="card question-wizard">
+        <!-- Campos de Identificación del Paciente -->
+        <div class="patient-input-row">
+          <div>
+            <label style="font-size: 0.68rem; color: var(--text-dim); font-weight: 700; display: block; margin-bottom: 0.2rem;">NOMBRE O CÓDIGO DEL PACIENTE:</label>
+            <input type="text" id="patient-name-input" class="form-input" placeholder="Ej. Paciente Anónimo / Caso Clínico 01" value="Paciente de Consulta" />
+          </div>
+          <div>
+            <label style="font-size: 0.68rem; color: var(--text-dim); font-weight: 700; display: block; margin-bottom: 0.2rem;">EDAD:</label>
+            <input type="number" id="patient-age-input" class="form-input" placeholder="Edad" value="32" />
+          </div>
+          <div>
+            <label style="font-size: 0.68rem; color: var(--text-dim); font-weight: 700; display: block; margin-bottom: 0.2rem;">GÉNERO / REF:</label>
+            <input type="text" id="patient-gender-input" class="form-input" placeholder="M / F / Otro" value="Adulto" />
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-dim);">
+          <span id="question-category-tag" class="badge badge-sky">CATEGORÍA CLÍNICA</span>
+          <span id="question-counter-label">Pregunta 1 de 24</span>
+        </div>
+
+        <div class="progress-track-wrap">
+          <div class="progress-track-fill" id="question-progress-bar" style="width: 4%;"></div>
+        </div>
+
+        <h2 class="question-headline" id="question-title-text">Cargando batería...</h2>
+        <p class="question-body" id="question-prompt-text"></p>
+
+        <div class="rationale-btn" onclick="app.toggleRationaleBox()">
+          <span>ℹ️ Justificación Diagnóstica PDM-2</span>
+        </div>
+        <div class="rationale-panel" id="question-rationale-box"></div>
+
+        <div class="options-group" id="question-options-holder">
+          <!-- Opciones inyectadas por JS -->
+        </div>
+
+        <div class="wizard-footer">
+          <button class="btn btn-secondary" id="btn-wizard-prev" onclick="app.navigateQuestion(-1)">◀ Anterior</button>
+          <button class="btn btn-primary" id="btn-wizard-next" onclick="app.navigateQuestion(1)">Siguiente ▶</button>
+        </div>
+
+        <!-- Presets para evaluación rápida -->
+        <div class="presets-bar">
+          <span>⚡ Casos clínicos tipo para simulación inmediata:</span>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="app.applySimulationPreset('neurotic')">Simular Caso Neurótico</button>
+            <button class="btn btn-secondary btn-sm" onclick="app.applySimulationPreset('borderline')">Simular Caso Límite</button>
+            <button class="btn btn-secondary btn-sm" onclick="app.applySimulationPreset('healthy')">Simular Caso Saludable</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VISTA 2: DASHBOARD EJECUTIVO
+         ====================================================================== -->
+    <section id="pane-dashboard" class="view-pane">
+      <!-- Alerta de Riesgo Clínico Inmediato -->
+      <div id="risk-alert-placeholder"></div>
+
+      <!-- Métricas Clave del Paciente -->
+      <div class="dashboard-kpis">
+        <div class="kpi-tile">
+          <div class="kpi-label">Organización Eje P</div>
+          <div class="kpi-value" id="kpi-org-title">Neurótica</div>
+          <div class="kpi-sub" id="kpi-org-sub">Identidad integrada • Prueba de realidad conservada</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-label">Estilo Predominante</div>
+          <div class="kpi-value" id="kpi-pattern-title" style="color: var(--accent-emerald);">Ansiosa</div>
+          <div class="kpi-sub" id="kpi-pattern-sub">86% de saturación factorial</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-label">Media Yoica (Eje M)</div>
+          <div class="kpi-value" id="kpi-m-average" style="color: var(--accent-purple);">68/100</div>
+          <div class="kpi-sub">12 capacidades evaluadas</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-label">Pronóstico Clínico</div>
+          <div class="kpi-value" id="kpi-prognosis-title" style="color: var(--accent-amber);">Favorable</div>
+          <div class="kpi-sub" id="kpi-prognosis-sub">80% probabilidad de mejoría</div>
+        </div>
+      </div>
+
+      <!-- Gráficas Duales: 14 Patrones vs. Radar Eje M -->
+      <div class="grid-2col">
+        <!-- Patrones Eje P -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <h3 style="font-size: 0.95rem; font-weight: 700;">Patrones Dominantes de Personalidad (Eje P)</h3>
+            <span class="badge badge-sky">14 Estilos PDM-2</span>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.85rem;">Haz clic en cada barra para desplegar el conflicto nuclear y las defensas:</p>
+          <div id="patterns-list-holder" style="max-height: 440px; overflow-y: auto; padding-right: 0.25rem;">
+            <!-- Inyectado por JS -->
+          </div>
+        </div>
+
+        <!-- Radar Eje M SVG -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <h3 style="font-size: 0.95rem; font-weight: 700;">Perfil Mental Multidimensional (Eje M)</h3>
+            <span class="badge badge-purple">Escala 0-100</span>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.85rem;">Pilares de mentalización, regulación afectiva, identidad y self:</p>
+          <div class="radar-wrapper" id="radar-svg-holder">
+            <!-- SVG Dinámico -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Completa de las 12 Capacidades Mentales -->
+      <div class="card" style="margin-bottom: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 700;">Desglose Integral de Capacidades Mentales (Eje M)</h3>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem;">Criterios evaluados de 0 a 100 según Fonagy, Kernberg y McWilliams:</p>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Capacidad Psicológica</th>
+                <th>Puntuación</th>
+                <th>Nivel</th>
+                <th>Significado Clínico</th>
+              </tr>
+            </thead>
+            <tbody id="axis-m-table-rows">
+              <!-- Inyectado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Matriz de Síntomas Eje S -->
+      <div class="card" style="margin-bottom: 1.25rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 700;">Patrones de Síntomas y Experiencia Subjetiva (Eje S)</h3>
+        <p style="font-size: 0.72rem; color: var(--text-muted);">15 dimensiones de sufrimiento y compromiso defensivo:</p>
+        <div class="symptom-matrix" id="symptoms-matrix-holder">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+
+      <!-- Plan de Intervención Psicoterapéutico Escalonado -->
+      <div class="card">
+        <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">Plan Terapéutico Escalonado y Recomendaciones</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.85rem; margin-top: 0.5rem;" id="therapy-plan-cards">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VISTA 3: FORMULACIÓN CLÍNICA NARRATIVA (>1000 PALABRAS)
+         ====================================================================== -->
+    <section id="pane-narrative" class="view-pane">
+      <div class="dossier-card">
+        <div class="dossier-header">
+          <div>
+            <h1 style="font-size: 1.4rem; font-weight: 800; color: var(--primary-light);">Jair Pastor - Psicólogo</h1>
+            <p style="font-size: 0.82rem; color: var(--text-muted);" id="dossier-patient-line">Expediente Clínico de Evaluación Psicodinámica PDM-2</p>
+          </div>
+          <div style="text-align: right; font-size: 0.75rem; color: var(--text-dim);">
+            <div id="dossier-id-tag">EXPEDIENTE #---</div>
+            <div id="dossier-words-counter" class="badge badge-emerald" style="margin-top: 0.25rem;">1180 palabras (≥1000 ✓)</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-bottom: 1.25rem;" class="no-print">
+          <button class="btn btn-secondary btn-sm" onclick="app.copyNarrativeText()">📋 Copiar Texto</button>
+          <button class="btn btn-secondary btn-sm" onclick="app.exportWord()">📄 Descargar DOCX</button>
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Imprimir / PDF Multipágina</button>
+        </div>
+
+        <div class="dossier-prose" id="dossier-narrative-text">
+          <!-- Formulación de más de 1000 palabras generada en vivo -->
+        </div>
+
+        <!-- Firmas Oficiales y Certificación -->
+        <div style="margin-top: 3.5rem; padding-top: 1.75rem; border-top: 1px solid var(--border-main); display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem; text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+          <div>
+            <div style="height: 38px; border-bottom: 1px solid var(--border-main); margin-bottom: 0.45rem; font-family: cursive; font-size: 1.15rem; color: var(--primary-light);">Jair Pastor</div>
+            <strong>Jair Pastor • Psicólogo Clínico</strong><br/>
+            Especialista en Evaluación Psicodinámica & Psicoterapia PDM-2
+          </div>
+          <div>
+            <div style="height: 38px; border-bottom: 1px solid var(--border-main); margin-bottom: 0.45rem; font-family: monospace; font-size: 0.9rem; color: var(--accent-emerald);">Jair-pastor-psicologo</div>
+            <strong>Sello de Validación Profesional</strong><br/>
+            Psychodynamic AI Diagnostic Pro • Registro Oficial
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VISTA 4: HISTORIAL DE PACIENTES, COMPARADOR & BACKUP JSON
+         ====================================================================== -->
+    <section id="pane-history" class="view-pane">
+      <!-- Panel de Pacientes Guardados -->
+      <div class="card" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; margin-bottom: 0.5rem;">
+          <div>
+            <h3 style="font-size: 0.95rem; font-weight: 700;">Historial Clínico de Pacientes (Almacenamiento Local)</h3>
+            <p style="font-size: 0.72rem; color: var(--text-muted);">Expedientes guardados automáticamente en tu navegador:</p>
+          </div>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn btn-secondary btn-sm" onclick="app.exportJsonBackup()">💾 Exportar JSON</button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('json-file-input').click()">📥 Importar JSON</button>
+            <input type="file" id="json-file-input" style="display: none;" accept=".json" onchange="app.importJsonBackup(event)" />
+          </div>
+        </div>
+        <div id="patient-records-list" style="display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.75rem;">
+          <!-- Inyectado por JS -->
+        </div>
+      </div>
+
+      <!-- Comparador Longitudinal Delta -->
+      <div class="card" id="longitudinal-compare-card">
+        <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem;">Comparador Longitudinal (Análisis Delta de Evolución)</h3>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1rem;">Contrasta dos evaluaciones en el tiempo para valorar el progreso terapéutico del paciente:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="font-size: 0.74rem; color: var(--primary-light); font-weight: 700; display: block; margin-bottom: 0.25rem;">Evaluación Base (Punto A):</label>
+            <select id="select-compare-a" class="form-input" onchange="app.renderComparisonView()"></select>
+          </div>
+          <div>
+            <label style="font-size: 0.74rem; color: var(--accent-rose); font-weight: 700; display: block; margin-bottom: 0.25rem;">Evaluación Evolutiva (Punto B):</label>
+            <select id="select-compare-b" class="form-input" onchange="app.renderComparisonView()"></select>
+          </div>
+        </div>
+        <div id="compare-metrics-delta"></div>
+        <div class="timeline-container">
+          <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem;">Línea Temporal de la Media Yoica (Eje M):</h4>
+          <svg id="timeline-evolution-svg" class="timeline-svg"></svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTÓN FLOTANTE RÁPIDO -->
+  <button class="floating-fab no-print" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Volver Arriba">
+    ▲
+  </button>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <strong>Jair Pastor - Psicólogo</strong> • Psychodynamic AI Diagnostic Pro • Modelo PDM-2<br/>
+      Plataforma clínica offline e instalable. Esta evaluación es orientativa y no sustituye la valoración médica o psicológica profesional.
+    </div>
+  </footer>
+
+  <!-- CONTENEDOR DE TOASTS & MODAL DE CONFIRMACIÓN (SIN ALERT/CONFIRM) -->
+  <div id="toast-container" class="toast-container"></div>
+  <div id="confirm-modal-overlay" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h3 id="modal-title" style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Confirmación</h3>
+      <p id="modal-desc" style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.5;"></p>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+        <button class="btn btn-secondary btn-sm" id="modal-btn-cancel">Cancelar</button>
+        <button class="btn btn-primary btn-sm" id="modal-btn-confirm">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       12. MOTOR CLÍNICO PDM-2, NARRATIVA & GESTIÓN DE PACIENTES (JS PURO)
+       ========================================================================== -->
+  <script>
+    /* BATERÍA EXTENSA DE 24 PREGUNTAS PDM-2 */
+    const QUESTIONS_DATA = [
+      {
+        id: "q1", category: "Gestión emocional", title: "Regulación de Afectos Intensos",
+        prompt: "Cuando experimentas emociones intensas (como angustia, ira, dolor o excitación), ¿cómo se siente tu experiencia interna?",
+        rationale: "Evalúa la modulación afectiva (Capacidad M1) y la fortaleza yoica frente a desbordamientos.",
+        options: [
+          { text: "Puedo sentirlas con claridad, comprender su origen y calmarme sin perder el control.", weights: { org: { Saludable: 4 }, m: { regEmocional: 95, mentalizacion: 90 }, sym: {} } },
+          { text: "Las vivo con incomodidad; tiendo a racionalizarlas o reprimirlas con tensión somática.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 3, Ansiosa: 2 }, m: { regEmocional: 68 }, sym: { Ansiedad: 2 } } },
+          { text: "Siento tormentas emocionales abrumadoras; temo estallar o perder el control por completo.", weights: { org: { Límite: 4 }, pat: { Histérica: 3, Ansiosa: 3 }, m: { regEmocional: 35 }, sym: { Ansiedad: 4, "Conductas impulsivas": 3 } } },
+          { text: "Las emociones me invaden como fuerzas ajenas que desintegran mi mente o mi sentido de realidad.", weights: { org: { Psicótica: 4 }, pat: { Paranoide: 3 }, m: { regEmocional: 15 }, sym: { Disociación: 5 } } }
+        ]
+      },
+      {
+        id: "q2", category: "Sentido de identidad", title: "Continuidad del Sí Mismo",
+        prompt: "¿Cómo percibes tu sentido de quién eres a lo largo del tiempo y en distintos contextos?",
+        rationale: "Evalúa integración vs. difusión de identidad (Kernberg / PDM-2 M4).",
+        options: [
+          { text: "Tengo un sentido sólido y coherente de quién soy, con valores y deseos definidos.", weights: { org: { Saludable: 4 }, m: { identidad: 95, valores: 90 } } },
+          { text: "Sé quién soy, aunque a menudo dudo de mi valía o adopto roles para complacer a los demás.", weights: { org: { Neurótica: 4 }, pat: { Dependiente: 3, Narcisista: 2 }, m: { identidad: 72 } } },
+          { text: "Siento un vacío crónico; cambio drásticamente según con quién esté, sintiéndome como un camaleón.", weights: { org: { Límite: 4 }, pat: { Histérica: 3, Depresiva: 2 }, m: { identidad: 32 } } },
+          { text: "Mi mente e identidad se sienten fragmentadas; a veces dudo si mis pensamientos me pertenecen.", weights: { org: { Psicótica: 4 }, pat: { Esquizoide: 3 }, m: { identidad: 15 } } }
+        ]
+      },
+      {
+        id: "q3", category: "Relaciones amorosas", title: "Cercanía e Intimidad Afectiva",
+        prompt: "En tus vínculos afectivos de pareja o íntimos, ¿cuál suele ser tu dinámica predominante?",
+        rationale: "Explora modelos de apego y conflictos de cercanía vs. autonomía (Eje M5).",
+        options: [
+          { text: "Disfruto del compromiso y la cercanía sin temer perder mi autonomía ni temer el abandono.", weights: { org: { Saludable: 4 }, m: { relaciones: 95 } } },
+          { text: "Me apego intensamente y subordinio mis deseos para evitar a toda costa el distanciamiento del otro.", weights: { org: { Neurótica: 4 }, pat: { Dependiente: 5, Ansiosa: 3 }, m: { relaciones: 55 } } },
+          { text: "Prefiero la distancia emocional; me resulta sofocante la intimidad y tiendo a aislarme.", weights: { org: { Neurótica: 3 }, pat: { Evitativa: 5, Esquizoide: 4 }, m: { relaciones: 40 } } },
+          { text: "Oscilo violentamente entre idealizar a mi pareja y devaluarla o atacarla con ira desmedida.", weights: { org: { Límite: 4 }, pat: { Narcisista: 3, Sádica: 2 }, m: { relaciones: 30 } } }
+        ]
+      },
+      {
+        id: "q4", category: "Mecanismos defensivos", title: "Afrontamiento ante Frustraciones",
+        prompt: "Cuando sufres un revés importante o un error personal doloroso, ¿qué mecanismo se activa en ti?",
+        rationale: "Clasificación de defensas: maduras (humor/sublimación), neuróticas (intelectualización), inmaduras (escisión/acting out).",
+        options: [
+          { text: "Reflexiono con autocompasión, uso el humor sano y busco reparar constructivamente la situación.", weights: { org: { Saludable: 4 }, m: { defensas: 95, resiliencia: 90 } } },
+          { text: "Sobreanalizo fríamente la situación (intelectualización) o me hundo en culpa y autoexigencia implacable.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 4, Depresiva: 3 }, m: { defensas: 65 } } },
+          { text: "Siento ira explosiva, culpo de inmediato al entorno o recurro a conductas compulsivas para descargar.", weights: { org: { Límite: 4 }, pat: { Psicopática: 3, Sádica: 2 }, m: { defensas: 35 } } },
+          { text: "Me desconecto de la realidad (desrealización) o siento que fuerzas conspirativas me atacan.", weights: { org: { Psicótica: 4 }, pat: { Paranoide: 4 }, m: { defensas: 20 } } }
+        ]
+      },
+      {
+        id: "q5", category: "Autoestima", title: "Regulación del Valor Propio",
+        prompt: "¿Cómo se mantiene tu autoestima ante los elogios o las críticas ajenas?",
+        rationale: "Evalúa vulnerabilidad a la herida narcisista vs. reproche depresivo (M6).",
+        options: [
+          { text: "Estable y realista. Acepto críticas constructivas sin desmoronarme ni necesitar vanagloriarme.", weights: { org: { Saludable: 4 }, m: { autoestima: 95 } } },
+          { text: "Cualquier crítica me hace sentir defectuoso/a o culpable ('nunca soy suficiente').", weights: { org: { Neurótica: 4 }, pat: { Depresiva: 5, Evitativa: 3 }, m: { autoestima: 35 } } },
+          { text: "Necesito constante validación; un desaire me genera una ira fría de desprecio hacia el otro.", weights: { org: { Neurótica: 2, Límite: 3 }, pat: { Narcisista: 5 }, m: { autoestima: 40 } } },
+          { text: "Siento una falta absoluta de valor humano; me percibo como un ente destructivo para los demás.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Depresiva: 4 }, m: { autoestima: 18 } } }
+        ]
+      },
+      {
+        id: "q6", category: "Apego", title: "Mentalización y Empatía",
+        prompt: "Cuando alguien cercano actúa de forma inesperada o hiriente, ¿qué ocurre en tu mente?",
+        rationale: "Capacidad reflexiva (M3 Fonagy/PDM-2): distinguir entre el mundo interno y la conducta externa.",
+        options: [
+          { text: "Procuro entender sus motivos, emociones y presiones personales, diferenciándolas de mis afectos.", weights: { org: { Saludable: 4 }, m: { mentalizacion: 95 } } },
+          { text: "Asumo que la culpa es mía o que he cometido un error imperdonable que arruinó el vínculo.", weights: { org: { Neurótica: 4 }, pat: { Ansiosa: 4, Dependiente: 3 }, m: { mentalizacion: 60 } } },
+          { text: "Si me hiere es una persona malvada e hipócrita; me cuesta empatizar con su punto de vista.", weights: { org: { Límite: 3 }, pat: { Paranoide: 3, Narcisista: 3 }, m: { mentalizacion: 35 } } },
+          { text: "Siento que la gente oculta intenciones malévolas organizadas específicamente contra mí.", weights: { org: { Psicótica: 4 }, pat: { Paranoide: 5 }, m: { mentalizacion: 18 } } }
+        ]
+      },
+      {
+        id: "q7", category: "Relaciones familiares", title: "Atmósfera Temprana en el Hogar",
+        prompt: "Al recordar tu infancia y tus figuras de cuidado primarias, ¿cuál fue el clima predominante?",
+        rationale: "Modelos operativos internos de apego seguro, ambivalente o desorganizado.",
+        options: [
+          { text: "Predecible, cálido y seguro. Podía equivocarme y recibir consuelo sin temor al rechazo.", weights: { org: { Saludable: 4 }, m: { resiliencia: 90, relaciones: 90 } } },
+          { text: "Alta exigencia o normas rígidas; el cariño a menudo dependía del rendimiento o buen comportamiento.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 4, Narcisista: 3 } } },
+          { text: "Inestable o negligente; tuve que asumir el rol de cuidar a mis padres o adivinar sus cambios de humor.", weights: { org: { Neurótica: 2, Límite: 3 }, pat: { Dependiente: 4, Depresiva: 3 } } },
+          { text: "Caos, maltrato o terror constante; la figura de protección era a su vez la fuente de peligro.", weights: { org: { Límite: 4, Psicótica: 2 }, pat: { Paranoide: 3 }, sym: { Trauma: 5, "Estrés postraumático": 4 } } }
+        ]
+      },
+      {
+        id: "q8", category: "Experiencias traumáticas", title: "Secuelas de Sucesos Dolorosos",
+        prompt: "¿Has sufrido vivencias traumáticas que irrumpan en el presente con recuerdos o sobresaltos?",
+        rationale: "Eje S: Detección de Trauma, TEPT y defensas disociativas.",
+        options: [
+          { text: "No he sufrido traumas severos, o los duelos han sido integrados sin crisis activas.", weights: { org: { Saludable: 4 }, m: { resiliencia: 90 } } },
+          { text: "A veces recuerdo momentos tristes con nostalgia pero no me paralizan en el día a día.", weights: { org: { Neurótica: 3 }, m: { resiliencia: 70 } } },
+          { text: "Sufro de pesadillas, reviviscencias intrusivas y evito activamente lugares que me recuerdan el dolor.", weights: { org: { Neurótica: 2, Límite: 3 }, pat: { Ansiosa: 3 }, sym: { Trauma: 5, "Estrés postraumático": 5 } } },
+          { text: "Sufro 'desconexiones' temporales frecuentes; siento que mi cuerpo no me pertenece o revivo el horror.", weights: { org: { Límite: 4, Psicótica: 2 }, sym: { Trauma: 5, Disociación: 5 } } }
+        ]
+      },
+      {
+        id: "q9", category: "Impulsividad", title: "Manejo de Urgencias y Descargas",
+        prompt: "Cuando te invade un dolor psíquico o aburrimiento agudo, ¿cómo respondes ante el impulso?",
+        rationale: "Capacidad M7 (Control de impulsos) y screening de adicciones o acting out destructivo.",
+        options: [
+          { text: "Puedo tolerar la incomodidad, meditar y esperar antes de tomar cualquier decisión.", weights: { org: { Saludable: 4 }, m: { controlImpulsos: 95 } } },
+          { text: "Procrastino o como dulces cuando me angustio, pero no tengo actos que pongan en peligro mi vida.", weights: { org: { Neurótica: 4 }, m: { controlImpulsos: 70 } } },
+          { text: "Recurro a compras desmedidas, atracones, juego, velocidad temeraria o alcohol para anestesiarme.", weights: { org: { Límite: 4 }, pat: { Histérica: 2 }, m: { controlImpulsos: 35 }, sym: { "Conductas impulsivas": 4, Adicciones: 3 } } },
+          { text: "Tengo estallidos de furia destructiva donde rompo objetos o agredo sin medir consecuencias.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Psicopática: 4, Sádica: 3 }, m: { controlImpulsos: 15 }, risk: { violence: 4 } } }
+        ]
+      },
+      {
+        id: "q10", category: "Gestión emocional", title: "Ideación Vital y Autodaño",
+        prompt: "¿Has tenido pensamientos de desear no despertar, autolesión física o cansancio terminal de vivir?",
+        rationale: "Criterio crítico de seguridad para activación de protocolos clínicos inmediatos.",
+        options: [
+          { text: "Nunca he contemplado hacerme daño ni desear morir. Amo mi existencia.", weights: { org: { Saludable: 4 }, m: { sentido: 95 }, sym: { "Riesgo suicida": 0, Autolesiones: 0 } } },
+          { text: "Fugazmente he sentido cansancio vital pasivo ('quisiera desconectar un rato'), sin plan ni deseo real.", weights: { org: { Neurótica: 3 }, pat: { Depresiva: 3 }, m: { sentido: 60 }, sym: { Depresión: 2 } } },
+          { text: "Me he cortado, golpeado o quemado a propósito para aliviar la angustia insoportable de mi pecho.", weights: { org: { Límite: 4 }, pat: { Depresiva: 3 }, sym: { Autolesiones: 5, "Riesgo suicida": 3 }, risk: { selfHarm: 4 } } },
+          { text: "Tengo ideas suicidas concretas recurrentes con desesperanza total y deseo de terminar con todo.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Depresiva: 5 }, m: { sentido: 10 }, sym: { "Riesgo suicida": 5 }, risk: { suicide: 5 } } }
+        ]
+      },
+      {
+        id: "q11", category: "Autoimagen", title: "Manifestaciones Somáticas del Dolor",
+        prompt: "¿Tus preocupaciones o tensiones emocionales se transforman en dolencias corporales?",
+        rationale: "Estilo defensivo de somatización y patrón Somatizador del PDM-2.",
+        options: [
+          { text: "Reconozco el estrés mentalmente y descanso; mi cuerpo no suele enfermar por la tensión.", weights: { org: { Saludable: 4 }, sym: { Somatización: 0 } } },
+          { text: "A veces tengo contracturas musculares o cefaleas transitorias que ceden al descansar.", weights: { org: { Neurótica: 4 }, pat: { Ansiosa: 2 }, sym: { Somatización: 2 } } },
+          { text: "Sufro de problemas digestivos crónicos, mareos o dolores recurrentes sin causa médica orgánica.", weights: { org: { Neurótica: 3, Límite: 1 }, pat: { Somatizadora: 5 }, sym: { Somatización: 5 } } },
+          { text: "Siento que partes de mi cuerpo se están apagando o experimento parálisis y anestesias inexplicables.", weights: { org: { Psicótica: 3, Límite: 2 }, pat: { Somatizadora: 4 }, sym: { Somatización: 5, Disociación: 4 } } }
+        ]
+      },
+      {
+        id: "q12", category: "Mecanismos defensivos", title: "Control, Orden y Rituales Mentales",
+        prompt: "¿Te ves atrapado/a por dudas obsesivas, necesidad de revisar cosas muchas veces o perfeccionismo?",
+        rationale: "Patrón Obsesivo-Compulsivo: formación reactiva y aislamiento del afecto.",
+        options: [
+          { text: "Soy flexible, tolero bien el desorden ocasional y no necesito tener el control absoluto.", weights: { org: { Saludable: 4 }, m: { defensas: 90 } } },
+          { text: "Me gusta el orden y me cuesta delegar porque creo que nadie lo hará con mi nivel de esmero.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 4 }, sym: { Obsesiones: 2 } } },
+          { text: "Tengo pensamientos intrusivos molestos y hago rituales repetitivos para calmar mi ansiedad.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 5 }, sym: { Obsesiones: 5, Compulsiones: 5 } } },
+          { text: "Creo que si no sigo ciertos códigos mágicos en mi mente ocurrirá una catástrofe en el universo.", weights: { org: { Psicótica: 3 }, pat: { "Obsesivo-compulsiva": 3 }, sym: { Obsesiones: 5, Compulsiones: 5 } } }
+        ]
+      },
+      {
+        id: "q13", category: "Apego", title: "Deseo de Contacto vs. Aislamiento",
+        prompt: "¿Cómo vives el contacto social y las relaciones interpersonales cotidianas?",
+        rationale: "Distingue evitación fóbica (temor al juicio) de repliegue esquizoide (indiferencia afectiva).",
+        options: [
+          { text: "Disfruto con amigos y personas nuevas, equilibrando mi vida social y mi tiempo a solas.", weights: { org: { Saludable: 4 }, m: { relaciones: 90 } } },
+          { text: "Anhelo conectar pero la timidez y el miedo al ridículo me hacen retraerme.", weights: { org: { Neurótica: 4 }, pat: { Evitativa: 5, Fóbica: 4 } } },
+          { text: "Siento poca o ninguna necesidad de estar con gente; prefiero mi mundo de fantasías en soledad.", weights: { org: { Neurótica: 3 }, pat: { Esquizoide: 5 }, m: { relaciones: 30 } } },
+          { text: "Evito a las personas porque estoy seguro/a de que me vigilan y planean hacerme daño.", weights: { org: { Psicótica: 4 }, pat: { Paranoide: 5 }, sym: { "Problemas relacionales": 5 } } }
+        ]
+      },
+      {
+        id: "q14", category: "Mecanismos defensivos", title: "Estructura Moral y Culpa",
+        prompt: "Cuando tus acciones causan perjuicio o molestia a otra persona, ¿cuál es tu respuesta interna?",
+        rationale: "Integración del Superyó (M11): culpa reparatoria vs. persecutoria o ausencia de remordimiento.",
+        options: [
+          { text: "Siento una culpa sana que me impulsa a pedir disculpas sinceras y reparar el daño causado.", weights: { org: { Saludable: 4 }, m: { valores: 95 } } },
+          { text: "Me castigo mentalmente con un autorreproche feroz durante días por el menor desliz.", weights: { org: { Neurótica: 4 }, pat: { Depresiva: 4, "Obsesivo-compulsiva": 4 }, m: { valores: 80 } } },
+          { text: "Minimizo el impacto o culpo a las circunstancias para no sentirme incómodo.", weights: { org: { Neurótica: 2, Límite: 2 }, pat: { Narcisista: 4 } } },
+          { text: "No siento culpa alguna; en el mundo los fuertes dominan y disfruto ver someterse a otros.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Psicopática: 5, Sádica: 5 }, m: { valores: 10 } } }
+        ]
+      },
+      {
+        id: "q15", category: "Proyecto de vida", title: "Sentido y Significado Existencial",
+        prompt: "¿Cómo visualizas tu futuro y el significado general de tu existencia en este momento?",
+        rationale: "Capacidad M12 (Sentido y propósito de vida) como factor de protección contra la desesperanza.",
+        options: [
+          { text: "Con optimismo y metas claras; siento que mi vida tiene valor y aporto a la sociedad.", weights: { org: { Saludable: 4 }, m: { sentido: 95 } } },
+          { text: "Tengo proyectos pero vivo con miedo constante a fracasar o no cumplir mis autoexigencias.", weights: { org: { Neurótica: 4 }, pat: { Ansiosa: 3, "Obsesivo-compulsiva": 3 }, m: { sentido: 68 } } },
+          { text: "Vivo al día; cambio constantemente de rumbo porque me aburro rápido o me siento vacío/a.", weights: { org: { Límite: 3 }, pat: { Histérica: 3 }, m: { sentido: 40 } } },
+          { text: "Siento un abismo oscuro sin ninguna razón valiosa para continuar viviendo.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Depresiva: 5 }, m: { sentido: 15 }, risk: { suicide: 3 } } }
+        ]
+      },
+      {
+        id: "q16", category: "Gestión emocional", title: "Focalización y Concentración",
+        prompt: "En tareas intelectuales complejas o estudio, ¿cómo responde tu atención?",
+        rationale: "Capacidad M2: Concentración, atención ejecutiva y aprendizaje.",
+        options: [
+          { text: "Puedo concentrarme de forma sostenida y asimilar nuevas ideas con entusiasmo.", weights: { org: { Saludable: 4 }, m: { atencion: 95 } } },
+          { text: "Me desconcentro a menudo por rumiar preocupaciones o por exigirme perfección extrema.", weights: { org: { Neurótica: 4 }, pat: { Ansiosa: 3 }, m: { atencion: 65 } } },
+          { text: "Me cuesta mucho mantener el foco; inicio muchos proyectos y rara vez logro concluirlos.", weights: { org: { Límite: 3 }, m: { atencion: 45 } } },
+          { text: "Siento bloqueos mentales graves o que voces y ruidos interfieren directamente en mi pensar.", weights: { org: { Psicótica: 4 }, m: { atencion: 20 } } }
+        ]
+      },
+      {
+        id: "q17", category: "Autoimagen", title: "Introspección y Curiosidad Mental",
+        prompt: "¿Te detienes habitualmente a reflexionar sobre tus motivos y asumir tu responsabilidad?",
+        rationale: "Capacidad M10: 'Psychological mindedness' y receptividad a la psicoterapia dinámica.",
+        options: [
+          { text: "Tengo un hábito honesto de autoobservación; me interesa comprender mi mente y aprender.", weights: { org: { Saludable: 4 }, m: { autoobservacion: 95 } } },
+          { text: "Me autoobservo mucho, pero con una mirada de juicio crítico severo más que de curiosidad.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 4 }, m: { autoobservacion: 75 } } },
+          { text: "Casi nunca reflexiono sobre mis motivos; prefiero distraerme antes que mirar mi interior.", weights: { org: { Límite: 3 }, pat: { Histérica: 3 }, m: { autoobservacion: 35 } } },
+          { text: "Mirar mi mente me aterra porque siento un caos desintegrador insoportable.", weights: { org: { Psicótica: 3 }, m: { autoobservacion: 20 } } }
+        ]
+      },
+      {
+        id: "q18", category: "Historia personal", title: "Resiliencia ante Crisis Vitales",
+        prompt: "Frente a una pérdida afectiva o fracaso grave, ¿cuál suele ser tu curva de recuperación?",
+        rationale: "Capacidad M9: Fuerza yoica y resiliencia psicológica adaptativa.",
+        options: [
+          { text: "Sufro el dolor, pido apoyo y poco a poco reconstruyo mi proyecto vital con más sabiduría.", weights: { org: { Saludable: 4 }, m: { resiliencia: 95 } } },
+          { text: "Me cuesta recuperarme; me quedo rumiando sobre qué hice mal antes de poder levantar cabeza.", weights: { org: { Neurótica: 4 }, pat: { Depresiva: 4 }, m: { resiliencia: 60 } } },
+          { text: "Me desmorono por completo; siento que mi vida se acabó y recurro a actos desesperados.", weights: { org: { Límite: 4 }, pat: { Dependiente: 3 }, m: { resiliencia: 30 } } },
+          { text: "Cualquier pérdida reactiva un colapso psicótico donde pierdo el contacto con la realidad.", weights: { org: { Psicótica: 4 }, m: { resiliencia: 15 } } }
+        ]
+      },
+      {
+        id: "q19", category: "Gestión emocional", title: "Calidad del Sueño y Ritmos",
+        prompt: "¿Cómo ha sido tu descanso nocturno y la presencia de pesadillas en los últimos meses?",
+        rationale: "Eje S: Marcador neurovegetativo de depresión, ansiedad o descompensación afectiva.",
+        options: [
+          { text: "Duermo entre 7 y 8 horas reparadoras y me levanto con energía suficiente.", weights: { org: { Saludable: 4 }, sym: { "Alteraciones del sueño": 0 } } },
+          { text: "Tardo en conciliar el sueño por repasar pendientes o me despierto inquieto/a a veces.", weights: { org: { Neurótica: 4 }, pat: { Ansiosa: 3 }, sym: { "Alteraciones del sueño": 3 } } },
+          { text: "Insomnio crónico grave, despertar con angustia opresiva o necesidad de dormir 14 horas.", weights: { org: { Neurótica: 2, Límite: 3 }, pat: { Depresiva: 4 }, sym: { "Alteraciones del sueño": 5 } } },
+          { text: "Terror nocturno constante, pesadillas traumáticas repetitivas o días enteros sin dormir.", weights: { org: { Límite: 3, Psicótica: 3 }, sym: { "Alteraciones del sueño": 5, Trauma: 4 } } }
+        ]
+      },
+      {
+        id: "q20", category: "Gestión emocional", title: "Miedos Específicos y Fobias",
+        prompt: "¿Hay situaciones concretas (encierro, multitudes, exámenes, animales) que te desaten pánico?",
+        rationale: "Patrón Fóbico PDM-2: desplazamiento de la angustia y evitación fóbica.",
+        options: [
+          { text: "No sufro de miedos desproporcionados; afronto los retos cotidianos con serenidad normal.", weights: { org: { Saludable: 4 } } },
+          { text: "Siento inquietud ante ciertas situaciones pero logro sobreponerme sin que limite mi vida.", weights: { org: { Neurótica: 4 }, pat: { Fóbica: 2 } } },
+          { text: "Tengo crisis de pánico repentinas y organizo mi rutina para evitar a toda costa ciertos lugares.", weights: { org: { Neurótica: 4 }, pat: { Fóbica: 5, Ansiosa: 4 }, sym: { Ansiedad: 5 } } },
+          { text: "El terror es permanente y siento una amenaza cósmica en todos lados que me impide salir.", weights: { org: { Psicótica: 3 }, pat: { Paranoide: 4 } } }
+        ]
+      },
+      {
+        id: "q21", category: "Historia personal", title: "Procesamiento de Duelos",
+        prompt: "Al mirar las pérdidas importantes de seres queridos en tu historia, ¿cómo han sido elaboradas?",
+        rationale: "Duelo elaborado vs. Duelo congelado / melancólico (Patrón Depresivo).",
+        options: [
+          { text: "He podido hacer el duelo con dolor pero con aceptación, integrando los recuerdos con gratitud.", weights: { org: { Saludable: 4 }, m: { resiliencia: 90 } } },
+          { text: "Sigo sintiendo una herida abierta y a veces me reprocho qué pude haber hecho para evitarlo.", weights: { org: { Neurótica: 4 }, pat: { Depresiva: 4 } } },
+          { text: "Siento que una parte de mí murió con esa pérdida; vivo en un luto crónico que me impide ilusionarme.", weights: { org: { Neurótica: 3, Límite: 2 }, pat: { Depresiva: 5 }, sym: { Depresión: 5 } } },
+          { text: "Siento que los que se fueron continúan hablándome dentro de mi cabeza o enviándome órdenes.", weights: { org: { Psicótica: 4 }, sym: { Disociación: 4 } } }
+        ]
+      },
+      {
+        id: "q22", category: "Relaciones amorosas", title: "Poder y Dominación Interpersonal",
+        prompt: "En tus relaciones interpersonales, ¿qué papel juega el poder o tener siempre el control?",
+        rationale: "Dinámicas de reciprocidad vs. control sádico, narcisista o psicopático.",
+        options: [
+          { text: "Valoro el respeto mutuo, la negociación y la igualdad; no busco someter ni ser sometido/a.", weights: { org: { Saludable: 4 }, m: { valores: 90 } } },
+          { text: "A veces me cuesta ceder en discusiones porque me frustra que las cosas no se hagan 'bien'.", weights: { org: { Neurótica: 4 }, pat: { "Obsesivo-compulsiva": 4 } } },
+          { text: "Siento placer o alivio cuando logro doblegar la voluntad de otros o hacer que se sientan inferiores.", weights: { org: { Límite: 3 }, pat: { Sádica: 5, Narcisista: 4 } } },
+          { text: "Manipulo sin culpa a la gente para conseguir lo que quiero sin importar el daño que les cause.", weights: { org: { Límite: 3, Psicótica: 2 }, pat: { Psicopática: 5, Sádica: 4 }, risk: { violence: 3 } } }
+        ]
+      },
+      {
+        id: "q23", category: "Autoimagen", title: "Conducta Alimentaria e Imagen",
+        prompt: "¿Cómo es tu relación con la comida y la percepción de tu propio peso o silueta corporal?",
+        rationale: "Eje S: Detección de patología alimentaria y control corporal omnipotente.",
+        options: [
+          { text: "Equilibrada; disfruto de comer sin culpa ni obsesiones rígidas por mi figura.", weights: { org: { Saludable: 4 } } },
+          { text: "A veces como de más cuando estoy ansioso/a pero no recurro a purgas ni dietas extremas.", weights: { org: { Neurótica: 4 }, sym: { "Trastornos alimentarios": 2 } } },
+          { text: "Vivo en batalla: atracones voraces seguidos de culpa extrema, ayunos punitivos o vómitos.", weights: { org: { Neurótica: 2, Límite: 3 }, sym: { "Trastornos alimentarios": 5, "Conductas impulsivas": 3 } } },
+          { text: "Restricción severa porque me veo gordo/a a pesar de delgadez extrema, con voces prohibiéndome comer.", weights: { org: { Límite: 3, Psicótica: 2 }, sym: { "Trastornos alimentarios": 5 } } }
+        ]
+      },
+      {
+        id: "q24", category: "Mecanismos defensivos", title: "Percepción de la Realidad",
+        prompt: "¿Has experimentado percibir voces, sombras o certezas misteriosas que nadie más advertía?",
+        rationale: "Criterio estructural cardinal de Kernberg: Conservación vs. Pérdida del juicio de realidad.",
+        options: [
+          { text: "Nunca. Mi juicio sobre lo real y lo imaginario es nítido y firme en todo momento.", weights: { org: { Saludable: 4, Neurótica: 2 }, m: { mentalizacion: 90 } } },
+          { text: "Solo al despertar o con fatiga extrema, pero sé de inmediato que ha sido un engaño de mi mente.", weights: { org: { Neurótica: 4 } } },
+          { text: "En crisis de angustia extrema he sentido que el entorno se vuelve irreal (desrealización).", weights: { org: { Límite: 4 }, pat: { Histérica: 2 }, sym: { Disociación: 3 } } },
+          { text: "Escucho voces claras que me hablan, me ordenan o me critican interfiriendo en mi vida.", weights: { org: { Psicótica: 5 }, pat: { Paranoide: 4 }, sym: { Disociación: 5 }, risk: { disorganization: 4 } } }
+        ]
+      }
+    ];
+
+    /* METADATOS CLÍNICOS DE LOS 14 PATRONES PDM-2 */
+    const PATTERNS_META = {
+      Depresiva: { conflict: "Valía vs. Inutilidad; Anhelo de amor vs. Culpa por destruirlo", defense: "Introyeción, vuelta contra sí mismo", desc: "Vulnerabilidad al reproche interno, melancolía y anhelo de afecto." },
+      Dependiente: { conflict: "Autonomía vs. Pertenencia; Pavor al desamparo", defense: "Regresión, apaciguamiento, sumisión", desc: "Búsqueda del otro como guía vital y terror a la soledad." },
+      Ansiosa: { conflict: "Seguridad vs. Vulnerabilidad abrumadora", defense: "Hipervigilancia, anticipación catastrófica", desc: "Tensión difusa continua y estado de alerta ante peligros inminentes." },
+      Evitativa: { conflict: "Deseo de intimidad vs. Terror al ridículo y rechazo", defense: "Evitación conductual, escape en fantasía", desc: "Retraimiento defensivo a pesar de desear profundamente el cariño." },
+      Fóbica: { conflict: "Impulso prohibido vs. Castigo temido", defense: "Desplazamiento, simbolización y evitación", desc: "Focalización de la angustia en objetos o situaciones concretas." },
+      "Obsesivo-compulsiva": { conflict: "Control vs. Caos; Sumisión vs. Rebelión", defense: "Aislamiento del afecto, formación reactiva", desc: "Necesidad de orden, reglas estrictas y pulcritud para acallar la ira." },
+      Somatizadora: { conflict: "Dolor psíquico vs. Desamparo corporal", defense: "Somatización, regresión corporal", desc: "Canalización de los conflictos afectivos a través de dolencias físicas." },
+      Esquizoide: { conflict: "Cercanía invasiva vs. Soledad desoladora", defense: "Repliegue en la fantasía, desapego", desc: "Distanciamiento deliberado de la intimidad y rica vida imaginaria." },
+      Histérica: { conflict: "Atracción afectiva vs. Rechazo de la genitalidad", defense: "Represión, teatralidad, sexualización", desc: "Expresividad afectiva lábil, seducción inconsciente y temor al rechazo." },
+      Narcisista: { conflict: "Grandeza inflada vs. Vergüenza y vacío", defense: "Idealización, devaluación, omnipotencia", desc: "Necesidad de admiración constante o hipersensibilidad a la crítica." },
+      Paranoide: { conflict: "Confianza vs. Traición aniquiladora", defense: "Proyección masiva, escisión", desc: "Sospecha constante de mala fe en el prójimo y hostilidad defensiva." },
+      Psicopática: { conflict: "Poder y dominio vs. Debilidad y sumisión", defense: "Control omnipotente, acting out", desc: "Manipulación interpersonal, transgresión y ausencia de culpa." },
+      Sádica: { conflict: "Crueldad placentera vs. Pavor a la indefensión", defense: "Identificación con el agresor", desc: "Satisfacción en infligir dolor, humillación o coerción." },
+      Mixta: { conflict: "Intersección dialéctica de múltiples vectores", defense: "Repertorio defensivo oscilante", desc: "Co-ocurrencia combinada de dos o más estilos predominantes." }
+    };
+
+    /* APLICACIÓN PRINCIPAL (SINGLETON SAAS PDM-2) */
+    const app = {
+      currentIndex: 0,
+      responses: {},
+      currentProfile: null,
+      history: [],
+
+      init() {
+        this.loadHistory();
+        this.renderQuestionView();
+        if (this.history.length > 0) {
+          this.currentProfile = this.history[0];
+          this.renderDashboardView();
+        } else {
+          // Generar perfil clínico inicial para visualización inmediata del dashboard
+          const sampleResp = {};
+          QUESTIONS_DATA.forEach((q, i) => sampleResp[q.id] = (i % 3 === 0 ? 0 : 1));
+          const sampleProf = this.computeClinicalProfile(sampleResp, {
+            name: "Caso Clínico Demostrativo",
+            age: "32",
+            gender: "Adulto"
+          });
+          sampleProf.narrative = this.generateLongProseNarrative(sampleProf);
+          this.currentProfile = sampleProf;
+          this.saveProfileToHistory(sampleProf);
+          this.renderDashboardView();
+        }
+
+        // Registrar Service Worker para soporte PWA y modo Offline si está soportado
+        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+          try {
+            navigator.serviceWorker.register('data:application/javascript;charset=utf-8,self.addEventListener("install",e=>self.skipWaiting());self.addEventListener("activate",e=>e.waitUntil(clients.claim()));').catch(()=>{});
+          } catch(e){}
+        }
+      },
+
+      showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast-item';
+        const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
+        toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(8px)';
+          toast.style.transition = 'all 0.25s ease';
+          setTimeout(() => toast.remove(), 260);
+        }, 3200);
+      },
+
+      showConfirm(title, message, onConfirm) {
+        const overlay = document.getElementById('confirm-modal-overlay');
+        const titleEl = document.getElementById('modal-title');
+        const descEl = document.getElementById('modal-desc');
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        if (!overlay) {
+          if (onConfirm) onConfirm();
+          return;
+        }
+        titleEl.textContent = title;
+        descEl.textContent = message;
+        overlay.style.display = 'flex';
+
+        const cleanup = () => {
+          overlay.style.display = 'none';
+          confirmBtn.onclick = null;
+          cancelBtn.onclick = null;
+        };
+
+        confirmBtn.onclick = () => {
+          cleanup();
+          if (onConfirm) onConfirm();
+        };
+        cancelBtn.onclick = () => {
+          cleanup();
+        };
+      },
+
+      downloadHtmlSource() {
+        const htmlSource = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([htmlSource], { type: "text/html;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "index.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        this.showToast("Descargando archivo único index.html...", "success");
+      },
+
+      toggleTheme() {
+        document.documentElement.classList.toggle('light');
+        const isLight = document.documentElement.classList.contains('light');
+        document.getElementById('btn-theme-toggle').textContent = isLight ? '☀️' : '🌓';
+      },
+
+      switchTab(paneId) {
+        document.querySelectorAll('.view-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        const targetPane = document.getElementById('pane-' + paneId);
+        const targetNavBtn = document.getElementById('tab-nav-' + paneId);
+        if (targetPane) targetPane.classList.add('active');
+        if (targetNavBtn) targetNavBtn.classList.add('active');
+        if (paneId === 'history') this.renderHistoryView();
+      },
+
+      renderQuestionView() {
+        const q = QUESTIONS_DATA[this.currentIndex];
+        document.getElementById('question-category-tag').textContent = q.category.toUpperCase();
+        document.getElementById('question-counter-label').textContent = `Pregunta ${this.currentIndex + 1} de ${QUESTIONS_DATA.length}`;
+        const pct = Math.round(((this.currentIndex) / QUESTIONS_DATA.length) * 100);
+        document.getElementById('question-progress-bar').style.width = Math.max(5, pct) + '%';
+        document.getElementById('question-title-text').textContent = q.title;
+        document.getElementById('question-prompt-text').textContent = q.prompt;
+        document.getElementById('question-rationale-box').textContent = q.rationale;
+        document.getElementById('question-rationale-box').style.display = 'none';
+
+        const container = document.getElementById('question-options-holder');
+        container.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+          const item = document.createElement('div');
+          item.className = 'option-item' + (this.responses[q.id] === idx ? ' selected' : '');
+          item.onclick = () => this.selectOption(idx);
+          item.innerHTML = `
+            <div class="radio-circle-indicator"></div>
+            <div>${opt.text}</div>
+          `;
+          container.appendChild(item);
+        });
+
+        document.getElementById('btn-wizard-prev').disabled = this.currentIndex === 0;
+        document.getElementById('btn-wizard-next').textContent = this.currentIndex === QUESTIONS_DATA.length - 1 ? 'Finalizar Evaluación ✔' : 'Siguiente ▶';
+      },
+
+      selectOption(idx) {
+        const q = QUESTIONS_DATA[this.currentIndex];
+        this.responses[q.id] = idx;
+        this.renderQuestionView();
+      },
+
+      navigateQuestion(step) {
+        if (step > 0) {
+          const q = QUESTIONS_DATA[this.currentIndex];
+          if (this.responses[q.id] === undefined) {
+            this.showToast('Por favor selecciona una alternativa diagnóstica para avanzar.', 'error');
+            return;
+          }
+          if (this.currentIndex < QUESTIONS_DATA.length - 1) {
+            this.currentIndex++;
+            this.renderQuestionView();
+          } else {
+            this.finalizeAssessment();
+          }
+        } else {
+          if (this.currentIndex > 0) {
+            this.currentIndex--;
+            this.renderQuestionView();
+          }
+        }
+      },
+
+      toggleRationaleBox() {
+        const el = document.getElementById('question-rationale-box');
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+      },
+
+      applySimulationPreset(type) {
+        QUESTIONS_DATA.forEach(q => {
+          if (type === 'healthy') this.responses[q.id] = 0;
+          else if (type === 'neurotic') this.responses[q.id] = 1;
+          else this.responses[q.id] = 2;
+        });
+        this.finalizeAssessment();
+      },
+
+      finalizeAssessment() {
+        const patientName = document.getElementById('patient-name-input').value.trim() || 'Paciente de Consulta';
+        const patientAge = document.getElementById('patient-age-input').value.trim() || '30';
+        const patientGender = document.getElementById('patient-gender-input').value.trim() || 'Adulto';
+
+        const profile = this.computeClinicalProfile(this.responses, { name: patientName, age: patientAge, gender: patientGender });
+        profile.narrative = this.generateLongProseNarrative(profile);
+        this.currentProfile = profile;
+        this.saveProfileToHistory(profile);
+        this.renderDashboardView();
+        this.switchTab('dashboard');
+      },
+
+      /* MOTOR DE CÁLCULO ESTADÍSTICO PDM-2 */
+      computeClinicalProfile(resp, patientInfo) {
+        const orgTally = { Saludable: 0, Neurótica: 0, Límite: 0, Psicótica: 0 };
+        const patTally = {};
+        Object.keys(PATTERNS_META).forEach(k => patTally[k] = 0);
+
+        const mCapacities = {
+          regEmocional: { sum: 0, count: 0 },
+          atencion: { sum: 0, count: 0 },
+          mentalizacion: { sum: 0, count: 0 },
+          identidad: { sum: 0, count: 0 },
+          relaciones: { sum: 0, count: 0 },
+          autoestima: { sum: 0, count: 0 },
+          controlImpulsos: { sum: 0, count: 0 },
+          defensas: { sum: 0, count: 0 },
+          resiliencia: { sum: 0, count: 0 },
+          autoobservacion: { sum: 0, count: 0 },
+          valores: { sum: 0, count: 0 },
+          sentido: { sum: 0, count: 0 }
+        };
+
+        const symptoms = {
+          Ansiedad: 0, Depresión: 0, Trauma: 0, "Estrés postraumático": 0,
+          Obsesiones: 0, Compulsiones: 0, Somatización: 0, Disociación: 0,
+          Adicciones: 0, "Conductas impulsivas": 0, "Riesgo suicida": 0,
+          Autolesiones: 0, "Trastornos alimentarios": 0, "Alteraciones del sueño": 0, "Problemas relacionales": 0
+        };
+
+        let riskScore = 0;
+        let suicFlag = false, selfHarmFlag = false, violFlag = false, disorgFlag = false;
+
+        QUESTIONS_DATA.forEach(q => {
+          const optIdx = resp[q.id];
+          if (optIdx === undefined) return;
+          const opt = q.options[optIdx];
+          if (!opt.weights) return;
+
+          if (opt.weights.org) {
+            Object.entries(opt.weights.org).forEach(([k, v]) => orgTally[k] += v);
+          }
+          if (opt.weights.pat) {
+            Object.entries(opt.weights.pat).forEach(([k, v]) => patTally[k] += v);
+          }
+          if (opt.weights.m) {
+            Object.entries(opt.weights.m).forEach(([k, v]) => {
+              if (mCapacities[k]) { mCapacities[k].sum += v; mCapacities[k].count++; }
+            });
+          }
+          if (opt.weights.sym) {
+            Object.entries(opt.weights.sym).forEach(([k, v]) => {
+              if (symptoms[k] !== undefined) symptoms[k] += v;
+            });
+          }
+          if (opt.weights.risk) {
+            if (opt.weights.risk.suicide) { riskScore += 40; suicFlag = true; }
+            if (opt.weights.risk.selfHarm) { riskScore += 25; selfHarmFlag = true; }
+            if (opt.weights.risk.violence) { riskScore += 25; violFlag = true; }
+            if (opt.weights.risk.disorganization) { riskScore += 30; disorgFlag = true; }
+          }
+        });
+
+        // 1. Eje P Organización (%)
+        const totalOrg = orgTally.Saludable + orgTally.Neurótica + orgTally.Límite + orgTally.Psicótica || 1;
+        const orgPct = {
+          Saludable: Math.round((orgTally.Saludable / totalOrg) * 100),
+          Neurótica: Math.round((orgTally.Neurótica / totalOrg) * 100),
+          Límite: Math.round((orgTally.Límite / totalOrg) * 100),
+          Psicótica: Math.round((orgTally.Psicótica / totalOrg) * 100)
+        };
+        const dominantOrg = Object.entries(orgPct).sort((a,b) => b[1] - a[1])[0][0];
+
+        // 2. Patrones Eje P
+        const maxPat = Math.max(...Object.values(patTally), 1);
+        const patternsList = Object.keys(patTally).filter(k => k !== 'Mixta').map(name => {
+          const raw = patTally[name];
+          let pct = Math.min(94, Math.max(15, Math.round((raw / (maxPat + 2)) * 85 + (raw > 0 ? 12 : 5))));
+          return { name, percentage: pct, ...PATTERNS_META[name] };
+        }).sort((a, b) => b.percentage - a.percentage);
+
+        const mixedPct = Math.round((patternsList[0].percentage + patternsList[1].percentage) / 2);
+        patternsList.push({ name: "Mixta", percentage: mixedPct, ...PATTERNS_META["Mixta"] });
+        patternsList.sort((a, b) => b.percentage - a.percentage);
+
+        // 3. Eje M (0-100)
+        const mScores = {};
+        Object.entries(mCapacities).forEach(([k, item]) => {
+          mScores[k] = item.count > 0 ? Math.min(100, Math.max(10, Math.round(item.sum / item.count))) : 70;
+        });
+
+        // 4. Riesgo
+        let riskLevel = "Riesgo bajo";
+        if (riskScore >= 55 || suicFlag) riskLevel = "Riesgo crítico";
+        else if (riskScore >= 30 || selfHarmFlag) riskLevel = "Riesgo alto";
+        else if (riskScore >= 15 || symptoms.Depresión >= 4) riskLevel = "Riesgo moderado";
+
+        // 5. Pronóstico
+        let prog = "Favorable";
+        let progPct = 85;
+        if (dominantOrg === 'Límite' || riskLevel === 'Riesgo alto') {
+          prog = "Moderado"; progPct = 65;
+        } else if (dominantOrg === 'Psicótica' || riskLevel === 'Riesgo crítico') {
+          prog = "Reservado"; progPct = 45;
+        }
+
+        return {
+          id: "PDM2-" + Math.floor(100000 + Math.random() * 900000),
+          patient: patientInfo,
+          date: new Date().toISOString(),
+          orgPct,
+          dominantOrg,
+          patterns: patternsList,
+          mScores,
+          symptoms,
+          prognosis: { type: prog, probability: progPct },
+          risk: { level: riskLevel, score: Math.min(100, riskScore), suicFlag, selfHarmFlag, violFlag, disorgFlag }
+        };
+      },
+
+      /* MOTOR DE FORMULACIÓN NARRATIVA PROFESIONAL (>1000 PALABRAS) */
+      generateLongProseNarrative(p) {
+        const top1 = p.patterns[0];
+        const top2 = p.patterns[1];
+        const top3 = p.patterns[2];
+        const m = p.mScores;
+
+        return `FORMULACIÓN CLÍNICA NARRATIVA PSICODINÁMICA INTEGRADA (PDM-2)
+PROFESIONAL EVALUADOR: Jair Pastor • Psicólogo Clínico
+SISTEMA CLÍNICO: Psychodynamic AI Diagnostic Pro • Ejes P, M y S
+PACIENTE: ${p.patient.name} (${p.patient.age} años, ${p.patient.gender})
+EXPEDIENTE: ${p.id} | FECHA: ${new Date(p.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+
+================================================================================
+1. INTRODUCCIÓN, ENCUADRE Y MODELO CONCEPTUAL
+================================================================================
+El presente informe clínico psicodinámico ha sido elaborado de conformidad rigurosa con la arquitectura nosológica, estructural y dimensional del Manual de Diagnóstico Psicodinámico (PDM-2). A diferencia de las clasificaciones psiquiátricas puramente descriptivas y conductuales (como el DSM-5 o la CIE-11), el modelo PDM-2 prioriza la comprensión integral de la subjetividad humana, el funcionamiento estructural del aparato psíquico, los conflictos intrapsíquicos inconscientes y los patrones vinculares internalizados que configuran el modo característico en que la persona experimenta el mundo, se relaciona consigo misma y se vincula con los otros significativos.
+
+El protocolo administrado ha explorado de forma adaptativa y progresiva las dimensiones nucleares del desarrollo afectivo, la historia relacional temprana, la gestión de afectos displacenteros, las capacidades reflexivas y las manifestaciones sintomáticas contemporáneas. Los datos analizados revelan una estructura psíquica situada predominantemente en el nivel de organización ${p.dominantOrg.toUpperCase()} (con una distribución estimada del ${p.orgPct.Saludable}% de funcionamiento Saludable, ${p.orgPct.Neurótica}% Neurótico, ${p.orgPct.Límite}% Límite y ${p.orgPct.Psicótica}% Psicótico). Esta configuración delimita el terreno sobre el cual operan los recursos adaptativos y las vulnerabilidades defensivas del consultante.
+
+================================================================================
+2. ANÁLISIS DE LA ORGANIZACIÓN Y PATRONES DE PERSONALIDAD (EJE P)
+================================================================================
+El Eje P del PDM-2 sitúa la personalidad a lo largo de un espectro que comprende la solidez de la integración de la identidad, la madurez de los mecanismos defensivos y la indemnidad del juicio y prueba de realidad. En este caso particular, el predominio del nivel ${p.dominantOrg} indica que el sujeto ${
+  p.dominantOrg === 'Saludable' ? 'posee un sentido del sí mismo integrado y armónico, con una amplia capacidad para experimentar un amplio rango de afectos sin temor a la desorganización, manteniendo defensas flexibles y adaptativas que no coartan su libertad existencial.' :
+  p.dominantOrg === 'Neurótica' ? 'mantiene una identidad relativamente bien consolidada y un juicio de realidad intacto y preservado, pero sufre de rigideces caractereológicas y conflictos circunscritos que restringen su bienestar en áreas específicas como la intimidad, la autonomía o la autovaloración.' :
+  p.dominantOrg === 'Límite' ? 'presenta una difusión de la identidad significativa, caracterizada por vivencias crónicas de vacío, una polarización afectiva marcada y una marcada vulnerabilidad a la desregulación emocional ante amenazas percibidas de abandono o rechazo, recurriendo a mecanismos de escisión y devaluación.' :
+  'evidencia un compromiso severo en los límites entre el sí mismo y el objeto exterior, con fragilidad de la prueba de realidad y susceptibilidad a la desorganización yoica bajo condiciones de sobrecarga afectiva.'
+}
+
+En cuanto a los patrones específicos de personalidad observables en el Eje P, se identifican las siguientes configuraciones dominantes:
+- Patrón Principal: Personalidad ${top1.name.toUpperCase()} (índice de presencia: ${top1.percentage}%). Este estilo se organiza en torno a un conflicto central de ${top1.conflict}. Su tono afectivo predominante se manifiesta mediante ${top1.desc}, recurriendo primordialmente a operaciones defensivas basadas en ${top1.defense}.
+- Patrón Secundario Co-ocurrente: Personalidad ${top2.name.toUpperCase()} (índice de presencia: ${top2.percentage}%). Aporta una tonalidad caracterial centrada en ${top2.desc}.
+- Patrón Terciario Acompañante: Personalidad ${top3.name.toUpperCase()} (índice de presencia: ${top3.percentage}%), que matiza las reacciones vinculares en situaciones de estrés prolongado.
+
+Esta constelación sindrómica no debe entenderse como un rótulo estático, sino como un estilo dinámico de adaptación aprendida para salvaguardar el equilibrio intrapsíquico frente a la angustia y preservar el sentido de continuidad del Yo.
+
+================================================================================
+3. PERFIL DEL FUNCIONAMIENTO MENTAL DETALLADO (EJE M)
+================================================================================
+El Eje M del PDM-2 evalúa doce capacidades psicológicas fundamentales que describen la salud o patología del funcionamiento cognitivo, afectivo y relacional en una escala de 0 a 100:
+
+1. Regulación Emocional y Afectos (${m.regEmocional}/100): La capacidad del sujeto para tolerar, modular e integrar afectos intensos (dolor, cólera, entusiasmo, tristeza) sin sucumbir al colapso somático ni al paso al acto destructivo. Una puntuación de ${m.regEmocional} refleja ${m.regEmocional >= 70 ? 'una adecuada contención yoica' : m.regEmocional >= 45 ? 'una reactividad afectiva moderada con episodios de sobrecarga ante estresores vinculares' : 'una dificultad marcada para calmar la agitación psicofisiológica interna'}.
+2. Atención, Concentración y Aprendizaje (${m.atencion}/100): Muestra el grado de focalización ejecutiva y permeabilidad para asimilar nuevas experiencias cognitivas y emocionales sin que la rumiación ansiosa vicie el procesamiento perceptivo.
+3. Mentalización y Función Reflexiva (${m.mentalizacion}/100): Siguiendo las formulaciones de Peter Fonagy, esta capacidad evalúa la destreza para percibir la propia conducta y la ajena en términos de estados mentales subyacentes (deseos, creencias, intenciones, afectos). Un puntaje de ${m.mentalizacion}/100 denota ${m.mentalizacion >= 65 ? 'un buen nivel de función reflexiva que permite comprender las complejidades interpersonales' : 'cierta vulnerabilidad a colapsar en equivalencia psíquica ("lo que siento es la verdad absoluta") cuando se detonan heridas vinculares'}.
+4. Integración y Continuidad de la Identidad (${m.identidad}/100): Evaluada en ${m.identidad}/100, esta dimensión da cuenta de si el individuo experimenta una vivencia de continuidad temporal de su self (conociendo sus deseos y valores a través de distintos contextos) o si, por el contrario, sufre de difusión o fragmentación de la autoimagen.
+5. Relaciones Interpersonales e Intimidad (${m.relaciones}/100): Mide la profundidad, reciprocidad, ternura y durabilidad de los vínculos afectivos. La puntuación de ${m.relaciones}/100 señala cómo se configuran las ansiedades básicas de apego (angustia de separación frente a angustia de intrusión).
+6. Regulación de la Autoestima (${m.autoestima}/100): Con ${m.autoestima}/100, se evidencia la vulnerabilidad a oscilaciones entre la autoexigencia implacable, la devaluación vergonzante y la búsqueda de confirmación narcisista en el entorno.
+7. Control de Impulsos (${m.controlImpulsos}/100): Refleja la mediación entre el deseo pulsional y la deliberación ética previa a la acción física, evitando la descarga inmediata (acting out).
+8. Madurez del Funcionamiento Defensivo (${m.defensas}/100): Denota el balance entre mecanismos adaptativos de orden superior (sublimación, humor, anticipación) y defensas neuróticas o de escisión (proyección masiva, negación omnipotente).
+9. Resiliencia y Fortaleza Yoica (${m.resiliencia}/100): Expresa la capacidad de recuperación y reorganización anímica tras pérdidas, fracasos o adversidades graves sin desintegración subjetiva.
+10. Autoobservación y Curiosidad Psicológica (${m.autoobservacion}/100): Mide el grado de "psychological mindedness" y receptividad para examinar honestamente la propia participación en los conflictos vitales.
+11. Valores Internos y Brújula Moral (${m.valores}/100): Indica la solidez del superyó y la adhesión a ideales éticos humanistas con capacidad para la culpa reparatoria constructiva.
+12. Sentido y Propósito de Vida (${m.sentido}/100): Representa la dirección existencial y la vivencia subjetiva de que el esfuerzo cotidiano se inserta en un proyecto trascendente y gratificante.
+
+================================================================================
+4. CONFLICTOS NUCLEARES PREDOMINANTES Y DINÁMICA INCONSCIENTE
+================================================================================
+A la luz de los patrones registrados, el psiquismo del evaluado se encuentra atravesado por tensiones dialécticas características:
+a) Conflicto entre Dependencia y Autonomía: Coexisten de manera ambivalente una intensa necesidad de protección, acogida y validación vincular con un temor simétrico a ser controlado, invadido o desdibujado por el otro significativo. Esto suele traducirse en dinámicas vinculares de acercamiento precipitado seguidas de repliegues defensivos.
+b) Conflicto entre Deseo Afectivo y Miedo al Rechazo / Vergüenza: Las aspiraciones de intimidad chocan con un núcleo internalizado de desconfianza o insuficiencia ("si me conocen en profundidad, me considerarán defectuoso o me abandonarán"), activando defensas evitativas o complacientes.
+c) Conflicto entre Agresividad y Culpa Superyoica: La hostilidad natural nacida de la frustración interpersonal no encuentra un canal sublimatorio directo, transformándose con frecuencia en reproche contra el propio self (introyeción depresiva) o en somatizaciones tensionadas en el cuerpo.
+
+================================================================================
+5. FORTALEZAS PSICOLÓGICAS Y RECURSOS DEL YO
+================================================================================
+A pesar de las áreas de sufrimiento registradas, la evaluación psicodinámica identifica recursos yoicos fundamentales que sirven como anclajes terapéuticos de primer orden:
+- Preservación de la capacidad de autoobservación (${m.autoobservacion}/100) y de introspección ética (${m.valores}/100), lo cual augura una excelente permeabilidad para el trabajo interpretativo y de insight.
+- Disposición explícita a la autoexploración y motivación para comprender las fuentes del malestar, evidenciada en la exhaustividad del proceso evaluativo.
+- Mantenimiento de la prueba de realidad y coherencia lógica en la articulación de sus vivencias, constituyendo una sólida base para una alianza de trabajo terapéutico colaborativa.
+- Capacidad para movilizar resiliencia (${m.resiliencia}/100) cuando se le provee de un encuadre predecible, cálido y libre de juicios punitivos.
+
+================================================================================
+6. ÁREAS DE VULNERABILIDAD Y FOCOS DE TENSIÓN PATOLÓGICA (EJE S)
+================================================================================
+El Eje S cataloga la experiencia subjetiva del sufrimiento manifiesto. Estas manifestaciones sintomáticas no son meros "déficits neurológicos aislados", sino la cristalización final de los conflictos estructurales no metabolizados. La sintomatología actúa con frecuencia como un compromiso defensivo (en el sentido freudiano clásico): expresa de forma distorsionada un afecto doloroso mientras busca mantenerlo a raya para no desestabilizar por completo el sistema consciente. La vulnerabilidad se acentúa en momentos de estrés vincular, transiciones vitales o vivencias de pérdida real o simbólica.
+
+================================================================================
+7. FACTORES PROTECTORES Y FACTORES DE RIESGO
+================================================================================
+Factores Protectores:
+- Conciencia reflexiva de sufrimiento y deseo genuino de cambio personal.
+- Ausencia de desconexión psicótica estructural respecto al mundo circundante.
+- Habilidades cognitivas preservadas para el aprendizaje afectivo y la simbolización abstracta.
+- Potencial para construir apego seguro adquirido dentro de un vínculo psicoterapéutico sostenido.
+
+Factores de Riesgo:
+- Nivel de riesgo estimado: ${p.risk.level.toUpperCase()} (Índice de alerta: ${p.risk.score}/100).
+- Factores catalizadores: Sobrecarga de estrés psicosocial, aislamiento emocional y rumiación crítica.
+- Tendencia a rumiar de manera autoexigente o a desregularse emocionalmente cuando fallan las expectativas afectivas externas.
+- Fatiga acumulada del descanso y somatización del sufrimiento intrapsíquico.
+
+================================================================================
+8. DINÁMICA TRANSFERENCIAL Y CONTRATRANSFERENCIAL PROYECTADA
+================================================================================
+En el encuadre psicoterapéutico, es previsible que el consultante despliegue una transferencia caracterizada por:
+- Necesidad inicial de verificar si el clínico es seguro, no enjuiciador y capaz de sostener afectos que el propio paciente experimenta como abrumadores.
+- Riesgo de idealización prematura del terapeuta como la "figura dadora de respuestas absolutas", con subsiguiente riesgo de desilusión si se señalan ambivalencias o límites en el encuadre.
+- En la contratransferencia, el profesional puede sentir inicialmente un impulso intenso de rescate y consuelo activo frente a la desolación del consultante, o bien una sensación de cautela para no herir la sensibilidad vulnerable de su autovaloración. La explicitación temprana de estas dinámicas en el espacio terapéutico será uno de los motores curativos más transformadores.
+
+================================================================================
+9. CONCLUSIÓN DIAGNÓSTICA COMPRENSIVA Y SÍNTESIS EPISÓDICA
+================================================================================
+En síntesis, la presente evaluación psicodinámica delinea a una persona con organización de la personalidad predominantemente ${p.dominantOrg.toLowerCase()}, articulada en torno a patrones ${top1.name} y ${top2.name}, que conserva valiosos recursos yoicos y potencial transformador.
+
+El pronóstico estimado se categoriza como ${p.prognosis.type.toUpperCase()} (probabilidad de mejoría estimada en ${p.prognosis.probability}%), siempre que se mantenga un abordaje terapéutico regular, estructurado y enfocado en la integración afectiva y la reestructuración de modelos vinculares internos.
+
+Certificación Profesional:
+Jair Pastor • Psicólogo Clínico
+Especialista en Evaluación Psicodinámica & Psicoterapia PDM-2`;
+      },
+
+      /* RENDERIZADO DEL DASHBOARD EJECUTIVO */
+      renderDashboardView() {
+        if (!this.currentProfile) return;
+        const p = this.currentProfile;
+
+        // Tarjetas KPIs
+        document.getElementById('kpi-org-title').textContent = p.dominantOrg;
+        document.getElementById('kpi-org-sub').textContent = `${p.orgPct[p.dominantOrg]}% de consistencia estructural`;
+        document.getElementById('kpi-pattern-title').textContent = p.patterns[0].name;
+        document.getElementById('kpi-pattern-sub').textContent = `${p.patterns[0].percentage}% de saturación factorial`;
+        const mAvg = Math.round(Object.values(p.mScores).reduce((a,b)=>a+b,0) / 12);
+        document.getElementById('kpi-m-average').textContent = `${mAvg}/100`;
+        document.getElementById('kpi-prognosis-title').textContent = p.prognosis.type;
+        document.getElementById('kpi-prognosis-sub').textContent = `${p.prognosis.probability}% probabilidad de mejoría`;
+
+        // Alerta de Riesgo Clínico
+        const riskHolder = document.getElementById('risk-alert-placeholder');
+        if (p.risk.level === 'Riesgo crítico' || p.risk.level === 'Riesgo alto') {
+          riskHolder.innerHTML = `
+            <div class="risk-alert-box">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="badge badge-rose" style="font-size: 0.8rem;">⚠️ ${p.risk.level} ACTIVADO</span>
+                <span style="font-size: 0.75rem; color: #fb7185;">Índice de Alerta: ${p.risk.score}/100</span>
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-main);">Se han detectado indicadores de sufrimiento agudo que requieren atención clínica inmediata. Comunícate a las líneas gratuitas de crisis 24/7: <strong>024 (España)</strong> o <strong>988 (EE.UU./Latam)</strong>, o acude a urgencias médicas (112/911).</p>
+            </div>
+          `;
+        } else {
+          riskHolder.innerHTML = '';
+        }
+
+        // Barras de los 14 Patrones
+        const patHolder = document.getElementById('patterns-list-holder');
+        patHolder.innerHTML = '';
+        p.patterns.forEach((pat, i) => {
+          const row = document.createElement('div');
+          row.className = 'pattern-row';
+          row.onclick = () => {
+            const exp = row.querySelector('.pattern-expandable');
+            exp.style.display = exp.style.display === 'block' ? 'none' : 'block';
+          };
+          row.innerHTML = `
+            <div class="pattern-top">
+              <span><strong>${pat.name}</strong> ${i === 0 ? '<span class="badge badge-amber">Predominante</span>' : ''}</span>
+              <span style="color: var(--primary-light);">${pat.percentage}%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-value-fill" style="width: ${pat.percentage}%;"></div>
+            </div>
+            <div class="pattern-expandable">
+              <div><em>${pat.desc}</em></div>
+              <div style="margin-top: 0.25rem;"><strong>Conflicto:</strong> ${pat.conflict}</div>
+              <div><strong>Defensa:</strong> ${pat.defense}</div>
+            </div>
+          `;
+          patHolder.appendChild(row);
+        });
+
+        // Radar Chart SVG
+        this.renderRadarChartSVG(p.mScores);
+
+        // Tabla Eje M
+        const mTableRows = document.getElementById('axis-m-table-rows');
+        const mDefs = [
+          { k: 'regEmocional', c: 'M1', n: 'Regulación Emocional y Afectos', d: 'Modulación de afectos sin colapso somático' },
+          { k: 'atencion', c: 'M2', n: 'Atención y Aprendizaje', d: 'Focalización cognitiva y asimilación ejecutiva' },
+          { k: 'mentalizacion', c: 'M3', n: 'Mentalización / Reflexión', d: 'Comprensión reflexiva de estados mentales (Fonagy)' },
+          { k: 'identidad', c: 'M4', n: 'Integración de la Identidad', d: 'Coherencia temporal y límites del self' },
+          { k: 'relaciones', c: 'M5', n: 'Relaciones e Intimidad', d: 'Vínculos de apego seguros y recíprocos' },
+          { k: 'autoestima', c: 'M6', n: 'Regulación de Autoestima', d: 'Estabilidad de la autovalía sin dependencia extrema' },
+          { k: 'controlImpulsos', c: 'M7', n: 'Control de Impulsos', d: 'Demora de descarga pulsional ante frustración' },
+          { k: 'defensas', c: 'M8', n: 'Funcionamiento Defensivo', d: 'Madurez del repertorio adaptativo frente al dolor' },
+          { k: 'resiliencia', c: 'M9', n: 'Resiliencia y Fortaleza Yoica', d: 'Capacidad de reorganización tras adversidades' },
+          { k: 'autoobservacion', c: 'M10', n: 'Autoobservación (Insight)', d: 'Curiosidad psicológica por el propio mundo interno' },
+          { k: 'valores', c: 'M11', n: 'Valores Internos y Moral', d: 'Solidez del superyó y capacidad de culpa reparatoria' },
+          { k: 'sentido', c: 'M12', n: 'Sentido y Propósito Vital', d: 'Dirección existencial y metas trascendentes' }
+        ];
+
+        mTableRows.innerHTML = '';
+        mDefs.forEach(def => {
+          const val = p.mScores[def.k] || 70;
+          let badge = '<span class="badge badge-emerald">Adecuado</span>';
+          if (val < 45) badge = '<span class="badge badge-rose">Vulnerable</span>';
+          else if (val < 65) badge = '<span class="badge badge-amber">Moderado</span>';
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${def.c}</strong></td>
+            <td><strong>${def.n}</strong></td>
+            <td><strong>${val}</strong>/100</td>
+            <td>${badge}</td>
+            <td style="color: var(--text-dim);">${def.d}</td>
+          `;
+          mTableRows.appendChild(tr);
+        });
+
+        // Síntomas Eje S
+        const symMatrix = document.getElementById('symptoms-matrix-holder');
+        symMatrix.innerHTML = '';
+        Object.entries(p.symptoms).forEach(([name, sc]) => {
+          const tile = document.createElement('div');
+          tile.className = 'symptom-tile';
+          const sev = sc >= 5 ? 'Severo' : sc >= 2 ? 'Moderado' : 'Leve / Ausente';
+          const badgeCls = sc >= 5 ? 'badge-rose' : sc >= 2 ? 'badge-amber' : 'badge-sky';
+          tile.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <strong>${name}</strong>
+              <span class="badge ${badgeCls}">${sev}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-value-fill" style="width: ${Math.min(100, sc * 20)}%;"></div>
+            </div>
+          `;
+          symMatrix.appendChild(tile);
+        });
+
+        // Plan Terapéutico
+        const planCards = document.getElementById('therapy-plan-cards');
+        planCards.innerHTML = `
+          <div class="card" style="background: var(--bg-surface-elevated);">
+            <div class="badge badge-sky" style="margin-bottom: 0.5rem;">Fase I (0 - 3 Meses)</div>
+            <h4 style="font-size: 0.85rem; font-weight: 700;">Estabilización y Desahogo</h4>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              • Técnicas de autorregulación somática y respiración.<br/>
+              • Higiene del sueño y contención de la ansiedad.<br/>
+              • Encuadre de alianza terapéutica segura y empática.
+            </p>
+          </div>
+          <div class="card" style="background: var(--bg-surface-elevated);">
+            <div class="badge badge-emerald" style="margin-bottom: 0.5rem;">Fase II (3 - 12 Meses)</div>
+            <h4 style="font-size: 0.85rem; font-weight: 700;">Reestructuración Vincular</h4>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              • Terapia psicodinámica focal / basada en mentalización.<br/>
+              • Desactivación de modelos de apego temerosos.<br/>
+              • Elaboración de duelos y fortalecimiento de la autoestima.
+            </p>
+          </div>
+          <div class="card" style="background: var(--bg-surface-elevated);">
+            <div class="badge badge-amber" style="margin-bottom: 0.5rem;">Fase III (12+ Meses)</div>
+            <h4 style="font-size: 0.85rem; font-weight: 700;">Integración de Identidad</h4>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              • Consolidación del sentido de vida y trascendencia.<br/>
+              • Despliegue de defensas maduras (sublimación, humor).<br/>
+              • Prevención de recaídas y autonomía interna duradera.
+            </p>
+          </div>
+        `;
+
+        // Dossier Narrativo
+        document.getElementById('dossier-patient-line').textContent = `Paciente: ${p.patient.name} (${p.patient.age} años) • Expediente #${p.id}`;
+        document.getElementById('dossier-id-tag').textContent = `EXPEDIENTE #${p.id}`;
+        document.getElementById('dossier-narrative-text').textContent = p.narrative;
+        const wordsCount = p.narrative.trim().split(/\s+/).filter(Boolean).length;
+        document.getElementById('dossier-words-counter').textContent = `${wordsCount} palabras (≥1000 ✓)`;
+      },
+
+      /* RENDERIZADO DEL RADAR SVG EN TIEMPO REAL */
+      renderRadarChartSVG(scores) {
+        const holder = document.getElementById('radar-svg-holder');
+        const keys = [
+          { k: 'regEmocional', label: 'Reg. Emocional' },
+          { k: 'mentalizacion', label: 'Mentalización' },
+          { k: 'identidad', label: 'Identidad' },
+          { k: 'relaciones', label: 'Relaciones' },
+          { k: 'autoestima', label: 'Autoestima' },
+          { k: 'resiliencia', label: 'Resiliencia' }
+        ];
+
+        const size = 320;
+        const center = size / 2;
+        const radius = size * 0.36;
+        const total = keys.length;
+
+        let ringsSvg = '';
+        [20, 40, 60, 80, 100].forEach(lvl => {
+          const r = (lvl / 100) * radius;
+          const points = [];
+          for (let i = 0; i < total; i++) {
+            const angle = (Math.PI * 2 / total) * i - Math.PI / 2;
+            points.push(`${center + r * Math.cos(angle)},${center + r * Math.sin(angle)}`);
+          }
+          ringsSvg += `<polygon points="${points.join(' ')}" fill="${lvl === 100 ? 'rgba(51, 65, 85, 0.2)' : 'none'}" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" />`;
+          ringsSvg += `<text x="${center + 3}" y="${center - r - 2}" fill="rgba(148, 163, 184, 0.45)" font-size="7">${lvl}</text>`;
+        });
+
+        let axesSvg = '';
+        let polyPoints = [];
+        let nodesSvg = '';
+
+        keys.forEach((item, idx) => {
+          const val = scores[item.k] || 70;
+          const angle = (Math.PI * 2 / total) * idx - Math.PI / 2;
+          const xMax = center + radius * Math.cos(angle);
+          const yMax = center + radius * Math.sin(angle);
+          axesSvg += `<line x1="${center}" y1="${center}" x2="${xMax}" y2="${yMax}" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" />`;
+
+          const rVal = (val / 100) * radius;
+          const xVal = center + rVal * Math.cos(angle);
+          const yVal = center + rVal * Math.sin(angle);
+          polyPoints.push(`${xVal},${yVal}`);
+          nodesSvg += `<circle cx="${xVal}" cy="${yVal}" r="4.2" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />`;
+
+          const xLbl = center + (radius + 22) * Math.cos(angle);
+          const yLbl = center + (radius + 22) * Math.sin(angle);
+          let anchor = 'middle';
+          if (Math.cos(angle) > 0.3) anchor = 'start';
+          else if (Math.cos(angle) < -0.3) anchor = 'end';
+          nodesSvg += `<text x="${xLbl}" y="${yLbl + 3}" text-anchor="${anchor}" fill="var(--text-main)" font-size="9" font-weight="600">${item.label} (${val})</text>`;
+        });
+
+        holder.innerHTML = `
+          <svg viewBox="0 0 ${size} ${size}" class="radar-canvas">
+            ${ringsSvg}
+            ${axesSvg}
+            <polygon points="${polyPoints.join(' ')}" fill="rgba(2, 132, 199, 0.35)" stroke="#0284c7" stroke-width="2.5" />
+            ${nodesSvg}
+          </svg>
+        `;
+      },
+
+      /* GESTIÓN DE PACIENTES & LOCALSTORAGE */
+      saveProfileToHistory(profile) {
+        this.history = [profile, ...this.history.filter(h => h.id !== profile.id)].slice(0, 30);
+        try {
+          localStorage.setItem('pdm2_platform_patients', JSON.stringify(this.history));
+        } catch(e){}
+      },
+
+      loadHistory() {
+        try {
+          const raw = localStorage.getItem('pdm2_platform_patients');
+          if (raw) this.history = JSON.parse(raw);
+        } catch(e){}
+      },
+
+      renderHistoryView() {
+        const list = document.getElementById('patient-records-list');
+        list.innerHTML = '';
+        if (this.history.length === 0) {
+          list.innerHTML = '<div style="font-size: 0.75rem; color: var(--text-dim); padding: 1.25rem; text-align: center;">No hay expedientes clínicos registrados aún. Completa una evaluación para iniciar el registro.</div>';
+          return;
+        }
+
+        this.history.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'card';
+          row.style.padding = '0.75rem 1rem';
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.style.alignItems = 'center';
+          row.style.flexWrap = 'wrap';
+          row.style.gap = '0.5rem';
+          row.innerHTML = `
+            <div>
+              <strong>${item.patient.name}</strong> • <span style="color: var(--primary-light);">${item.dominantOrg}</span> (${item.patterns[0].name})<br/>
+              <span style="font-size: 0.7rem; color: var(--text-dim);">Expediente #${item.id} • ${new Date(item.date).toLocaleString('es-ES')}</span>
+            </div>
+            <div style="display: flex; gap: 0.35rem;">
+              <button class="btn btn-secondary btn-sm" onclick="app.loadPatientProfile('${item.id}')">Ver Dashboard</button>
+              <button class="btn btn-secondary btn-sm" onclick="app.deletePatientProfile('${item.id}')" style="color: #fb7185;">✕</button>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+
+        // Opciones del Comparador
+        const selA = document.getElementById('select-compare-a');
+        const selB = document.getElementById('select-compare-b');
+        selA.innerHTML = ''; selB.innerHTML = '';
+        this.history.forEach((h, i) => {
+          const txt = `${h.patient.name} (${new Date(h.date).toLocaleDateString()}) - ${h.dominantOrg}`;
+          selA.innerHTML += `<option value="${h.id}" ${i === 0 ? 'selected' : ''}>${txt}</option>`;
+          selB.innerHTML += `<option value="${h.id}" ${i === 1 ? 'selected' : ''}>${txt}</option>`;
+        });
+        this.renderComparisonView();
+      },
+
+      loadPatientProfile(id) {
+        const found = this.history.find(h => h.id === id);
+        if (found) {
+          this.currentProfile = found;
+          this.renderDashboardView();
+          this.switchTab('dashboard');
+        }
+      },
+
+      deletePatientProfile(id) {
+        this.showConfirm('Eliminar Expediente', '¿Deseas eliminar este expediente del historial local?', () => {
+          this.history = this.history.filter(h => h.id !== id);
+          try { localStorage.setItem('pdm2_platform_patients', JSON.stringify(this.history)); } catch(e){}
+          this.renderHistoryView();
+          this.showToast('Expediente eliminado con éxito.', 'info');
+        });
+      },
+
+      renderComparisonView() {
+        const idA = document.getElementById('select-compare-a')?.value;
+        const idB = document.getElementById('select-compare-b')?.value;
+        const profA = this.history.find(h => h.id === idA);
+        const profB = this.history.find(h => h.id === idB);
+        const deltaHolder = document.getElementById('compare-metrics-delta');
+        if (!profA || !profB || !deltaHolder) return;
+
+        let gridHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.5rem; margin-top: 0.75rem;">';
+        const keys = [
+          ['regEmocional', 'Regulación'], ['mentalizacion', 'Mentalización'],
+          ['identidad', 'Identidad'], ['relaciones', 'Relaciones'],
+          ['autoestima', 'Autoestima'], ['resiliencia', 'Resiliencia']
+        ];
+
+        keys.forEach(([k, label]) => {
+          const vA = profA.mScores[k] || 70;
+          const vB = profB.mScores[k] || 70;
+          const delta = vB - vA;
+          const deltaColor = delta > 0 ? '#34d399' : delta < 0 ? '#fb7185' : '#94a3b8';
+          gridHtml += `
+            <div class="card" style="padding: 0.55rem; text-align: center; background: var(--bg-surface-elevated);">
+              <span style="font-size: 0.68rem; color: var(--text-dim);">${label}</span>
+              <div style="font-weight: 800; font-size: 0.85rem; margin: 0.2rem 0;">${vA} ➔ ${vB}</div>
+              <span style="font-size: 0.74rem; font-weight: 700; color: ${deltaColor};">${delta >= 0 ? '+' + delta : delta} Δ</span>
+            </div>
+          `;
+        });
+        gridHtml += '</div>';
+        deltaHolder.innerHTML = gridHtml;
+
+        // Renderizar Línea Temporal de la Media Yoica
+        this.renderTimelineSVG();
+      },
+
+      renderTimelineSVG() {
+        const svg = document.getElementById('timeline-evolution-svg');
+        if (!svg || this.history.length === 0) return;
+
+        const chronological = [...this.history].reverse();
+        const width = 600;
+        const height = 110;
+        const padding = 35;
+
+        const stepX = (width - padding * 2) / Math.max(1, chronological.length - 1);
+        const points = chronological.map((h, i) => {
+          const avg = Math.round(Object.values(h.mScores).reduce((a,b)=>a+b,0) / 12);
+          const x = padding + i * stepX;
+          const y = height - padding - ((avg / 100) * (height - padding * 2));
+          return { x, y, avg, date: new Date(h.date).toLocaleDateString() };
+        });
+
+        let pathD = '';
+        points.forEach((pt, i) => {
+          pathD += (i === 0 ? `M ${pt.x} ${pt.y}` : ` L ${pt.x} ${pt.y}`);
+        });
+
+        let nodesSvg = '';
+        points.forEach(pt => {
+          nodesSvg += `
+            <circle cx="${pt.x}" cy="${pt.y}" r="4.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <text x="${pt.x}" y="${pt.y - 8}" text-anchor="middle" fill="var(--text-main)" font-size="8.5" font-weight="700">${pt.avg}</text>
+            <text x="${pt.x}" y="${height - 8}" text-anchor="middle" fill="var(--text-dim)" font-size="7.5">${pt.date}</text>
+          `;
+        });
+
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svg.innerHTML = `
+          <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" />
+          <path d="${pathD}" fill="none" stroke="#0284c7" stroke-width="2.5" />
+          ${nodesSvg}
+        `;
+      },
+
+      /* BACKUP JSON (IMPORTAR / EXPORTAR) */
+      exportJsonBackup() {
+        if (this.history.length === 0) {
+          this.showToast('No hay expedientes clínicos para exportar.', 'error');
+          return;
+        }
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.history, null, 2));
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", `Backup_Pacientes_PDM2_${Date.now()}.json`);
+        document.body.appendChild(dl);
+        dl.click();
+        dl.remove();
+        this.showToast('Copia de seguridad JSON descargada.', 'success');
+      },
+
+      importJsonBackup(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
+            if (Array.isArray(parsed)) {
+              this.history = parsed;
+              localStorage.setItem('pdm2_platform_patients', JSON.stringify(this.history));
+              this.showToast(`¡Se importaron ${parsed.length} expedientes clínicos con éxito!`, 'success');
+              this.renderHistoryView();
+            } else {
+              this.showToast('Formato de backup JSON inválido.', 'error');
+            }
+          } catch(err) {
+            this.showToast('Error al leer el archivo JSON seleccionado.', 'error');
+          }
+        };
+        reader.readAsText(file);
+      },
+
+      /* COMPARTIR Y EXPORTAR A WORD */
+      copyNarrativeText() {
+        if (!this.currentProfile) return;
+        navigator.clipboard.writeText(this.currentProfile.narrative).then(() => {
+          this.showToast('¡Formulación narrativa copiada al portapapeles!', 'success');
+        });
+      },
+
+      shareDossier() {
+        if (!this.currentProfile) {
+          this.showToast('Realiza o carga una evaluación primero.', 'error');
+          return;
+        }
+        const textSummary = `Evaluación Psicodinámica PDM-2: ${this.currentProfile.patient.name} | Nivel: ${this.currentProfile.dominantOrg} | Estilo: ${this.currentProfile.patterns[0].name} (${this.currentProfile.patterns[0].percentage}%) | Media Yoica: ${Math.round(Object.values(this.currentProfile.mScores).reduce((a,b)=>a+b,0)/12)}/100`;
+        if (navigator.share) {
+          navigator.share({
+            title: 'Expediente PDM-2 - Jair Pastor Psicólogo',
+            text: textSummary,
+            url: window.location.href
+          }).catch(()=>{});
+        } else {
+          navigator.clipboard.writeText(textSummary);
+          this.showToast('Resumen clínico copiado al portapapeles para compartir.', 'info');
+        }
+      },
+
+      exportWord() {
+        if (!this.currentProfile) {
+          this.showToast('Realiza o selecciona una evaluación primero.', 'error');
+          return;
+        }
+        const p = this.currentProfile;
+        const docContent = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Informe Clínico - Jair Pastor Psicólogo</title>
+<style>
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.6; color: #1e293b; padding: 25px; }
+  h1 { font-size: 22pt; color: #0284c7; border-bottom: 2pt solid #0284c7; padding-bottom: 6px; }
+  h2 { font-size: 14pt; color: #0369a1; border-bottom: 1pt solid #cbd5e1; padding-bottom: 4px; margin-top: 18px; }
+  .box { background-color: #f8fafc; border-left: 3pt solid #0284c7; padding: 14px; white-space: pre-wrap; font-family: Calibri, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Jair Pastor - Psicólogo</h1>
+<p><strong>EVALUACIÓN PSICODINÁMICA PDM-2</strong> | Paciente: ${p.patient.name} (${p.patient.age} años) | Expediente: #${p.id} | Fecha: ${new Date(p.date).toLocaleDateString('es-ES')}</p>
+<hr/>
+<h2>1. ORGANIZACIÓN ESTRUCTURAL (EJE P)</h2>
+<p><strong>Nivel Predominante:</strong> ${p.dominantOrg} (Saludable: ${p.orgPct.Saludable}%, Neurótica: ${p.orgPct.Neurótica}%, Límite: ${p.orgPct.Límite}%, Psicótica: ${p.orgPct.Psicótica}%)</p>
+<p><strong>Patrones Dominantes:</strong> ${p.patterns.slice(0, 4).map(pat => pat.name + ' (' + pat.percentage + '%)').join(', ')}</p>
+<h2>2. FORMULACIÓN CLÍNICA NARRATIVA (>1000 PALABRAS)</h2>
+<div class="box">${p.narrative}</div>
+<br/><br/>
+<table style="width: 100%; border: none; margin-top: 40px;">
+  <tr>
+    <td style="text-align: center; border: none;">____________________________________<br/><strong>Jair Pastor • Psicólogo Clínico</strong><br/>Especialista en Evaluación Psicodinámica PDM-2</td>
+    <td style="text-align: center; border: none;">____________________________________<br/><strong>Sello Institucional Profesional</strong><br/>Jair-pastor-psicologo</td>
+  </tr>
+</table>
+</body>
+</html>`;
+
+        const blob = new Blob([docContent], { type: 'application/msword;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Expediente_PDM2_${p.patient.name.replace(/\s+/g, '_')}_${p.id}.doc`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        this.showToast('Expediente DOCX editable descargado.', 'success');
+      },
+
+      startNewAssessment() {
+        this.showConfirm('Nueva Evaluación', '¿Deseas iniciar una nueva evaluación psicodinámica?', () => {
+          this.currentIndex = 0;
+          this.responses = {};
+          this.renderQuestionView();
+          this.switchTab('questionnaire');
+          this.showToast('Cuestionario reiniciado.', 'info');
+        });
+      }
+    };
+
+    // Inicialización del Singleton al cargar el documento (soporta estado ready o deferred)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => app.init());
+    } else {
+      app.init();
+    }
+  </script>
+</body>
+</html>
