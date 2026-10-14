@@ -1,0 +1,3039 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAIRRESTAURA DSM-5 AI | Sistema Clínico Integral de Apoyo Diagnóstico</title>
+  <meta name="description" content="Sistema clínico integral de evaluación, diagnóstico diferencial automatizado, radar de síntomas y seguimiento longitudinal basado en criterios DSM-5." />
+  <meta property="og:title" content="JAIRRESTAURA DSM-5 AI" />
+  <meta property="og:description" content="Plataforma profesional de evaluación y diagnóstico diferencial basada en la metodología DSM-5." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+
+  <!-- Tailwind CSS CDN con configuración personalizada -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#082f49',
+            },
+            clinical: {
+              subclinical: '#10b981',
+              mild: '#eab308',
+              moderate: '#f97316',
+              severe: '#ef4444'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- PDF.js CDN (para análisis de documentos PDF) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+
+  <!-- Mammoth.js CDN (para análisis de documentos DOCX) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+  <!-- Confetti para celebración de informe completado -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Estilos base Notion/ChatGPT */
+    body {
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    /* Scrollbar minimalista */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(156, 163, 175, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(156, 163, 175, 0.6);
+    }
+    .print-only {
+      display: none;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      body {
+        background: white !important;
+        color: black !important;
+      }
+    }
+  </style>
+</head>
+<body class="h-full bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 antialiased font-sans selection:bg-sky-500 selection:text-white transition-colors duration-200">
+
+  <!-- AVISO LEGAL PERMANENTE SUPERIOR -->
+  <aside id="top-legal-banner" class="w-full bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-xs text-amber-800 dark:text-amber-300 font-medium flex items-center justify-between gap-3 sticky top-0 z-50 backdrop-blur-md">
+    <div class="flex items-center gap-2 max-w-7xl mx-auto flex-1">
+      <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0"></i>
+      <span class="truncate sm:whitespace-normal">
+        <strong>Aviso Legal Clínico:</strong> Esta herramienta es únicamente de apoyo clínico y educativo. No sustituye la evaluación diagnóstica realizada por un profesional de salud mental.
+      </span>
+    </div>
+    <button onclick="document.getElementById('top-legal-banner').style.display='none'" class="p-1 hover:bg-amber-500/20 rounded text-amber-700 dark:text-amber-300 transition-colors" title="Ocultar barra superior">
+      <i data-lucide="x" class="w-3.5 h-3.5"></i>
+    </button>
+  </aside>
+
+  <!-- CONTENEDOR PRINCIPAL SAAS -->
+  <div class="min-h-screen flex flex-col lg:flex-row">
+
+    <!-- BARRA LATERAL (SIDEBAR NOTION/CHATGPT STYLE) -->
+    <aside id="app-sidebar" class="w-full lg:w-72 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col shrink-0 lg:h-[calc(100vh-37px)] lg:sticky lg:top-[37px] z-40">
+      
+      <!-- Logo y Título -->
+      <div class="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+            <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-base tracking-tight text-zinc-900 dark:text-white">JAIRRESTAURA</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300 border border-sky-300 dark:border-sky-800">DSM-5 AI</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400">Apoyo Clínico Psiquiátrico</p>
+          </div>
+        </div>
+        <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800" onclick="toggleMobileMenu()">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Selector de Paciente Activo -->
+      <div class="p-3 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
+        <label class="block text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5 flex items-center justify-between">
+          <span>Paciente Activo</span>
+          <button onclick="openNewPatientModal()" class="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 text-[11px]">
+            <i data-lucide="user-plus" class="w-3 h-3"></i> Nuevo
+          </button>
+        </label>
+        <div class="relative">
+          <select id="active-patient-select" onchange="changeActivePatient(this.value)" class="w-full text-xs font-medium bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-2.5 py-2 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-sky-500 truncate cursor-pointer shadow-sm">
+            <!-- Rellenado dinámicamente -->
+          </select>
+        </div>
+        <div id="patient-mini-badge" class="mt-2 text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center justify-between">
+          <span id="patient-age-sex" class="truncate">34 años • Masculino</span>
+          <span id="patient-eval-count" class="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-[10px] font-mono">2 evals</span>
+        </div>
+      </div>
+
+      <!-- Menú de Navegación Principal -->
+      <nav id="sidebar-nav" class="p-3 space-y-1 flex-1 overflow-y-auto">
+        <button onclick="navigateTo('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn active w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-sky-700 bg-sky-50 dark:text-sky-300 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-900">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard Clínico</span>
+        </button>
+
+        <button onclick="navigateTo('questionnaire')" id="nav-btn-questionnaire" class="nav-tab-btn w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <div class="flex items-center gap-3">
+            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+            <span>Cuestionario DSM-5</span>
+          </div>
+          <span id="questionnaire-progress-badge" class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-200 dark:bg-zinc-800">236 ítems</span>
+        </button>
+
+        <button onclick="navigateTo('diagnostic')" id="nav-btn-diagnostic" class="nav-tab-btn w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <i data-lucide="stethoscope" class="w-4 h-4"></i>
+          <span>Diagnóstico Diferencial</span>
+        </button>
+
+        <button onclick="navigateTo('report')" id="nav-btn-report" class="nav-tab-btn w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          <span>Informe Clínico Completo</span>
+        </button>
+
+        <button onclick="navigateTo('longitudinal')" id="nav-btn-longitudinal" class="nav-tab-btn w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <i data-lucide="trending-up" class="w-4 h-4"></i>
+          <span>Seguimiento Longitudinal</span>
+        </button>
+
+        <button onclick="navigateTo('upload')" id="nav-btn-upload" class="nav-tab-btn w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <i data-lucide="file-up" class="w-4 h-4"></i>
+          <span>Análisis de PDF / DOCX</span>
+        </button>
+
+        <button onclick="navigateTo('patients')" id="nav-btn-patients" class="nav-tab-btn w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          <span>Historial de Pacientes</span>
+        </button>
+
+        <div class="pt-4 pb-1">
+          <div class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Herramientas & Voz</div>
+        </div>
+
+        <!-- Control de Voz Rápido -->
+        <div class="p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/60 text-xs">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="font-medium flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-sky-500"></i> Lectura por Voz
+            </span>
+            <span id="speech-status-indicator" class="w-2 h-2 rounded-full bg-zinc-400"></span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="playClinicalVoiceSummary()" id="btn-voice-play" class="flex-1 py-1 px-2 bg-sky-600 hover:bg-sky-500 text-white rounded text-[11px] font-medium flex items-center justify-center gap-1 shadow-sm transition">
+              <i data-lucide="play" class="w-3 h-3"></i> Escuchar
+            </button>
+            <button onclick="pauseResumeVoice()" id="btn-voice-pause" class="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded text-zinc-600 dark:text-zinc-300" title="Pausar / Reanudar">
+              <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="stopVoice()" class="p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded text-zinc-600 dark:text-zinc-300" title="Detener">
+              <i data-lucide="square" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Footer de Barra Lateral -->
+      <div class="p-3 border-t border-zinc-200 dark:border-zinc-800 space-y-2 bg-zinc-50/50 dark:bg-zinc-900/50">
+        
+        <!-- Toggle Modo Oscuro / Claro & Botón Exportar Single-File HTML -->
+        <div class="flex items-center justify-between gap-2">
+          <button onclick="toggleTheme()" class="flex-1 flex items-center justify-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition">
+            <i id="theme-icon" data-lucide="moon" class="w-3.5 h-3.5"></i>
+            <span id="theme-text">Modo Oscuro</span>
+          </button>
+          <button onclick="exportSingleFileForGitHub()" title="Descargar este archivo index.html listo para GitHub" class="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition" title="Exportar index.html para GitHub">
+            <i data-lucide="download" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+          </button>
+          <button onclick="triggerPWAInstall()" id="btn-pwa-install" class="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition" title="Instalar como Aplicación PWA">
+            <i data-lucide="smartphone" class="w-4 h-4 text-sky-600 dark:text-sky-400"></i>
+          </button>
+        </div>
+
+        <div class="text-[10px] text-center text-zinc-400 dark:text-zinc-500">
+          JAIRRESTAURA DSM-5 AI v2.5 • Sin Backend
+        </div>
+      </div>
+    </aside>
+
+    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+    <main class="flex-1 flex flex-col min-w-0 bg-white dark:bg-zinc-950 overflow-y-auto">
+
+      <!-- BARRA DE ACCIONES SUPERIOR -->
+      <header class="px-6 py-3.5 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur sticky top-[37px] z-30 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 id="page-title" class="text-lg font-bold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+            <span>Dashboard Clínico</span>
+          </h1>
+          <p id="page-subtitle" class="text-xs text-zinc-500 dark:text-zinc-400">Visión global multiaxial y perfil del paciente activo</p>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="flex items-center gap-2">
+          <button onclick="navigateTo('questionnaire')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-600 hover:bg-sky-500 text-white shadow-sm transition">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>Realizar Evaluación</span>
+          </button>
+          <button onclick="exportReportPDF()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 shadow-sm transition">
+            <i data-lucide="file-down" class="w-3.5 h-3.5 text-rose-500"></i>
+            <span>PDF</span>
+          </button>
+          <button onclick="exportReportDOCX()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 shadow-sm transition">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-500"></i>
+            <span>DOCX</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VISTAS / CONTENEDORES DE PESTAÑAS -->
+      <div class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-8">
+
+        <!-- ========================================== -->
+        <!-- 1. VISTA: DASHBOARD CLÍNICO                -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="view-panel space-y-6">
+          
+          <!-- Banner de Banderas Rojas / Alertas Clínicas -->
+          <div id="red-flags-alert-container" class="hidden rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-900 dark:text-rose-200">
+            <div class="flex items-start gap-3">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5"></i>
+              <div class="space-y-1">
+                <h4 class="font-bold text-sm text-rose-800 dark:text-rose-300">ALERTA CLÍNICA: Banderas Rojas Detectadas</h4>
+                <p id="red-flags-text" class="text-xs text-rose-700 dark:text-rose-300/90 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjetas KPI Clínicas -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                <span class="font-medium">Diagnóstico Principal</span>
+                <i data-lucide="activity" class="w-4 h-4 text-sky-500"></i>
+              </div>
+              <div id="kpi-primary-dx" class="text-sm font-bold text-zinc-900 dark:text-white truncate">Cargando...</div>
+              <div id="kpi-primary-code" class="text-xs font-mono text-sky-600 dark:text-sky-400">DSM-5 / CIE-10</div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                <span class="font-medium">Índice Global de Severidad</span>
+                <i data-lucide="gauge" class="w-4 h-4 text-amber-500"></i>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span id="kpi-severity-score" class="text-2xl font-extrabold text-zinc-900 dark:text-white">0%</span>
+                <span id="kpi-severity-label" class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">Subclínico</span>
+              </div>
+              <div class="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
+                <div id="kpi-severity-bar" class="bg-sky-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                <span class="font-medium">Pronóstico Estimado</span>
+                <i data-lucide="sparkles" class="w-4 h-4 text-emerald-500"></i>
+              </div>
+              <div id="kpi-prognosis-title" class="text-sm font-bold text-emerald-600 dark:text-emerald-400">Favorable con Tratamiento</div>
+              <p id="kpi-prognosis-desc" class="text-[11px] text-zinc-500 dark:text-zinc-400 truncate">Buena adherencia y factores protectores</p>
+            </div>
+
+            <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/80 shadow-sm space-y-2">
+              <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                <span class="font-medium">Preguntas Respondidas</span>
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-500"></i>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <span id="kpi-answered-count" class="text-2xl font-extrabold text-zinc-900 dark:text-white">236</span>
+                <span class="text-xs text-zinc-400">/ 236 ítems</span>
+              </div>
+              <div class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Evaluación exhaustiva completa</div>
+            </div>
+
+          </div>
+
+          <!-- GRÁFICOS: RADAR DE SÍNTOMAS Y BARRAS DE SEVERIDAD -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Radar Multiaxial (7 cols) -->
+            <div class="lg:col-span-7 p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="compass" class="w-4 h-4 text-sky-500"></i> Radar Multiaxial de Síntomas DSM-5
+                  </h3>
+                  <p class="text-xs text-zinc-500 dark:text-zinc-400">Distribución dimensional a lo largo de las 12 categorías clínicas</p>
+                </div>
+                <button onclick="renderRadarChart()" class="p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" title="Actualizar Gráfica">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+              <div class="relative h-[340px] w-full flex items-center justify-center">
+                <canvas id="radarChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Barras de Compatibilidad y Diagnósticos (5 cols) -->
+            <div class="lg:col-span-5 p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-4 flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-500"></i> Severidad por Dominio DSM-5
+                </h3>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Porcentaje de cumplimiento de criterios y corte de severidad</p>
+              </div>
+
+              <div id="severity-breakdown-list" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+                <!-- Rellenado dinámicamente -->
+              </div>
+
+              <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-[11px] text-zinc-400">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Subclínico (&lt;25%)</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> Leve</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span> Moderado</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> Grave (≥75%)</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RESUMEN EJECUTIVO Y RECOMENDACIONES PREVIAS -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-3">
+              <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-500"></i> Factores de Riesgo y Protección
+              </h3>
+              <div class="space-y-3 text-xs">
+                <div>
+                  <span class="font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 mb-1">
+                    <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Factores de Riesgo Identificados:
+                  </span>
+                  <ul id="dashboard-risk-factors" class="list-disc list-inside text-zinc-600 dark:text-zinc-300 space-y-0.5">
+                    <!-- Rellenado dinámicamente -->
+                  </ul>
+                </div>
+                <div>
+                  <span class="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mb-1">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Factores de Protección y Resiliencia:
+                  </span>
+                  <ul id="dashboard-protection-factors" class="list-disc list-inside text-zinc-600 dark:text-zinc-300 space-y-0.5">
+                    <!-- Rellenado dinámicamente -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-3 flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> Plan Terapéutico Recomendado
+                </h3>
+                <div id="dashboard-therapeutic-plan" class="mt-2 text-xs text-zinc-600 dark:text-zinc-300 space-y-2 leading-relaxed">
+                  <!-- Rellenado dinámicamente -->
+                </div>
+              </div>
+              <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+                <button onclick="navigateTo('report')" class="text-xs text-sky-600 dark:text-sky-400 font-semibold hover:underline flex items-center gap-1">
+                  Ver Informe Clínico Detallado <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </button>
+                <button onclick="playClinicalVoiceSummary()" class="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white flex items-center gap-1">
+                  <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Escuchar Resumen
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2. VISTA: CUESTIONARIO ADAPTATIVO DSM-5     -->
+        <!-- ========================================== -->
+        <section id="view-questionnaire" class="view-panel hidden space-y-6">
+          
+          <!-- Encabezado del Cuestionario & Filtros de Categoría -->
+          <div class="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-4">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="list-checks" class="w-5 h-5 text-sky-500"></i> Protocolo de Evaluación DSM-5 (236 Ítems)
+                </h2>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Escala clínica de severidad (0: Nunca / Ausente | 4: Extremo / Incapacitante continuo)</p>
+              </div>
+
+              <!-- Filtro / Selector de Modo -->
+              <div class="flex items-center gap-2">
+                <button onclick="autoFillRandomEvaluation('mild')" class="px-2.5 py-1 text-xs rounded border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100" title="Cargar perfil de prueba leve">
+                  Test Leve
+                </button>
+                <button onclick="autoFillRandomEvaluation('severe')" class="px-2.5 py-1 text-xs rounded border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100" title="Cargar perfil de prueba agudo">
+                  Test Grave
+                </button>
+                <button onclick="resetCurrentEvaluation()" class="px-2.5 py-1 text-xs rounded border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100">
+                  Reiniciar
+                </button>
+              </div>
+            </div>
+
+            <!-- Barra de Progreso General -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-medium">
+                <span class="text-zinc-600 dark:text-zinc-400">Progreso de la evaluación activa:</span>
+                <span id="questionnaire-progress-text" class="text-sky-600 dark:text-sky-400 font-mono">0 / 236 respondidas (0%)</span>
+              </div>
+              <div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 overflow-hidden">
+                <div id="questionnaire-progress-bar" class="bg-gradient-to-r from-sky-500 to-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- Selector de Categorías (Pills Horizontales) -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-2 pt-1 no-scrollbar text-xs">
+              <button onclick="filterQuestionCategory('all')" class="cat-filter-btn active shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+                Todas (236)
+              </button>
+              <button onclick="filterQuestionCategory('cat_dep')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Depresión (22)
+              </button>
+              <button onclick="filterQuestionCategory('cat_ans')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Ansiedad (24)
+              </button>
+              <button onclick="filterQuestionCategory('cat_bip')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Bipolar (20)
+              </button>
+              <button onclick="filterQuestionCategory('cat_toc')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                TOC (18)
+              </button>
+              <button onclick="filterQuestionCategory('cat_trauma')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Trauma / TEPT (20)
+              </button>
+              <button onclick="filterQuestionCategory('cat_psi')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Psicosis (18)
+              </button>
+              <button onclick="filterQuestionCategory('cat_neuro')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                TDAH / Neuro (22)
+              </button>
+              <button onclick="filterQuestionCategory('cat_tca')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Conducta Alimentaria (18)
+              </button>
+              <button onclick="filterQuestionCategory('cat_sueno')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Sueño-Vigilia (16)
+              </button>
+              <button onclick="filterQuestionCategory('cat_pers')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Personalidad (24)
+              </button>
+              <button onclick="filterQuestionCategory('cat_sust')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Sustancias / Adicciones (18)
+              </button>
+              <button onclick="filterQuestionCategory('cat_som')" class="cat-filter-btn shrink-0 px-3 py-1.5 rounded-lg font-medium transition bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200">
+                Somáticos / Disociación (16)
+              </button>
+            </div>
+
+          </div>
+
+          <!-- LISTA DINÁMICA DE PREGUNTAS -->
+          <div id="questions-list-container" class="space-y-4">
+            <!-- Rellenado dinámicamente con las 236 preguntas -->
+          </div>
+
+          <!-- Botón Flotante / Inferior de Guardado y Diagnóstico -->
+          <div class="sticky bottom-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xl flex items-center justify-between gap-4">
+            <div class="text-xs text-zinc-600 dark:text-zinc-400">
+              <span id="floating-answered-count" class="font-bold text-zinc-900 dark:text-white">236</span> respuestas guardadas automáticamente en localStorage.
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="saveAndProcessEvaluation()" class="px-5 py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-semibold text-xs rounded-xl shadow-md flex items-center gap-2 transition transform active:scale-95">
+                <i data-lucide="brain" class="w-4 h-4"></i> Procesar Diagnóstico y Generar Informe
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3. VISTA: DIAGNÓSTICO DIFERENCIAL          -->
+        <!-- ========================================== -->
+        <section id="view-diagnostic" class="view-panel hidden space-y-6">
+          
+          <div class="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="git-branch" class="w-5 h-5 text-sky-500"></i> Matriz de Diagnóstico Diferencial Automatizado
+                </h2>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Jerarquización según criterios de inclusión, exclusión y comorbilidad DSM-5</p>
+              </div>
+              <button onclick="playClinicalVoiceSummary()" class="px-3 py-1.5 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300 text-xs font-semibold rounded-lg flex items-center gap-1.5 hover:bg-sky-100 transition">
+                <i data-lucide="volume-2" class="w-4 h-4"></i> Lectura por Voz
+              </button>
+            </div>
+
+            <!-- Diagnóstico Primario en Gran Formato -->
+            <div id="dx-primary-card" class="p-5 rounded-xl border border-sky-200 dark:border-sky-900/60 bg-gradient-to-r from-sky-50/50 to-indigo-50/30 dark:from-sky-950/20 dark:to-indigo-950/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-sky-600 text-white">Diagnóstico Principal</span>
+                <span id="dx-primary-confidence" class="text-xs font-bold font-mono text-sky-700 dark:text-sky-300">Concordancia Criterial: 85%</span>
+              </div>
+              <div>
+                <h3 id="dx-primary-name" class="text-xl font-extrabold text-zinc-900 dark:text-white">F32.2 Trastorno Depresivo Mayor, Episodio Único, Grave</h3>
+                <p id="dx-primary-justification" class="text-xs text-zinc-600 dark:text-zinc-300 mt-1 leading-relaxed">
+                  Cumple Criterios A1 (ánimo deprimido persistente), A2 (anhedonia), A3 (alteración del apetito/peso), A4 (insomnio terminal) y A7 (sentimientos de culpa excesiva) por más de 14 días con disfunción sociolaboral manifiesta.
+                </p>
+              </div>
+            </div>
+
+            <!-- Tabla de Diagnósticos Diferenciales y Comórbidos -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Comorbilidades y Diagnósticos Secundarios Evaluados</h4>
+              <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead class="bg-zinc-50 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+                    <tr>
+                      <th class="p-3 font-semibold">Trastorno / Categoría DSM-5</th>
+                      <th class="p-3 font-semibold">Código CIE-10</th>
+                      <th class="p-3 font-semibold">Compatibilidad</th>
+                      <th class="p-3 font-semibold">Criterios Clave</th>
+                      <th class="p-3 font-semibold">Estatus Clínico</th>
+                    </tr>
+                  </thead>
+                  <tbody id="differential-table-body" class="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+                    <!-- Rellenado dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Árbol de Decisión / Reglas de Exclusión DSM-5 -->
+          <div class="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-3">
+            <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="network" class="w-4 h-4 text-emerald-500"></i> Reglas de Exclusión y Jerarquía Diagnóstica DSM-5 Aplicadas
+            </h3>
+            <div id="exclusion-rules-container" class="space-y-2 text-xs text-zinc-600 dark:text-zinc-300">
+              <!-- Rellenado dinámicamente -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4. VISTA: INFORME CLÍNICO COMPLETO         -->
+        <!-- ========================================== -->
+        <section id="view-report" class="view-panel hidden space-y-6">
+          
+          <!-- Barra de Acciones del Informe -->
+          <div class="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+            <div class="flex items-center gap-2">
+              <i data-lucide="file-badge" class="w-5 h-5 text-sky-600 dark:text-sky-400"></i>
+              <span class="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Informe Oficial Formateado para Impresión y Expediente</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="playClinicalVoiceSummary()" class="px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="volume-2" class="w-3.5 h-3.5 text-sky-500"></i> Escuchar Informe
+              </button>
+              <button onclick="exportReportDOCX()" class="px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-medium hover:bg-blue-100 flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Exportar DOCX
+              </button>
+              <button onclick="exportReportPDF()" class="px-4 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Descargar PDF Oficial
+              </button>
+            </div>
+          </div>
+
+          <!-- DOCUMENTO FORMAL IMPRIMIBLE / EXPORTABLE (HTML2PDF CONTAINER) -->
+          <div id="clinical-report-printable" class="p-8 sm:p-12 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl space-y-8 text-zinc-800 dark:text-zinc-200">
+            
+            <!-- Membrete Profesional -->
+            <div class="border-b-2 border-zinc-900 dark:border-zinc-100 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+              <div>
+                <div class="text-xs uppercase tracking-widest font-extrabold text-sky-600 dark:text-sky-400">INFORME DE EVALUACIÓN PSICODIAGNÓSTICA</div>
+                <h1 class="text-2xl font-black tracking-tight text-zinc-950 dark:text-white mt-1">JAIRRESTAURA DSM-5 AI</h1>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Sistema Automatizado Multiaxial de Apoyo Clínico Basado en DSM-5-TR</p>
+              </div>
+              <div class="text-right text-xs space-y-0.5">
+                <div><strong>Fecha de Evaluación:</strong> <span id="report-date">--/--/----</span></div>
+                <div><strong>Folio Clínico:</strong> <span id="report-folio" class="font-mono">JR-DSM5-2026-001</span></div>
+                <div><strong>Tipo:</strong> Evaluación Psicodiagnóstica Integral</div>
+              </div>
+            </div>
+
+            <!-- Aviso Legal Estampado en el Informe -->
+            <div class="bg-amber-500/10 border-l-4 border-amber-500 p-3 text-xs text-amber-900 dark:text-amber-200">
+              <strong>Aviso Legal y Limitación de Responsabilidad:</strong> Esta herramienta es únicamente de apoyo clínico y educativo. No sustituye la evaluación diagnóstica realizada por un profesional de salud mental colegiado.
+            </div>
+
+            <!-- 1. Datos Generales del Paciente -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                1. Ficha de Identificación del Paciente
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                <div>
+                  <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]">Nombre Completo</span>
+                  <strong id="rep-patient-name" class="text-zinc-900 dark:text-white">Carlos M. Restrepo</strong>
+                </div>
+                <div>
+                  <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]">Edad y Sexo</span>
+                  <span id="rep-patient-age-sex">34 años • Masculino</span>
+                </div>
+                <div>
+                  <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]">Ocupación</span>
+                  <span id="rep-patient-occ">Lic. en Finanzas</span>
+                </div>
+                <div>
+                  <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]">ID Expediente</span>
+                  <span id="rep-patient-id" class="font-mono">EXP-9942</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Motivo de Consulta y Resumen Clínico -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                2. Impresión Diagnóstica Principal (DSM-5 / CIE-10)
+              </h3>
+              <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <h4 id="rep-dx-title" class="font-bold text-sm text-zinc-900 dark:text-white">F32.2 Trastorno Depresivo Mayor Grave</h4>
+                  <span id="rep-dx-badge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200">Grave (88%)</span>
+                </div>
+                <p id="rep-dx-desc" class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-300">
+                  El paciente manifiesta un cuadro clínico caracterizado por tristeza persistente, anhedonia total, astenia intensa e insomnio terminal de más de 2 meses de evolución con interferencia laboral severa.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3. Diagnóstico Diferencial y Comorbilidades -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                3. Análisis de Diagnóstico Diferencial y Comorbilidades
+              </h3>
+              <div id="rep-differential-list" class="space-y-2 text-xs">
+                <!-- Rellenado dinámicamente -->
+              </div>
+            </div>
+
+            <!-- 4. Puntuaciones por Ejes Dimensionales DSM-5 -->
+            <div class="space-y-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                4. Perfil Dimensional Multiaxial (12 Dominios)
+              </h3>
+              <div id="rep-axes-table-container" class="overflow-x-auto text-xs">
+                <!-- Rellenado dinámicamente -->
+              </div>
+            </div>
+
+            <!-- 5. Factores de Riesgo y Factores de Protección -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wide flex items-center gap-1.5">
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Factores de Riesgo Identificados
+                </h4>
+                <div id="rep-risk-list" class="p-3 rounded-lg bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/40 text-xs text-zinc-700 dark:text-zinc-300 space-y-1">
+                  <!-- Rellenado dinámicamente -->
+                </div>
+              </div>
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide flex items-center gap-1.5">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Factores de Protección y Resiliencia
+                </h4>
+                <div id="rep-protection-list" class="p-3 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-900/40 text-xs text-zinc-700 dark:text-zinc-300 space-y-1">
+                  <!-- Rellenado dinámicamente -->
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. Pronóstico Clínico -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                5. Pronóstico Clínico Estimado
+              </h3>
+              <div id="rep-prognosis-box" class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 text-xs leading-relaxed">
+                <!-- Rellenado dinámicamente -->
+              </div>
+            </div>
+
+            <!-- 7. Plan Terapéutico y Recomendaciones Basadas en Evidencia -->
+            <div class="space-y-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 border-b border-zinc-200 dark:border-zinc-800 pb-1">
+                6. Plan de Intervención Terapéutica y Recomendaciones
+              </h3>
+              <div id="rep-treatment-plan" class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 text-xs space-y-2 leading-relaxed">
+                <!-- Rellenado dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Firma y Validación Profesional -->
+            <div class="pt-8 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-2 gap-8 text-xs text-zinc-500">
+              <div class="space-y-1">
+                <div>Generado mediante: <strong>JAIRRESTAURA DSM-5 AI</strong></div>
+                <div>Algoritmo: DSM-5-TR Differential Diagnostic Engine v2.5</div>
+                <div>Registro Local: Almacenado en dispositivo cliente (Seguridad estricta sin backend)</div>
+              </div>
+              <div class="text-right space-y-6">
+                <div class="inline-block border-b border-zinc-400 dark:border-zinc-600 w-48 text-center pb-1 font-mono text-[11px]">
+                  Firma del Profesional Evaluador
+                </div>
+                <div class="text-[10px] text-zinc-400">Psicólogo Clínico / Psiquiatra Tratante</div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5. VISTA: SEGUIMIENTO LONGITUDINAL         -->
+        <!-- ========================================== -->
+        <section id="view-longitudinal" class="view-panel hidden space-y-6">
+          
+          <div class="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="line-chart" class="w-5 h-5 text-sky-500"></i> Seguimiento Longitudinal y Comparador Clínico
+                </h2>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Comparación objetiva entre evaluaciones sucesivas del mismo paciente</p>
+              </div>
+
+              <!-- Selectores de Evaluación A vs B -->
+              <div class="flex items-center gap-2 text-xs">
+                <div>
+                  <label class="block text-[10px] text-zinc-400">Evaluación Base:</label>
+                  <select id="longitudinal-eval-a" onchange="updateLongitudinalComparison()" class="bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded px-2 py-1 text-xs">
+                    <!-- Rellenado dinámicamente -->
+                  </select>
+                </div>
+                <span class="text-zinc-400 mt-3">vs</span>
+                <div>
+                  <label class="block text-[10px] text-zinc-400">Evaluación Actual:</label>
+                  <select id="longitudinal-eval-b" onchange="updateLongitudinalComparison()" class="bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded px-2 py-1 text-xs">
+                    <!-- Rellenado dinámicamente -->
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráfico Longitudinal de Evolución -->
+            <div class="p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50">
+              <div class="h-[320px] w-full">
+                <canvas id="longitudinalChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Matriz de Variación Porcentual (Delta Δ) -->
+            <div class="space-y-2">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Tabla de Evolución y Cambios Sintomáticos</h4>
+              <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead class="bg-zinc-50 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+                    <tr>
+                      <th class="p-3 font-semibold">Categoría DSM-5</th>
+                      <th class="p-3 font-semibold">Evaluación Base</th>
+                      <th class="p-3 font-semibold">Evaluación Actual</th>
+                      <th class="p-3 font-semibold">Variación (Δ)</th>
+                      <th class="p-3 font-semibold">Significado Clínico</th>
+                    </tr>
+                  </thead>
+                  <tbody id="longitudinal-delta-tbody" class="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+                    <!-- Rellenado dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 6. VISTA: CARGA Y ANÁLISIS DE PDF/DOCX     -->
+        <!-- ========================================== -->
+        <section id="view-upload" class="view-panel hidden space-y-6">
+          
+          <div class="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-5">
+            <div>
+              <h2 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                <i data-lucide="file-search" class="w-5 h-5 text-sky-500"></i> Análisis Documental Clínico (PDF / DOCX / TXT)
+              </h2>
+              <p class="text-xs text-zinc-500 dark:text-zinc-400">
+                Cargue informes psiquiátricos previos, notas de evolución o historias clínicas para extraer automáticamente sintomatología DSM-5, antecedentes y medicación.
+              </p>
+            </div>
+
+            <!-- Drag and Drop Dropzone -->
+            <div id="file-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" class="border-2 border-dashed border-zinc-300 dark:border-zinc-700 hover:border-sky-500 dark:hover:border-sky-400 rounded-2xl p-8 text-center transition cursor-pointer bg-zinc-50/50 dark:bg-zinc-900/40">
+              <input type="file" id="document-file-input" onchange="handleFileSelect(event)" accept=".pdf,.docx,.txt" class="hidden">
+              <div class="max-w-md mx-auto space-y-3" onclick="document.getElementById('document-file-input').click()">
+                <div class="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-400 flex items-center justify-center mx-auto">
+                  <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <p class="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Haga clic o arrastre su archivo aquí</p>
+                  <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">Soporta documentos PDF (.pdf), Microsoft Word (.docx) y texto plano (.txt)</p>
+                </div>
+                <div class="text-[10px] text-zinc-400">100% procesado localmente en su navegador para máxima confidencialidad médica (HIPAA compliant client-side).</div>
+              </div>
+            </div>
+
+            <!-- Estado de carga / progreso -->
+            <div id="file-upload-status" class="hidden p-3 rounded-lg bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 text-xs text-sky-800 dark:text-sky-300 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="loader" class="w-4 h-4 animate-spin text-sky-600"></i>
+                <span id="file-upload-status-text">Extrayendo texto del documento...</span>
+              </div>
+            </div>
+
+            <!-- Resultados del Análisis Documental -->
+            <div id="file-analysis-results" class="hidden space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Hallazgos Extraídos del Documento
+                </h3>
+                <button onclick="applyDocumentFindingsToQuestionnaire()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Autocalificar Cuestionario con estos Datos
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 space-y-2">
+                  <span class="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                    <i data-lucide="activity" class="w-3.5 h-3.5 text-rose-500"></i> Síntomas Detectados
+                  </span>
+                  <ul id="doc-symptoms-list" class="space-y-1 text-zinc-600 dark:text-zinc-300">
+                    <!-- Rellenado dinámicamente -->
+                  </ul>
+                </div>
+
+                <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 space-y-2">
+                  <span class="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                    <i data-lucide="pill" class="w-3.5 h-3.5 text-sky-500"></i> Fármacos & Antecedentes
+                  </span>
+                  <ul id="doc-meds-list" class="space-y-1 text-zinc-600 dark:text-zinc-300">
+                    <!-- Rellenado dinámicamente -->
+                  </ul>
+                </div>
+
+                <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 space-y-2">
+                  <span class="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                    <i data-lucide="alert-octagon" class="w-3.5 h-3.5 text-amber-500"></i> Factores de Alerta
+                  </span>
+                  <ul id="doc-alerts-list" class="space-y-1 text-zinc-600 dark:text-zinc-300">
+                    <!-- Rellenado dinámicamente -->
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Vista Previa del Texto Extraído -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[11px] text-zinc-500">
+                  <span>Texto Plano Extraído:</span>
+                  <button onclick="toggleExtractedText()" class="text-sky-600 dark:text-sky-400 hover:underline">Mostrar / Ocultar</button>
+                </div>
+                <div id="extracted-text-box" class="hidden p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 font-mono text-[11px] text-zinc-700 dark:text-zinc-300 max-h-48 overflow-y-auto whitespace-pre-wrap"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 7. VISTA: HISTORIAL DE PACIENTES           -->
+        <!-- ========================================== -->
+        <section id="view-patients" class="view-panel hidden space-y-6">
+          
+          <div class="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="users" class="w-5 h-5 text-sky-500"></i> Directorio y Expedientes de Pacientes
+                </h2>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">Almacenamiento seguro persistente en localStorage</p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="openNewPatientModal()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
+                  <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Nuevo Paciente
+                </button>
+                <button onclick="exportDatabaseJSON()" class="px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-xs font-medium hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm transition" title="Copia de seguridad en archivo JSON">
+                  <i data-lucide="database" class="w-3.5 h-3.5"></i> Respaldar JSON
+                </button>
+                <label class="px-3 py-1.5 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-xs font-medium hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm transition cursor-pointer" title="Restaurar copia de seguridad">
+                  <i data-lucide="upload" class="w-3.5 h-3.5"></i> Restaurar
+                  <input type="file" onchange="importDatabaseJSON(event)" accept=".json" class="hidden">
+                </label>
+              </div>
+            </div>
+
+            <!-- Tabla de Pacientes Registrados -->
+            <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-zinc-50 dark:bg-zinc-800/60 text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+                  <tr>
+                    <th class="p-3 font-semibold">Paciente</th>
+                    <th class="p-3 font-semibold">Expediente</th>
+                    <th class="p-3 font-semibold">Edad / Sexo</th>
+                    <th class="p-3 font-semibold">Evaluaciones</th>
+                    <th class="p-3 font-semibold">Última Evaluación</th>
+                    <th class="p-3 font-semibold">Diagnóstico Actual</th>
+                    <th class="p-3 font-semibold text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="patients-table-tbody" class="divide-y divide-zinc-200 dark:divide-zinc-800 text-zinc-700 dark:text-zinc-300">
+                  <!-- Rellenado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- FOOTER GENERAL CLÍNICO -->
+      <footer class="mt-auto border-t border-zinc-200 dark:border-zinc-800 p-6 bg-white dark:bg-zinc-950 text-xs text-zinc-500 dark:text-zinc-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div class="space-y-1">
+            <div class="font-bold text-zinc-800 dark:text-zinc-200">JAIRRESTAURA DSM-5 AI • Sistema Clínico</div>
+            <p class="text-[11px] max-w-2xl text-zinc-400">
+              Aviso legal: Esta herramienta es únicamente de apoyo clínico y educativo. No sustituye la evaluación diagnóstica realizada por un profesional de salud mental.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="exportSingleFileForGitHub()" class="text-sky-600 dark:text-sky-400 hover:underline text-[11px] font-semibold flex items-center gap-1">
+              <i data-lucide="github" class="w-3.5 h-3.5"></i> Exportar index.html para GitHub
+            </button>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL: NUEVO PACIENTE -->
+  <div id="modal-new-patient" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-zinc-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4 text-sky-500"></i> Registrar Nuevo Paciente
+        </h3>
+        <button onclick="closeNewPatientModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form id="form-new-patient" onsubmit="handleCreatePatientSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">Nombre Completo *</label>
+          <input type="text" id="inp-pat-name" required placeholder="Ej. Ana Sofía Morales" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">Edad (Años) *</label>
+            <input type="number" id="inp-pat-age" required min="1" max="120" placeholder="Ej. 28" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">Sexo Biológico *</label>
+            <select id="inp-pat-sex" required class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="Femenino">Femenino</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">Ocupación / Profesión</label>
+          <input type="text" id="inp-pat-occ" placeholder="Ej. Docente universitaria" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-medium text-zinc-700 dark:text-zinc-300 mb-1">Notas Clínicas Iniciales / Motivo</label>
+          <textarea id="inp-pat-notes" rows="2" placeholder="Motivo inicial de consulta o remisión médica..." class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeNewPatientModal()" class="px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-lg shadow-sm">
+            Guardar e Iniciar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT MASTER: BANCO DSM-5 (236 PREGUNTAS), MOTOR CLÍNICO Y LÓGICA   -->
+  <!-- ========================================================================= -->
+  <script>
+    /**
+     * JAIRRESTAURA DSM-5 AI
+     * Banco de Preguntas Criteriales DSM-5 (236 Preguntas Exactas en 12 Categorías)
+     */
+    const DSM5_CATEGORIES = [
+      { id: 'cat_dep', name: 'Trastornos Depresivos', code: 'F32-F34', color: '#0284c7', count: 22 },
+      { id: 'cat_ans', name: 'Trastornos de Ansiedad', code: 'F40-F41', color: '#eab308', count: 24 },
+      { id: 'cat_bip', name: 'Trastornos Bipolares y Afines', code: 'F31', color: '#f97316', count: 20 },
+      { id: 'cat_toc', name: 'Trastorno Obsesivo-Compulsivo', code: 'F42', color: '#8b5cf6', count: 18 },
+      { id: 'cat_trauma', name: 'Trauma y Factores de Estrés', code: 'F43', color: '#ec4899', count: 20 },
+      { id: 'cat_psi', name: 'Espectro de la Esquizofrenia', code: 'F20-F29', color: '#ef4444', count: 18 },
+      { id: 'cat_neuro', name: 'Neurodesarrollo / TDAH', code: 'F90', color: '#10b981', count: 22 },
+      { id: 'cat_tca', name: 'Conducta Alimentaria', code: 'F50', color: '#14b8a6', count: 18 },
+      { id: 'cat_sueno', name: 'Sueño-Vigilia', code: 'F51', color: '#6366f1', count: 16 },
+      { id: 'cat_pers', name: 'Trastornos de la Personalidad', code: 'F60', color: '#d946ef', count: 24 },
+      { id: 'cat_sust', name: 'Sustancias y Adicciones', code: 'F10-F19', color: '#ea580c', count: 18 },
+      { id: 'cat_som', name: 'Somáticos y Disociativos', code: 'F45-F44', color: '#64748b', count: 16 }
+    ];
+
+    // BANCO COMPLETO DE 236 PREGUNTAS DSM-5
+    const DSM5_QUESTIONS = [
+      // 1. TRASTORNOS DEPRESIVOS (22 preguntas)
+      { id: 'q_dep_1', cat: 'cat_dep', text: 'Estado de ánimo deprimido la mayor parte del día (tristeza, vacío, desesperanza subjetiva o llanto observable).', criteria: 'Criterio A1 DSM-5 TDM' },
+      { id: 'q_dep_2', cat: 'cat_dep', text: 'Disminución marcada del interés o placer en todas o casi todas las actividades (anhedonia casi continua).', criteria: 'Criterio A2 DSM-5 TDM' },
+      { id: 'q_dep_3', cat: 'cat_dep', text: 'Pérdida o aumento significativo de peso sin régimen, o marcada disminución/aumento del apetito casi a diario.', criteria: 'Criterio A3 DSM-5 TDM' },
+      { id: 'q_dep_4', cat: 'cat_dep', text: 'Insomnio (dificultad para conciliar o mantener el sueño) o hipersomnia casi todos los días.', criteria: 'Criterio A4 DSM-5 TDM' },
+      { id: 'q_dep_5', cat: 'cat_dep', text: 'Agitación o enlentecimiento psicomotor observable por terceros (no meras sensaciones subjetivas).', criteria: 'Criterio A5 DSM-5 TDM' },
+      { id: 'q_dep_6', cat: 'cat_dep', text: 'Fatiga continua o pérdida casi total de energía ante actividades cotidianas mínimas.', criteria: 'Criterio A6 DSM-5 TDM' },
+      { id: 'q_dep_7', cat: 'cat_dep', text: 'Sentimientos de inutilidad o culpabilidad excesiva, desproporcionada o inapropiada.', criteria: 'Criterio A7 DSM-5 TDM' },
+      { id: 'q_dep_8', cat: 'cat_dep', text: 'Disminución de la capacidad para pensar, concentrarse, mantener la atención o tomar decisiones.', criteria: 'Criterio A8 DSM-5 TDM' },
+      { id: 'q_dep_9', cat: 'cat_dep', text: 'Pensamientos recurrentes de muerte (no solo temor a morir) o ideación suicida recurrente sin plan.', criteria: 'Criterio A9 DSM-5 TDM (BANDERA ROJA)', isRedFlag: true },
+      { id: 'q_dep_10', cat: 'cat_dep', text: 'Elaboración de planes específicos para autolesionarse o intentos previos de terminar con su vida.', criteria: 'Criterio A9 DSM-5 TDM (RIESGO CRÍTICO)', isRedFlag: true },
+      { id: 'q_dep_11', cat: 'cat_dep', text: 'Persistencia continua de este cuadro anímico durante al menos dos semanas consecutivas.', criteria: 'Criterio Temporal DSM-5' },
+      { id: 'q_dep_12', cat: 'cat_dep', text: 'Deterioro clínicamente significativo en las áreas social, ocupacional, académica o familiar.', criteria: 'Criterio B DSM-5' },
+      { id: 'q_dep_13', cat: 'cat_dep', text: 'Estado de ánimo deprimido continuo durante al menos dos años con pocos intervalos asintomáticos.', criteria: 'Trastorno Depresivo Persistente (Distimia)' },
+      { id: 'q_dep_14', cat: 'cat_dep', text: 'Baja autoestima crónica y sensación interior recurrente de fracaso personal.', criteria: 'Criterio Distimia DSM-5' },
+      { id: 'q_dep_15', cat: 'cat_dep', text: 'Sentimientos arraigados de desesperanza respecto al porvenir y falta de proyectos futuros.', criteria: 'Criterio Distimia DSM-5' },
+      { id: 'q_dep_16', cat: 'cat_dep', text: 'Labilidad afectiva marcada o llanto súbito que empeora la semana previa a la menstruación.', criteria: 'Trastorno Disfórico Premenstrual' },
+      { id: 'q_dep_17', cat: 'cat_dep', text: 'Irritabilidad intensa o aumento notable de disputas interpersonales en la fase lútea.', criteria: 'Criterio TDPM' },
+      { id: 'q_dep_18', cat: 'cat_dep', text: 'Sensación de agobio inmanejable o de estar totalmente al límite de sus fuerzas.', criteria: 'Criterio TDPM' },
+      { id: 'q_dep_19', cat: 'cat_dep', text: 'Dificultad acusada para levantarse de la cama o iniciar la jornada durante las mañanas.', criteria: 'Patrón Melancólico DSM-5' },
+      { id: 'q_dep_20', cat: 'cat_dep', text: 'Descuido severo de la higiene personal, la alimentación o las tareas domésticas elementales.', criteria: 'Severidad TDM' },
+      { id: 'q_dep_21', cat: 'cat_dep', text: 'Ausencia total en su historial de episodios eufóricos, maníacos o hipomaníacos espontáneos.', criteria: 'Criterio Exclusión Bipolar' },
+      { id: 'q_dep_22', cat: 'cat_dep', text: 'Los síntomas anímicos no son atribuibles a efectos fisiológicos directos de una droga o enfermedad tiroidea.', criteria: 'Criterio Exclusión Orgánica' },
+
+      // 2. TRASTORNOS DE ANSIEDAD (24 preguntas)
+      { id: 'q_ans_1', cat: 'cat_ans', text: 'Ansiedad y preocupación excesiva (anticipación aprensiva) sobre una amplia variedad de acontecimientos.', criteria: 'Criterio A TAG' },
+      { id: 'q_ans_2', cat: 'cat_ans', text: 'Dificultad marcada y constante para controlar o desactivar la preocupación una vez iniciada.', criteria: 'Criterio B TAG' },
+      { id: 'q_ans_3', cat: 'cat_ans', text: 'Inquietud psicomotriz continua, sensación de estar atrapado o con los nervios de punta.', criteria: 'Criterio C1 TAG' },
+      { id: 'q_ans_4', cat: 'cat_ans', text: 'Facilidad notable para fatigarse físicamente ante situaciones de tensión cotidiana.', criteria: 'Criterio C2 TAG' },
+      { id: 'q_ans_5', cat: 'cat_ans', text: 'Dificultad para concentrarse o experimentar que la mente se queda en blanco por la angustia.', criteria: 'Criterio C3 TAG' },
+      { id: 'q_ans_6', cat: 'cat_ans', text: 'Irritabilidad persistente reactiva a la sobrecarga de alerta mental.', criteria: 'Criterio C4 TAG' },
+      { id: 'q_ans_7', cat: 'cat_ans', text: 'Tensión muscular perceptible (contracturas en cuello, hombros, dolor mandíbular o cefalea tensional).', criteria: 'Criterio C5 TAG' },
+      { id: 'q_ans_8', cat: 'cat_ans', text: 'Alteraciones del sueño debidas a la rumiación ansiosa (conciliación difícil o despertares sobresaltados).', criteria: 'Criterio C6 TAG' },
+      { id: 'q_ans_9', cat: 'cat_ans', text: 'Episodios súbitos e inesperados de miedo pánico que alcanzan su máxima intensidad en minutos.', criteria: 'Criterio A T. Pánico' },
+      { id: 'q_ans_10', cat: 'cat_ans', text: 'Palpitaciones fuertes, latidos acelerados o taquicardia descontrolada durante los ataques.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_11', cat: 'cat_ans', text: 'Sudoración fría y temblores involuntarios en extremidades durante los momentos de angustia.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_12', cat: 'cat_ans', text: 'Sensación de falta de aire, asfixia inminente o respiración entrecortada repentina.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_13', cat: 'cat_ans', text: 'Opresión, pinchazos o dolor torácico que hace temer un infarto cardíaco.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_14', cat: 'cat_ans', text: 'Mareo, inestabilidad cefálica, sensación de aturdimiento o desvanecimiento inminente.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_15', cat: 'cat_ans', text: 'Sensación de desrealización (el entorno parece irreal o teatral) o despersonalización.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_16', cat: 'cat_ans', text: 'Miedo aterrador a perder el control de los propios actos, volverse loco o morir en el episodio.', criteria: 'Criterio Ataque Pánico' },
+      { id: 'q_ans_17', cat: 'cat_ans', text: 'Preocupación persistente por la posibilidad de sufrir nuevos ataques de pánico (ansiedad anticipatoria).', criteria: 'Criterio B T. Pánico' },
+      { id: 'q_ans_18', cat: 'cat_ans', text: 'Miedo intenso o evitación activa al utilizar transporte público (autobuses, trenes, metro, aviones).', criteria: 'Criterio Agorafobia' },
+      { id: 'q_ans_19', cat: 'cat_ans', text: 'Miedo intenso o evitación de espacios abiertos amplios (estacionamientos, puentes, plazas).', criteria: 'Criterio Agorafobia' },
+      { id: 'q_ans_20', cat: 'cat_ans', text: 'Miedo intenso o evitación de espacios cerrados (supermercados, cines, ascensores).', criteria: 'Criterio Agorafobia' },
+      { id: 'q_ans_21', cat: 'cat_ans', text: 'Miedo o malestar acusados al hacer colas o encontrarse en medio de multitudes.', criteria: 'Criterio Agorafobia' },
+      { id: 'q_ans_22', cat: 'cat_ans', text: 'Temor marcado a estar fuera del hogar sin una persona de confianza acompañante.', criteria: 'Criterio Agorafobia' },
+      { id: 'q_ans_23', cat: 'cat_ans', text: 'Miedo o ansiedad intensa frente a situaciones sociales donde la persona puede ser evaluada o juzgada.', criteria: 'Fobia Social / Ansiedad Social' },
+      { id: 'q_ans_24', cat: 'cat_ans', text: 'Evitación sistemática de hablar en público, presentarse ante extraños o comer frente a otras personas.', criteria: 'Fobia Social' },
+
+      // 3. TRASTORNOS BIPOLARES Y AFINES (20 preguntas)
+      { id: 'q_bip_1', cat: 'cat_bip', text: 'Período delimitado de estado de ánimo persistentemente elevado, eufórico o irritable con exceso inusual de energía.', criteria: 'Criterio A Manía/Hipomanía' },
+      { id: 'q_bip_2', cat: 'cat_bip', text: 'Autoestima grandiosa o sentimientos de poseer capacidades, riquezas o poderes extraordinarios no realistas.', criteria: 'Criterio B1 Bipolar' },
+      { id: 'q_bip_3', cat: 'cat_bip', text: 'Disminución drástica de la necesidad de dormir (sentirse descansado y rebosante de energía con 2-3 horas).', criteria: 'Criterio B2 Bipolar' },
+      { id: 'q_bip_4', cat: 'cat_bip', text: 'Locuacidad desmedida, hablar mucho más rápido de lo habitual con necesidad imperiosa de seguir hablando.', criteria: 'Criterio B3 Bipolar' },
+      { id: 'q_bip_5', cat: 'cat_bip', text: 'Fuga de ideas o experiencia subjetiva acelerada de que los pensamientos se agolpan y van a gran velocidad.', criteria: 'Criterio B4 Bipolar' },
+      { id: 'q_bip_6', cat: 'cat_bip', text: 'Facilidad extrema para distraerse; cambio continuo de atención hacia estímulos ambientales triviales.', criteria: 'Criterio B5 Bipolar' },
+      { id: 'q_bip_7', cat: 'cat_bip', text: 'Aumento notable de la actividad dirigida a metas (proyectos laborales nuevos y simultáneos, actividad política o sexual).', criteria: 'Criterio B6 Bipolar' },
+      { id: 'q_bip_8', cat: 'cat_bip', text: 'Agitación psicomotriz e inquietud constante que no persigue un objetivo concreto.', criteria: 'Criterio B6 Bipolar' },
+      { id: 'q_bip_9', cat: 'cat_bip', text: 'Participación desmedida en actividades de alto riesgo (compras excesivas imprudentes, inversiones insensatas, desenfreno sexual).', criteria: 'Criterio B7 Bipolar (RIESGO)', isRedFlag: true },
+      { id: 'q_bip_10', cat: 'cat_bip', text: 'La alteración es lo suficientemente grave para causar deterioro laboral notable o requerir hospitalización de urgencia.', criteria: 'Episodio Maníaco (Bipolar I)' },
+      { id: 'q_bip_11', cat: 'cat_bip', text: 'Episodios con elevación de ánimo de al menos 4 días consecutivos observables por allegados pero sin psicosis (Hipomanía).', criteria: 'Episodio Hipomaníaco (Bipolar II)' },
+      { id: 'q_bip_12', cat: 'cat_bip', text: 'Antecedentes vitales claros de alternancia entre episodios depresivos profundos y fases de reactividad hipomaníaca.', criteria: 'Ciclo Bipolar II' },
+      { id: 'q_bip_13', cat: 'cat_bip', text: 'Estados mixtos donde en un mismo día se combinan desesperanza depresiva con agitación y energía maníaca.', criteria: 'Especificador Mixto DSM-5' },
+      { id: 'q_bip_14', cat: 'cat_bip', text: 'Fluctuaciones anímicas recurrentes que han estado presentes durante al menos 2 años sin periodos estables largos.', criteria: 'Trastorno Ciclotímico' },
+      { id: 'q_bip_15', cat: 'cat_bip', text: 'Gasto compulsivo de ahorros vitales o solicitud de préstamos precipitados durante fases de euforia.', criteria: 'Conducta Imprudente Bipolar' },
+      { id: 'q_bip_16', cat: 'cat_bip', text: 'Comentarios de familiares o colegas advirtiendo que la persona se encuentra irreconociblemente desinhibida.', criteria: 'Feedback Social Bipolar' },
+      { id: 'q_bip_17', cat: 'cat_bip', text: 'Aparición súbita de planes megalómanos o abandono impulsivo de compromisos estables en la fase activa.', criteria: 'Desinhibición Bipolar' },
+      { id: 'q_bip_18', cat: 'cat_bip', text: 'Irritabilidad extrema o ataques de furia cuando alguien contradice sus ideas expansivas durante la fase alta.', criteria: 'Irritabilidad Maníaca' },
+      { id: 'q_bip_19', cat: 'cat_bip', text: 'Falta total de conciencia de enfermedad (anosognosia) mientras se encuentra en la etapa eufórica.', criteria: 'Insight Bipolar' },
+      { id: 'q_bip_20', cat: 'cat_bip', text: 'Los episodios expansivos no fueron inducidos exclusivamente por la ingesta de fármacos antidepresivos.', criteria: 'Criterio Diferencial Bipolar' },
+
+      // 4. TRASTORNO OBSESIVO-COMPULSIVO Y AFINES (18 preguntas)
+      { id: 'q_toc_1', cat: 'cat_toc', text: 'Pensamientos, impulsos o imágenes recurrentes y persistentes que se experimentan como intrusivos, no deseados y angustiantes.', criteria: 'Criterio A Obsesiones' },
+      { id: 'q_toc_2', cat: 'cat_toc', text: 'Intentos activos por ignorar, suprimir o neutralizar los pensamientos mediante otro pensamiento o acción compensatoria.', criteria: 'Criterio A2 TOC' },
+      { id: 'q_toc_3', cat: 'cat_toc', text: 'Obsesiones recurrentes de contaminación por gérmenes, suciedad, químicos o enfermedades infecciosas.', criteria: 'Subtipo Contaminación' },
+      { id: 'q_toc_4', cat: 'cat_toc', text: 'Pensamientos intrusivos aterradores sobre causar daño involuntario a seres queridos o provocar tragedias.', criteria: 'Subtipo Daño / Agresivo' },
+      { id: 'q_toc_5', cat: 'cat_toc', text: 'Necesidad apremiante y dolorosa de simetría exacta, equilibrio visual u orden milimétrico de los objetos.', criteria: 'Subtipo Simetría' },
+      { id: 'q_toc_6', cat: 'cat_toc', text: 'Dudas patológicas continuas sobre si se ha cerrado la puerta, apagado la estufa o desconectado cables.', criteria: 'Subtipo Comprobación' },
+      { id: 'q_toc_7', cat: 'cat_toc', text: 'Conductas repetitivas de lavado de manos meticuloso, duchas prolongadas o desinfección compulsiva.', criteria: 'Compulsión de Limpieza' },
+      { id: 'q_toc_8', cat: 'cat_toc', text: 'Conductas repetitivas de comprobación sistemática (cerraduras, grifos, enchufes) varias veces antes de salir.', criteria: 'Compulsión de Chequeo' },
+      { id: 'q_toc_9', cat: 'cat_toc', text: 'Actos mentales repetitivos (contar objetos, repetir frases mentalmente, rezar ritualmente) para evitar una desgracia.', criteria: 'Compulsiones Mentales' },
+      { id: 'q_toc_10', cat: 'cat_toc', text: 'Las obsesiones y compulsiones consumen más de 1 hora al día o causan deterioro social/laboral evidente.', criteria: 'Criterio B TOC (Tiempo)' },
+      { id: 'q_toc_11', cat: 'cat_toc', text: 'Preocupación absorbente por uno o más defectos percibidos en el aspecto físico que resultan imperceptibles para terceros.', criteria: 'Trastorno Dismórfico Corporal' },
+      { id: 'q_toc_12', cat: 'cat_toc', text: 'Comportamientos repetitivos de mirarse al espejo constantemente o camuflarse excesivamente por su apariencia.', criteria: 'Criterio Dismorfia' },
+      { id: 'q_toc_13', cat: 'cat_toc', text: 'Dificultad persistente para deshacerse o desprenderse de posesiones sin importar su nulo valor real.', criteria: 'Trastorno de Acumulación' },
+      { id: 'q_toc_14', cat: 'cat_toc', text: 'Angustia o malestar intenso ante la sola idea de tirar o donar pertenencias viejas o inservibles.', criteria: 'Criterio Acumulación' },
+      { id: 'q_toc_15', cat: 'cat_toc', text: 'Acumulación de objetos que congestiona y abarrota las zonas habitables de la vivienda impidiendo su uso.', criteria: 'Criterio Espacio Acumulación' },
+      { id: 'q_toc_16', cat: 'cat_toc', text: 'Hábito repetitivo e incontrolable de arrancarse el cabello propio provocando áreas de pérdida visible.', criteria: 'Tricotilomanía' },
+      { id: 'q_toc_17', cat: 'cat_toc', text: 'Rascado o pellizcado recurrente y compulsivo de la propia piel que causa heridas y lesiones cutáneas.', criteria: 'Excoriación' },
+      { id: 'q_toc_18', cat: 'cat_toc', text: 'Reconocimiento variable de que los rituales son ilógicos pero incapacidad práctica para resistir el impulso.', criteria: 'Nivel de Introspección (Insight)' },
+
+      // 5. TRAUMAS Y FACTORES DE ESTRÉS (20 preguntas)
+      { id: 'q_tr_1', cat: 'cat_trauma', text: 'Exposición directa a la muerte, amenaza de muerte, lesiones físicas graves o violencia sexual.', criteria: 'Criterio A1 TEPT' },
+      { id: 'q_tr_2', cat: 'cat_trauma', text: 'Presencia directa como testigo del suceso traumático o violencia extrema acaecida a otros.', criteria: 'Criterio A2 TEPT' },
+      { id: 'q_tr_3', cat: 'cat_trauma', text: 'Conocimiento cercano de que el suceso traumático ocurrió a un familiar o amigo íntimo.', criteria: 'Criterio A3 TEPT' },
+      { id: 'q_tr_4', cat: 'cat_trauma', text: 'Recuerdos angustiosos recurrentes, involuntarios e intrusivos del acontecimiento traumático.', criteria: 'Criterio B1 Intrusión' },
+      { id: 'q_tr_5', cat: 'cat_trauma', text: 'Sueños angustiosos o pesadillas vívidas recurrentes donde el contenido está ligado al trauma.', criteria: 'Criterio B2 Intrusión' },
+      { id: 'q_tr_6', cat: 'cat_trauma', text: 'Reacciones disociativas (flashbacks) en las que siente o actúa como si el suceso se estuviera repitiendo en el presente.', criteria: 'Criterio B3 Intrusión (Flashbacks)' },
+      { id: 'q_tr_7', cat: 'cat_trauma', text: 'Malestar psicológico intenso al exponerse a estímulos internos o externos que recuerdan el hecho.', criteria: 'Criterio B4 Intrusión' },
+      { id: 'q_tr_8', cat: 'cat_trauma', text: 'Reacciones fisiológicas notables (taquicardia, sudoración fría, náuseas) ante factores evocadores del trauma.', criteria: 'Criterio B5 Intrusión' },
+      { id: 'q_tr_9', cat: 'cat_trauma', text: 'Evitación deliberada y persistente de recuerdos, pensamientos o emociones ligados al trauma.', criteria: 'Criterio C1 Evitación' },
+      { id: 'q_tr_10', cat: 'cat_trauma', text: 'Evitación sistemática de lugares, personas, conversaciones, objetos o actividades que recuerdan el evento.', criteria: 'Criterio C2 Evitación' },
+      { id: 'q_tr_11', cat: 'cat_trauma', text: 'Incapacidad para recordar un aspecto fundamental del trauma (amnesia disociativa).', criteria: 'Criterio D1 Cognición Negativa' },
+      { id: 'q_tr_12', cat: 'cat_trauma', text: 'Creencias negativas exageradas y persistentes sobre uno mismo o el mundo ("estoy roto", "no se puede confiar en nadie").', criteria: 'Criterio D2 Cognición Negativa' },
+      { id: 'q_tr_13', cat: 'cat_trauma', text: 'Culpa o autorreproche distorsionado sobre la causa del suceso traumático o sus consecuencias.', criteria: 'Criterio D3 Cognición Negativa' },
+      { id: 'q_tr_14', cat: 'cat_trauma', text: 'Estado emocional negativo constante (terror, furia, vergüenza, asco o culpa persistente).', criteria: 'Criterio D4 Afecto Negativo' },
+      { id: 'q_tr_15', cat: 'cat_trauma', text: 'Disminución marcada del interés en actividades significativas que antes disfrutaba plenamente.', criteria: 'Criterio D5 Anhedonia Traumática' },
+      { id: 'q_tr_16', cat: 'cat_trauma', text: 'Sentimiento constante de desapego, frialdad o extrañeza en relación con los demás seres humanos.', criteria: 'Criterio D6 Desapego' },
+      { id: 'q_tr_17', cat: 'cat_trauma', text: 'Hipervigilancia permanente, escaneo constante del entorno en busca de posibles amenazas.', criteria: 'Criterio E3 Alerta / Activación' },
+      { id: 'q_tr_18', cat: 'cat_trauma', text: 'Respuesta de sobresalto exagerada ante ruidos inesperados, timbres o movimientos repentinos.', criteria: 'Criterio E4 Sobresalto' },
+      { id: 'q_tr_19', cat: 'cat_trauma', text: 'Comportamiento irritable, explosiones de furia súbita con agresión verbal o física hacia otros.', criteria: 'Criterio E1 Irritabilidad' },
+      { id: 'q_tr_20', cat: 'cat_trauma', text: 'Síntomas emocionales y conductuales reactivos a un estresor vital identificable (divorcio, quiebra, despido) que superan lo normal.', criteria: 'Trastorno de Adaptación' },
+
+      // 6. ESPECTRO DE LA ESQUIZOFRENIA Y PSICOSIS (18 preguntas)
+      { id: 'q_psi_1', cat: 'cat_psi', text: 'Creencia firme de que personas, organizaciones o agencias están espiándole, conspirando o tramando hacerle daño.', criteria: 'Delirio Persecutorio (BANDERA ROJA)', isRedFlag: true },
+      { id: 'q_psi_2', cat: 'cat_psi', text: 'Convicción de que gestos de extraños, noticias de televisión o carteles contienen mensajes dirigidos a usted.', criteria: 'Delirio de Referencia' },
+      { id: 'q_psi_3', cat: 'cat_psi', text: 'Creencia inamovible de poseer dones divinos, conexiones místicas o misiones secretas de salvación cósmica.', criteria: 'Delirio de Grandeza' },
+      { id: 'q_psi_4', cat: 'cat_psi', text: 'Sensación de que sus pensamientos están siendo transmitidos en voz alta, robados o insertados en su mente.', criteria: 'Delirio de Robo / Difusión' },
+      { id: 'q_psi_5', cat: 'cat_psi', text: 'Escuchar voces claras cuando no hay nadie cerca que dialogan entre sí o critican sus acciones continuamente.', criteria: 'Alucinaciones Auditivas (CRÍTICO)', isRedFlag: true },
+      { id: 'q_psi_6', cat: 'cat_psi', text: 'Visiones, sombras, figuras humanas o percepciones olfativas/táctiles sin correspondencia física.', criteria: 'Alucinaciones Visuales/Sensoriales' },
+      { id: 'q_psi_7', cat: 'cat_psi', text: 'Discurso desorganizado con descarrilamiento frecuente, saltando de un tema a otro sin nexo comprensible.', criteria: 'Discurso Desorganizado' },
+      { id: 'q_psi_8', cat: 'cat_psi', text: 'Respuestas orales tangenciales que no responden a lo preguntado o con asociaciones incoherentes.', criteria: 'Tangencialidad' },
+      { id: 'q_psi_9', cat: 'cat_psi', text: 'Incoherencia grave del lenguaje ("ensalada de palabras") que imposibilita la comunicación fluida.', criteria: 'Incoherencia Grave' },
+      { id: 'q_psi_10', cat: 'cat_psi', text: 'Comportamiento manifiestamente extravagante, agitación errática o indumentaria incoherente con el clima.', criteria: 'Comportamiento Desorganizado' },
+      { id: 'q_psi_11', cat: 'cat_psi', text: 'Adopción de posturas físicas rígidas y extrañas durante horas, mutismo absoluto o negativismo (catatonía).', criteria: 'Síntomas Catatónicos' },
+      { id: 'q_psi_12', cat: 'cat_psi', text: 'Aplanamiento afectivo severo: expresión facial neutra inmutable, contacto ocular nulo y voz monótona.', criteria: 'Aplanamiento Afectivo' },
+      { id: 'q_psi_13', cat: 'cat_psi', text: 'Abulia marcada: incapacidad para iniciar o persistir en actividades orientadas a propósitos vitales.', criteria: 'Abulia (Síntoma Negativo)' },
+      { id: 'q_psi_14', cat: 'cat_psi', text: 'Alogia: empobrecimiento drástico de las respuestas espontáneas con lenguaje breve y vacío de contenido.', criteria: 'Alogia (Síntoma Negativo)' },
+      { id: 'q_psi_15', cat: 'cat_psi', text: 'Aislamiento social completo por falta de motivación para interactuar con otros seres humanos.', criteria: 'Asocialidad' },
+      { id: 'q_psi_16', cat: 'cat_psi', text: 'Pérdida radical del nivel previo de desempeño funcional, laboral y de autocuidado en los últimos meses.', criteria: 'Deterioro Premórbido' },
+      { id: 'q_psi_17', cat: 'cat_psi', text: 'Signos continuos de la alteración durante al menos seis meses consecutivos (incluyendo fases prodrómicas).', criteria: 'Criterio Temporal Esquizofrenia' },
+      { id: 'q_psi_18', cat: 'cat_psi', text: 'Ausencia de justificación de estos síntomas por intoxicación etílica, drogas alucinógenas o patología encefálica.', criteria: 'Criterio Exclusión Orgánica' },
+
+      // 7. NEURODESARROLLO Y TDAH (22 preguntas)
+      { id: 'q_neu_1', cat: 'cat_neuro', text: 'Frecuentemente no presta la debida atención a detalles o comete errores por descuido en el trabajo o estudio.', criteria: 'Criterio A1a TDAH Inatención' },
+      { id: 'q_neu_2', cat: 'cat_neuro', text: 'Dificultad constante para mantener la atención sostenida en conferencias, lecturas largas o tareas.', criteria: 'Criterio A1b TDAH Inatención' },
+      { id: 'q_neu_3', cat: 'cat_neuro', text: 'Con frecuencia parece no escuchar cuando se le habla directamente (mente ausente en otro sitio).', criteria: 'Criterio A1c TDAH Inatención' },
+      { id: 'q_neu_4', cat: 'cat_neuro', text: 'Frecuentemente no sigue instrucciones hasta el final o deja proyectos iniciados sin terminar.', criteria: 'Criterio A1d TDAH Inatención' },
+      { id: 'q_neu_5', cat: 'cat_neuro', text: 'Dificultades notables para organizar tareas, secuenciar pasos, gestionar el tiempo y cumplir plazos.', criteria: 'Criterio A1e TDAH Desorganización' },
+      { id: 'q_neu_6', cat: 'cat_neuro', text: 'Procrastinación crónica o aversión intensa ante tareas que exigen esfuerzo mental sostenido prolongado.', criteria: 'Criterio A1f TDAH Inatención' },
+      { id: 'q_neu_7', cat: 'cat_neuro', text: 'Extravía con frecuencia llaves, billetera, teléfono móvil, gafas o documentos esenciales cotidianos.', criteria: 'Criterio A1g TDAH Pérdidas' },
+      { id: 'q_neu_8', cat: 'cat_neuro', text: 'Se distrae con suma facilidad ante ruidos de fondo, movimientos irrelevantes o ideas espontáneas.', criteria: 'Criterio A1h TDAH Distracción' },
+      { id: 'q_neu_9', cat: 'cat_neuro', text: 'Olvidos continuos de compromisos cotidianos, pagos de cuentas, citas médicas o llamadas acordadas.', criteria: 'Criterio A1i TDAH Olvidos' },
+      { id: 'q_neu_10', cat: 'cat_neuro', text: 'Juguetea con las manos o pies, tamborilea los dedos o se remueve inquieto en el asiento con frecuencia.', criteria: 'Criterio A2a Hiperactividad' },
+      { id: 'q_neu_11', cat: 'cat_neuro', text: 'Se levanta en situaciones donde la convención social exige permanecer sentado (reuniones, cine).', criteria: 'Criterio A2b Hiperactividad' },
+      { id: 'q_neu_12', cat: 'cat_neuro', text: 'Sensación interna continua de inquietud o de estar impulsado por un motor acelerado interior.', criteria: 'Criterio A2c Hiperactividad' },
+      { id: 'q_neu_13', cat: 'cat_neuro', text: 'Dificultad sustancial para dedicarse con tranquilidad a actividades recreativas en calma o silencio.', criteria: 'Criterio A2d Hiperactividad' },
+      { id: 'q_neu_14', cat: 'cat_neuro', text: 'Habla de forma excesiva, acelerada o en volumen mayor al esperado en el contexto social.', criteria: 'Criterio A2e Hiperactividad' },
+      { id: 'q_neu_15', cat: 'cat_neuro', text: 'Responde precipitadamente antes de que su interlocutor haya terminado de formular la pregunta.', criteria: 'Criterio A2f Impulsividad' },
+      { id: 'q_neu_16', cat: 'cat_neuro', text: 'Le cuesta esperar su turno en conversaciones, filas de supermercado o al conducir en el tráfico.', criteria: 'Criterio A2g Impulsividad' },
+      { id: 'q_neu_17', cat: 'cat_neuro', text: 'Interrumpe o se inmiscuye frecuentemente en conversaciones, juegos o tareas ajenas de modo invasivo.', criteria: 'Criterio A2h Impulsividad' },
+      { id: 'q_neu_18', cat: 'cat_neuro', text: 'Varios de los síntomas de inatención o hiperactividad estaban presentes antes de cumplir los 12 años.', criteria: 'Criterio B TDAH Cronológico' },
+      { id: 'q_neu_19', cat: 'cat_neuro', text: 'Dificultad marcada para descifrar intenciones sociales sutiles, dobles sentidos o claves no verbales.', criteria: 'Espectro Autista Adulto (TEA)' },
+      { id: 'q_neu_20', cat: 'cat_neuro', text: 'Adherencia inflexible a rutinas milimétricas con angustia severa ante imprevistos o cambios de planes.', criteria: 'Rigidez Criterio TEA' },
+      { id: 'q_neu_21', cat: 'cat_neuro', text: 'Intereses extraordinariamente restringidos y absorbentes con fijación casi obsesiva sobre temas puntuales.', criteria: 'Intereses Especiales TEA' },
+      { id: 'q_neu_22', cat: 'cat_neuro', text: 'Hipersensibilidad sensorial atípica a etiquetas de ropa, texturas de alimentos, luces intensas o ruidos agudos.', criteria: 'Sensibilidad Sensorial TEA' },
+
+      // 8. CONDUCTA ALIMENTARIA (18 preguntas)
+      { id: 'q_tca_1', cat: 'cat_tca', text: 'Restricción severa y deliberada de la ingesta de alimentos que conduce a un peso corporal significativamente bajo.', criteria: 'Criterio A Anorexia Nerviosa' },
+      { id: 'q_tca_2', cat: 'cat_tca', text: 'Miedo intenso, casi fóbico, a ganar peso o engordar, incluso encontrándose con un peso inferior al normal.', criteria: 'Criterio B Anorexia Nerviosa' },
+      { id: 'q_tca_3', cat: 'cat_tca', text: 'Distorsión grave de la percepción corporal: sentirse con sobrepeso a pesar de la delgadez objetiva.', criteria: 'Criterio C Anorexia Nerviosa' },
+      { id: 'q_tca_4', cat: 'cat_tca', text: 'La autovaloración personal como ser humano depende primordialmente de la báscula y la silueta corporal.', criteria: 'Criterio C Anorexia / Bulimia' },
+      { id: 'q_tca_5', cat: 'cat_tca', text: 'Episodios recurrentes de atracones con consumo de cantidades de comida muy superiores a lo normal en breve tiempo.', criteria: 'Criterio A1 Bulimia / Atracón' },
+      { id: 'q_tca_6', cat: 'cat_tca', text: 'Sensación angustiosa de pérdida absoluta del control sobre la comida durante el episodio de ingesta.', criteria: 'Criterio A2 Bulimia / Atracón' },
+      { id: 'q_tca_7', cat: 'cat_tca', text: 'Conductas compensatorias inapropiadas recurrentes: inducción deliberada del vómito tras comer.', criteria: 'Compensación Purgativa (RIESGO)', isRedFlag: true },
+      { id: 'q_tca_8', cat: 'cat_tca', text: 'Uso indebido de laxantes, diuréticos, enemas o pastillas adelgazantes para evitar subir de peso.', criteria: 'Conducta Purgativa' },
+      { id: 'q_tca_9', cat: 'cat_tca', text: 'Ayuno absoluto prolongado o realización de ejercicio físico extenuante e ininterrumpido como purga.', criteria: 'Compensación No Purgativa' },
+      { id: 'q_tca_10', cat: 'cat_tca', text: 'Los episodios de atracones y conductas compensatorias ocurren al menos una vez por semana durante 3 meses.', criteria: 'Criterio Temporal Bulimia' },
+      { id: 'q_tca_11', cat: 'cat_tca', text: 'Comer mucho más rápidamente de lo habitual durante los momentos de pérdida de control alimentario.', criteria: 'Criterio Trastorno por Atracón' },
+      { id: 'q_tca_12', cat: 'cat_tca', text: 'Comer hasta sentirse desagradablemente lleno, distendido o con dolor abdominal.', criteria: 'Criterio Atracón' },
+      { id: 'q_tca_13', cat: 'cat_tca', text: 'Ingerir grandes cantidades de alimentos cuando no se experimenta sensación fisiológica de hambre.', criteria: 'Criterio Atracón' },
+      { id: 'q_tca_14', cat: 'cat_tca', text: 'Comer en soledad o a escondidas debido a la profunda vergüenza por la cantidad que se ingiere.', criteria: 'Criterio Aislamiento Atracón' },
+      { id: 'q_tca_15', cat: 'cat_tca', text: 'Sentimientos intensos de asco hacia uno mismo, depresión profunda o culpa abrumadora después de comer.', criteria: 'Criterio Afectivo Atracón' },
+      { id: 'q_tca_16', cat: 'cat_tca', text: 'Episodios de atracones habituales sin recurrir a vómitos o laxantes posteriores (Atracón Puro).', criteria: 'Trastorno por Atracón Puro' },
+      { id: 'q_tca_17', cat: 'cat_tca', text: 'Obsesión por contar calorías, pesar porciones o registrar con exactitud cada bocado ingerido.', criteria: 'Control Obsesivo Dietario' },
+      { id: 'q_tca_18', cat: 'cat_tca', text: 'Aislamiento de reuniones sociales, comidas familiares o festejos por el temor a tener que comer en público.', criteria: 'Evitación Social Alimentaria' },
+
+      // 9. SUEÑO-VIGILIA (16 preguntas)
+      { id: 'q_sue_1', cat: 'cat_sueno', text: 'Dificultad marcada para iniciar el sueño (tardar más de 45 a 60 minutos en dormirse habitualmente).', criteria: 'Insomnio de Conciliación' },
+      { id: 'q_sue_2', cat: 'cat_sueno', text: 'Despertares nocturnos frecuentes con notable dificultad para volver a conciliar el sueño.', criteria: 'Insomnio de Mantenimiento' },
+      { id: 'q_sue_3', cat: 'cat_sueno', text: 'Despertar matutino precoz (horas antes de lo previsto) sin poder volverse a dormir jamás.', criteria: 'Insomnio Terminal' },
+      { id: 'q_sue_4', cat: 'cat_sueno', text: 'Sensación constante de sueño no reparador a pesar de haber permanecido las horas habituales en cama.', criteria: 'Calidad No Restauradora' },
+      { id: 'q_sue_5', cat: 'cat_sueno', text: 'La perturbación del sueño ocurre al menos 3 noches por semana de manera regular.', criteria: 'Criterio Temporal Insomnio' },
+      { id: 'q_sue_6', cat: 'cat_sueno', text: 'La dificultad para dormir se ha prolongado de forma continua por al menos 3 meses.', criteria: 'Insomnio Crónico' },
+      { id: 'q_sue_7', cat: 'cat_sueno', text: 'Somnolencia diurna excesiva o quedarse dormido involuntariamente mientras trabaja o conduce.', criteria: 'Hipersomnia / Somnolencia (RIESGO)', isRedFlag: true },
+      { id: 'q_sue_8', cat: 'cat_sueno', text: 'Ronquidos intensos, pausas respiratorias observadas por acompañantes o despertares con sensación de ahogo.', criteria: 'Apnea Obstructiva del Sueño' },
+      { id: 'q_sue_9', cat: 'cat_sueno', text: 'Necesidad imperiosa e incómoda de mover las piernas al acostarse, que solo se alivia con el movimiento.', criteria: 'Síndrome Piernas Inquietas' },
+      { id: 'q_sue_10', cat: 'cat_sueno', text: 'Pesadillas angustiosas y repetidas que provocan despertares en estado de alerta lúcido inmediato.', criteria: 'Trastorno de Pesadillas' },
+      { id: 'q_sue_11', cat: 'cat_sueno', text: 'Despertares súbitos en estado de terror con gritos y agitación psicomotriz sin recordar el sueño.', criteria: 'Terrores Nocturnos' },
+      { id: 'q_sue_12', cat: 'cat_sueno', text: 'Episodios de levantarse de la cama y deambular por la casa mientras continúa dormido (sonambulismo).', criteria: 'Sonambulismo' },
+      { id: 'q_sue_13', cat: 'cat_sueno', text: 'Desfase severo del ritmo biológico (incapacidad de dormir antes de las 4 AM y despertar a mediodía).', criteria: 'Fase Retrasada Circadiana' },
+      { id: 'q_sue_14', cat: 'cat_sueno', text: 'Fatiga diurna acusada, fallos atencionales y labilidad emocional directamente derivados del mal dormir.', criteria: 'Deterioro Diurno por Insomnio' },
+      { id: 'q_sue_15', cat: 'cat_sueno', text: 'Uso diario de somníferos, fármacos inductores o alcohol para lograr cerrar los ojos por la noche.', criteria: 'Dependencia Hipnótica' },
+      { id: 'q_sue_16', cat: 'cat_sueno', text: 'La persona dispone de condiciones y tiempo adecuados para dormir pero persiste la imposibilidad fisiológica.', criteria: 'Criterio de Oportunidad' },
+
+      // 10. TRASTORNOS DE LA PERSONALIDAD (24 preguntas)
+      { id: 'q_per_1', cat: 'cat_pers', text: 'Suspicacia y desconfianza generalizada injustificada hacia las intenciones de los demás (cree que le engañan).', criteria: 'Personalidad Paranoide' },
+      { id: 'q_per_2', cat: 'cat_pers', text: 'Rencores persistentes; incapacidad para perdonar agravios o desaires percibidos durante años.', criteria: 'Criterio Paranoide' },
+      { id: 'q_per_3', cat: 'cat_pers', text: 'Distanciamiento absoluto de relaciones sociales, frialdad afectiva y preferencia total por la soledad.', criteria: 'Personalidad Esquizoide' },
+      { id: 'q_per_4', cat: 'cat_pers', text: 'Ideas extravagantes, pensamiento mágico y comportamiento sumamente excéntrico en el trato social.', criteria: 'Personalidad Esquizotípica' },
+      { id: 'q_per_5', cat: 'cat_pers', text: 'Esfuerzos desesperados para evitar el abandono real o imaginado de personas significativas.', criteria: 'Criterio 1 TLP (Límite)' },
+      { id: 'q_per_6', cat: 'cat_pers', text: 'Patrón de relaciones interpersonales inestables e intensas, oscilando entre idealización y devaluación.', criteria: 'Criterio 2 TLP (Límite)' },
+      { id: 'q_per_7', cat: 'cat_pers', text: 'Alteración marcada y persistente de la autoimagen, valores vitales y sentido de quién es uno mismo.', criteria: 'Criterio 3 TLP (Límite)' },
+      { id: 'q_per_8', cat: 'cat_pers', text: 'Impulsividad en al menos dos áreas autolesivas (gastos irresponsables, sexo de riesgo, drogas, atracones).', criteria: 'Criterio 4 TLP (Límite)' },
+      { id: 'q_per_9', cat: 'cat_pers', text: 'Amenazas recurrentes de suicidio, gestos autolesivos o automutilación repetitiva (cortes, quemaduras).', criteria: 'Criterio 5 TLP (BANDERA ROJA CRÍTICA)', isRedFlag: true },
+      { id: 'q_per_10', cat: 'cat_pers', text: 'Inestabilidad afectiva notable debida a una acusada reactividad del estado de ánimo (ira, pánico en horas).', criteria: 'Criterio 6 TLP (Límite)' },
+      { id: 'q_per_11', cat: 'cat_pers', text: 'Sensación crónica, angustiante y devastadora de vacío interior que nada parece calmar.', criteria: 'Criterio 7 TLP (Límite)' },
+      { id: 'q_per_12', cat: 'cat_pers', text: 'Accesos de ira intensa e inapropiada con enorme dificultad para calmar los estallidos de furia.', criteria: 'Criterio 8 TLP (Límite)' },
+      { id: 'q_per_13', cat: 'cat_pers', text: 'Fracaso recurrente para adaptarse a normas sociales legales, realizando actos delictivos o fraudulentos.', criteria: 'Personalidad Antisocial' },
+      { id: 'q_per_14', cat: 'cat_pers', text: 'Engaño reiterado, utilización de alias o estafas a los demás para provecho o placer personal.', criteria: 'Criterio Antisocial' },
+      { id: 'q_per_15', cat: 'cat_pers', text: 'Ausencia total de remordimiento tras haber lastimado, maltratado o robado a otra persona.', criteria: 'Criterio Antisocial' },
+      { id: 'q_per_16', cat: 'cat_pers', text: 'Patrón dominante de grandeza en la fantasía o conducta personal con necesidad imperiosa de admiración.', criteria: 'Personalidad Narcisista' },
+      { id: 'q_per_17', cat: 'cat_pers', text: 'Absorción continua en fantasías de éxito ilimitado, poder, brillantez intelectual o belleza insuperable.', criteria: 'Criterio Narcisista' },
+      { id: 'q_per_18', cat: 'cat_pers', text: 'Creencia de ser único y especial, esperando privilegios desmedidos y trato excepcionalmente deferente.', criteria: 'Criterio Narcisista' },
+      { id: 'q_per_19', cat: 'cat_pers', text: 'Carencia profunda de empatía: incapacidad o negativa a reconocer los sentimientos ajenos.', criteria: 'Criterio Narcisista' },
+      { id: 'q_per_20', cat: 'cat_pers', text: 'Tendencia sistemática a explotar a los demás para lograr sus propios fines personales.', criteria: 'Criterio Narcisista' },
+      { id: 'q_per_21', cat: 'cat_pers', text: 'Inhibición social extrema, sentimientos de inferioridad e hipersensibilidad al rechazo ajeno.', criteria: 'Personalidad Evasiva / Evitativa' },
+      { id: 'q_per_22', cat: 'cat_pers', text: 'Necesidad apremiante y desmedida de que otros asuman la responsabilidad en las áreas principales de su vida.', criteria: 'Personalidad Dependiente' },
+      { id: 'q_per_23', cat: 'cat_pers', text: 'Preocupación absorbente por el orden, el perfeccionismo estricto y el control mental a expensas de la flexibilidad.', criteria: 'Personalidad Obsesivo-Compulsiva' },
+      { id: 'q_per_24', cat: 'cat_pers', text: 'Perfeccionismo extremo que paraliza e interfiere con la finalización puntual de proyectos.', criteria: 'Criterio Anancástico' },
+
+      // 11. SUSTANCIAS Y ADICCIONES (18 preguntas)
+      { id: 'q_sus_1', cat: 'cat_sust', text: 'Consumo habitual de alcohol o drogas en cantidades más grandes o durante un tiempo más largo de lo previsto.', criteria: 'Criterio 1 Abuso de Sustancias' },
+      { id: 'q_sus_2', cat: 'cat_sust', text: 'Deseo persistente o esfuerzos infructuosos continuos para reducir o controlar el consumo.', criteria: 'Criterio 2 Abuso de Sustancias' },
+      { id: 'q_sus_3', cat: 'cat_sust', text: 'Inversión de gran cantidad de tiempo en conseguir la sustancia, consumirla o recuperarse de sus efectos.', criteria: 'Criterio 3 Abuso de Sustancias' },
+      { id: 'q_sus_4', cat: 'cat_sust', text: 'Deseo intenso, necesidad imperiosa o urgencia psicológica incontrolable de consumir la sustancia (craving).', criteria: 'Criterio 4 Craving' },
+      { id: 'q_sus_5', cat: 'cat_sust', text: 'Consumo recurrente que lleva al incumplimiento de deberes fundamentales laborales, escolares o familiares.', criteria: 'Criterio 5 Rol Social' },
+      { id: 'q_sus_6', cat: 'cat_sust', text: 'Continuación del consumo a pesar de experimentar problemas interpersonales continuos causados por este.', criteria: 'Criterio 6 Problemas Relacionales' },
+      { id: 'q_sus_7', cat: 'cat_sust', text: 'Abandono de actividades sociales, profesionales o recreativas importantes debido al consumo.', criteria: 'Criterio 7 Abandono de Intereses' },
+      { id: 'q_sus_8', cat: 'cat_sust', text: 'Consumo recurrente en situaciones en las que genera un riesgo físico grave (ej. conducir bajo los efectos).', criteria: 'Criterio 8 Riesgo Físico (BANDERA ROJA)', isRedFlag: true },
+      { id: 'q_sus_9', cat: 'cat_sust', text: 'Consumo continuado a pesar de saber que padece un problema físico o psicológico exacerbado por la droga.', criteria: 'Criterio 9 Conciencia de Daño' },
+      { id: 'q_sus_10', cat: 'cat_sust', text: 'Tolerancia: necesidad de cantidades marcadamente crecientes para conseguir el efecto deseado.', criteria: 'Criterio 10 Tolerancia' },
+      { id: 'q_sus_11', cat: 'cat_sust', text: 'Abstinencia: síntomas fisiológicos desagradables (temblor, sudor, agitación) al cesar o disminuir el consumo.', criteria: 'Criterio 11 Síndrome de Abstinencia' },
+      { id: 'q_sus_12', cat: 'cat_sust', text: 'Consumo de la sustancia a primera hora del día o de fármacos afines para calmar los síntomas de abstinencia.', criteria: 'Uso de Alivio' },
+      { id: 'q_sus_13', cat: 'cat_sust', text: 'Necesidad imperiosa de apostar sumas de dinero cada vez mayores en juegos de azar para lograr la excitación deseada.', criteria: 'Juego Patológico (Ludopatía)' },
+      { id: 'q_sus_14', cat: 'cat_sust', text: 'Inquietud, irritabilidad o desesperación al intentar reducir o frenar el juego de apuestas.', criteria: 'Criterio Ludopatía' },
+      { id: 'q_sus_15', cat: 'cat_sust', text: 'Ocultar a la familia mediante mentiras repetidas el grado real de dinero y tiempo dedicado al juego/adicción.', criteria: 'Engaño en Adicciones' },
+      { id: 'q_sus_16', cat: 'cat_sust', text: 'Solicitud desesperada de dinero a terceros para pagar deudas ocasionadas por apuestas o drogas.', criteria: 'Deterioro Financiero Adictivo' },
+      { id: 'q_sus_17', cat: 'cat_sust', text: 'Uso desmedido de benzodiacepinas, analgésicos opioides o estimulantes sin prescripción médica formal.', criteria: 'Uso Indebido de Fármacos' },
+      { id: 'q_sus_18', cat: 'cat_sust', text: 'Conflictos con autoridades legales o despidos laborales atribuibles al estado de intoxicación.', criteria: 'Consecuencias Graves Legales' },
+
+      // 12. SOMÁTICOS Y DISOCIATIVOS (16 preguntas)
+      { id: 'q_som_1', cat: 'cat_som', text: 'Uno o más síntomas somáticos molestos que perturban significativamente el día a día (dolor crónico, mareo).', criteria: 'Criterio A Trastorno Somático' },
+      { id: 'q_som_2', cat: 'cat_som', text: 'Pensamientos desproporcionados y persistentes sobre la gravedad de los síntomas físicos padecidos.', criteria: 'Criterio B1 Somático' },
+      { id: 'q_som_3', cat: 'cat_som', text: 'Nivel persistentemente alto de ansiedad centrado en la salud física o en el dolor corporal.', criteria: 'Criterio B2 Somático' },
+      { id: 'q_som_4', cat: 'cat_som', text: 'Tiempo y energía excesivos consagrados a consultas médicas, síntomas corporales o búsqueda de diagnósticos.', criteria: 'Criterio B3 Somático' },
+      { id: 'q_som_5', cat: 'cat_som', text: 'Preocupación absorbente por la sospecha de tener o contraer una enfermedad médica mortal no detectada.', criteria: 'Ansiedad por Enfermedad (Hipocondría)' },
+      { id: 'q_som_6', cat: 'cat_som', text: 'Alarma extrema e inmediata ante signos corporales triviales (latidos perceptibles, manchas cutáneas leves).', criteria: 'Hipervigilancia Somática' },
+      { id: 'q_som_7', cat: 'cat_som', text: 'Comprobaciones corporales repetitivas en el espejo o toma compulsiva de signos vitales (presión, oximetría).', criteria: 'Conducta de Chequeo Somático' },
+      { id: 'q_som_8', cat: 'cat_som', text: 'Pérdida súbita o alteración del movimiento voluntario o sensibilidad (parálisis, ceguera) sin causa neurológica médica.', criteria: 'Trastorno de Conversión' },
+      { id: 'q_som_9', cat: 'cat_som', text: 'Falsificación de síntomas físicos o provocación deliberada de lesiones en uno mismo para asumir el rol de enfermo.', criteria: 'Trastorno Facticio' },
+      { id: 'q_som_10', cat: 'cat_som', text: 'Sensación persistente de verse a uno mismo desde fuera del cuerpo, como un autómata o espectador (despersonalización).', criteria: 'Despersonalización' },
+      { id: 'q_som_11', cat: 'cat_som', text: 'Sensación de que el entorno, las personas o el mundo físico son artificiales, bidimensionales o de sueño (desrealización).', criteria: 'Desrealización' },
+      { id: 'q_som_12', cat: 'cat_som', text: 'Conservación intacta del juicio de realidad durante las vivencias de despersonalización (sabe que es subjetivo).', criteria: 'Insight Disociativo' },
+      { id: 'q_som_13', cat: 'cat_som', text: 'Incapacidad de recordar información personal autobiográfica crucial tras un episodio de estrés severo.', criteria: 'Amnesia Disociativa' },
+      { id: 'q_som_14', cat: 'cat_som', text: 'Disrupción de la identidad con presencia de dos o más estados de personalidad independientes identificables.', criteria: 'Trastorno de Identidad Disociativa' },
+      { id: 'q_som_15', cat: 'cat_som', text: 'Realización de múltiples análisis de laboratorio e imágenes neurológicas negativas sin alivio de la angustia.', criteria: 'Consumo Médico Recurrente' },
+      { id: 'q_som_16', cat: 'cat_som', text: 'Los síntomas corporales persisten a pesar de la reiterada tranquilización fundada de médicos especialistas.', criteria: 'Resistencia a la Tranquilización' }
+    ];
+
+    /**
+     * ESTADO GLOBAL DE LA APLICACIÓN (CLIENT-SIDE REACTIVE STATE)
+     */
+    let appState = {
+      patients: [],
+      activePatientId: null,
+      activeCategoryFilter: 'all',
+      theme: 'dark', // 'dark' | 'light'
+      charts: {
+        radar: null,
+        longitudinal: null
+      },
+      currentView: 'dashboard',
+      speechSynthesis: {
+        synth: window.speechSynthesis,
+        isSpeaking: false,
+        isPaused: false,
+        utterance: null
+      }
+    };
+
+    /**
+     * INICIALIZACIÓN DE DATOS PREDEFINIDOS (PACIENTE MODELO Y EVALUACIONES REALISTAS)
+     */
+    function initDatabase() {
+      // 1. Cargar tema guardado
+      const savedTheme = localStorage.getItem('jair_theme') || 'dark';
+      setTheme(savedTheme);
+
+      // 2. Cargar pacientes de localStorage
+      const savedPatients = localStorage.getItem('jair_patients');
+      if (savedPatients) {
+        try {
+          appState.patients = JSON.parse(savedPatients);
+        } catch (e) {
+          appState.patients = [];
+        }
+      }
+
+      // Si no hay pacientes, creamos paciente modelo realista
+      if (!appState.patients || appState.patients.length === 0) {
+        seedDemoPatient();
+      }
+
+      // Establecer paciente activo
+      const savedActiveId = localStorage.getItem('jair_active_id');
+      if (savedActiveId && appState.patients.some(p => p.id === savedActiveId)) {
+        appState.activePatientId = savedActiveId;
+      } else {
+        appState.activePatientId = appState.patients[0].id;
+      }
+
+      renderPatientSelectors();
+      renderCurrentView();
+    }
+
+    // Datos semilla para demostración inmediata
+    function seedDemoPatient() {
+      // Respuestas para Evaluación 1 (Línea Base: Severa)
+      const baseAnswers = {};
+      DSM5_QUESTIONS.forEach(q => {
+        if (q.cat === 'cat_dep') baseAnswers[q.id] = Math.floor(Math.random() * 2) + 3; // 3 o 4
+        else if (q.cat === 'cat_ans') baseAnswers[q.id] = Math.floor(Math.random() * 2) + 2; // 2 o 3
+        else if (q.cat === 'cat_sueno') baseAnswers[q.id] = 3;
+        else baseAnswers[q.id] = Math.floor(Math.random() * 2); // 0 o 1
+      });
+      baseAnswers['q_dep_9'] = 2; // Ideación pasiva
+      baseAnswers['q_dep_10'] = 0; // Sin plan específico
+
+      // Respuestas para Evaluación 2 (Seguimiento 6 semanas después: Mejoría)
+      const followUpAnswers = { ...baseAnswers };
+      DSM5_QUESTIONS.forEach(q => {
+        if (q.cat === 'cat_dep') followUpAnswers[q.id] = Math.max(0, baseAnswers[q.id] - 2);
+        if (q.cat === 'cat_ans') followUpAnswers[q.id] = Math.max(0, baseAnswers[q.id] - 1);
+        if (q.cat === 'cat_sueno') followUpAnswers[q.id] = 1;
+      });
+      followUpAnswers['q_dep_9'] = 0;
+
+      const demoPatient = {
+        id: 'pat_demo_01',
+        folio: 'JR-DSM5-2026-001',
+        name: 'Carlos M. Restrepo',
+        age: 34,
+        sex: 'Masculino',
+        occupation: 'Licenciado en Finanzas',
+        notes: 'Remitido por medicina general ante cuadro de fatiga invalidante, insomnio de conciliación y anhedonia marcada de 3 meses.',
+        createdAt: '2026-08-15T10:00:00Z',
+        evaluations: [
+          {
+            id: 'eval_01',
+            date: '2026-08-15',
+            label: 'Evaluación Inicial (Línea Base)',
+            answers: baseAnswers,
+            notes: 'Fase aguda previa al inicio de farmacoterapia y TCC.'
+          },
+          {
+            id: 'eval_02',
+            date: '2026-10-10',
+            label: 'Seguimiento (Semana 8)',
+            answers: followUpAnswers,
+            notes: 'Respuesta favorable a sertralina 100mg y activación conductual.'
+          }
+        ]
+      };
+
+      appState.patients = [demoPatient];
+      savePatientsToStorage();
+    }
+
+    function savePatientsToStorage() {
+      localStorage.setItem('jair_patients', JSON.stringify(appState.patients));
+      localStorage.setItem('jair_active_id', appState.activePatientId);
+    }
+
+    function getActivePatient() {
+      return appState.patients.find(p => p.id === appState.activePatientId) || appState.patients[0];
+    }
+
+    function getLatestEvaluation(patient) {
+      if (!patient || !patient.evaluations || patient.evaluations.length === 0) {
+        return null;
+      }
+      return patient.evaluations[patient.evaluations.length - 1];
+    }
+
+    /**
+     * MOTOR DIAGNÓSTICO DIFERENCIAL Y PONDERACIÓN DSM-5
+     */
+    function calculateClinicalMetrics(answers) {
+      const categoryScores = {};
+      const categoryPercentages = {};
+      let totalQuestionsAnswered = 0;
+      let globalScore = 0;
+      let globalMax = 0;
+
+      DSM5_CATEGORIES.forEach(cat => {
+        const catQuestions = DSM5_QUESTIONS.filter(q => q.cat === cat.id);
+        const maxCatScore = catQuestions.length * 4;
+        let currentCatScore = 0;
+
+        catQuestions.forEach(q => {
+          const val = answers[q.id] !== undefined ? Number(answers[q.id]) : 0;
+          if (answers[q.id] !== undefined) totalQuestionsAnswered++;
+          currentCatScore += val;
+        });
+
+        categoryScores[cat.id] = currentCatScore;
+        const pct = Math.round((currentCatScore / maxCatScore) * 100);
+        categoryPercentages[cat.id] = pct;
+
+        globalScore += currentCatScore;
+        globalMax += maxCatScore;
+      });
+
+      const globalSeverityPct = Math.round((globalScore / globalMax) * 100);
+
+      // Detección de Banderas Rojas
+      const redFlagsDetected = [];
+      DSM5_QUESTIONS.filter(q => q.isRedFlag).forEach(rf => {
+        const val = Number(answers[rf.id] || 0);
+        if (val >= 2) {
+          redFlagsDetected.push({
+            question: rf.text,
+            severity: val,
+            criteria: rf.criteria
+          });
+        }
+      });
+
+      // Ordenar categorías por severidad descendente
+      const sortedCats = [...DSM5_CATEGORIES].sort((a, b) => categoryPercentages[b.id] - categoryPercentages[a.id]);
+      const primaryCat = sortedCats[0];
+      const primaryPct = categoryPercentages[primaryCat.id];
+
+      // LÓGICA DE DIAGNÓSTICO DIFERENCIAL JERÁRQUICO DSM-5
+      let primaryDx = {
+        name: 'Evaluación Subclínica / Sin Criterios Plenos',
+        code: 'Z00.4',
+        confidence: primaryPct,
+        justification: 'Puntuaciones globales dentro del rango de normalidad psicopatológica sin compromiso funcional severo.'
+      };
+
+      if (primaryCat.id === 'cat_dep') {
+        if (categoryPercentages['cat_bip'] >= 45) {
+          primaryDx = {
+            name: 'Trastorno Bipolar II, Episodio Depresivo Actual (F31.81)',
+            code: 'F31.81',
+            confidence: Math.round((primaryPct + categoryPercentages['cat_bip']) / 2),
+            justification: 'Presencia simultánea de criterios depresivos mayores con antecedentes de reactividad hipomaníaca. Regla de exclusión DSM-5: no califica como depresión unipolar pura.'
+          };
+        } else if (primaryPct >= 70) {
+          primaryDx = {
+            name: 'Trastorno Depresivo Mayor, Episodio Único, Grave (F32.2)',
+            code: 'F32.2',
+            confidence: primaryPct,
+            justification: 'Cumple criterios A1 (ánimo bajo), A2 (anhedonia) y múltiples síntomas neurovegetativos por más de 14 días continuos con alteración funcional acusada.'
+          };
+        } else {
+          primaryDx = {
+            name: 'Trastorno Depresivo Mayor, Moderado (F32.1) / Distimia',
+            code: 'F32.1',
+            confidence: primaryPct,
+            justification: 'Sintomatología depresiva de intensidad moderada con impacto parcial en el desempeño social.'
+          };
+        }
+      } else if (primaryCat.id === 'cat_ans') {
+        if (categoryPercentages['cat_ans'] >= 70) {
+          primaryDx = {
+            name: 'Trastorno de Ansiedad Generalizada Grave (F41.1) con Crisis de Pánico',
+            code: 'F41.1 / F41.0',
+            confidence: primaryPct,
+            justification: 'Preocupación aprehensiva incontrolable superior a 6 meses con hiperactividad autonómica y ataques episódicos de pánico.'
+          };
+        } else {
+          primaryDx = {
+            name: 'Trastorno de Ansiedad Generalizada, Leve-Moderado (F41.1)',
+            code: 'F41.1',
+            confidence: primaryPct,
+            justification: 'Tensión muscular, rumiación aprensiva y fatigabilidad cotidiana.'
+          };
+        }
+      } else if (primaryCat.id === 'cat_bip') {
+        primaryDx = {
+          name: 'Trastorno Bipolar I, Episodio Maníaco Actual (F31.13)',
+          code: 'F31.13',
+          confidence: primaryPct,
+          justification: 'Elevación expansiva del afecto, disminución de la necesidad de dormir, fuga de ideas y conductas de alto riesgo de más de 7 días.'
+        };
+      } else if (primaryCat.id === 'cat_toc') {
+        primaryDx = {
+          name: 'Trastorno Obsesivo-Compulsivo (F42.2)',
+          code: 'F42.2',
+          confidence: primaryPct,
+          justification: 'Presencia de pensamientos intrusivos egodistónicos y compulsiones neutralizadoras que consumen más de 1 hora diaria.'
+        };
+      } else if (primaryCat.id === 'cat_trauma') {
+        primaryDx = {
+          name: 'Trastorno de Estrés Postraumático Crónico (F43.10)',
+          code: 'F43.10',
+          confidence: primaryPct,
+          justification: 'Exposición a suceso traumático severo con intrusiones (flashbacks/pesadillas), evitación fóbica e hiperactivación autonómica permanente.'
+        };
+      } else if (primaryCat.id === 'cat_psi') {
+        primaryDx = {
+          name: 'Trastorno del Espectro Esquizofrénico / Psicótico Agudo (F20.9)',
+          code: 'F20.9',
+          confidence: primaryPct,
+          justification: 'Presencia de ideas delirantes fijas, alucinaciones auditivas activas y discurso desorganizado. Intervención médica de urgencia.'
+        };
+      } else if (primaryCat.id === 'cat_neuro') {
+        primaryDx = {
+          name: 'Trastorno por Déficit de Atención e Hiperactividad en el Adulto (F90.2)',
+          code: 'F90.2',
+          confidence: primaryPct,
+          justification: 'Patrón persistente de inatención, desorganización ejecutiva crónica e inquietud motora presente desde antes de los 12 años.'
+        };
+      } else if (primaryCat.id === 'cat_tca') {
+        primaryDx = {
+          name: 'Trastorno de la Conducta Alimentaria (F50.0 / F50.2)',
+          code: 'F50.2',
+          confidence: primaryPct,
+          justification: 'Distorsión de la imagen corporal con episodios de atracones y/o conductas compensatorias purgativas de alta frecuencia.'
+        };
+      } else if (primaryCat.id === 'cat_sueno') {
+        primaryDx = {
+          name: 'Trastorno de Insomnio Crónico Primario (F51.01)',
+          code: 'F51.01',
+          confidence: primaryPct,
+          justification: 'Dificultad de conciliación y mantenimiento del sueño más de 3 veces por semana durante más de 3 meses con impacto diurno.'
+        };
+      } else if (primaryCat.id === 'cat_pers') {
+        primaryDx = {
+          name: 'Trastorno Límite de la Personalidad (TLP / F60.3)',
+          code: 'F60.3',
+          confidence: primaryPct,
+          justification: 'Inestabilidad afectiva acusada, temor al desamparo, relaciones interpersonales tempestuosas, impulsividad y sentimientos de vacío.'
+        };
+      } else if (primaryCat.id === 'cat_sust') {
+        primaryDx = {
+          name: 'Trastorno por Uso de Sustancias / Dependencia (F10.20)',
+          code: 'F10.20',
+          confidence: primaryPct,
+          justification: 'Consumo compulsivo con tolerancia, craving persistente e incumplimiento reiterado de responsabilidades sociales.'
+        };
+      } else if (primaryCat.id === 'cat_som') {
+        primaryDx = {
+          name: 'Trastorno de Síntomas Somáticos / Ansiedad por Enfermedad (F45.1)',
+          code: 'F45.1',
+          confidence: primaryPct,
+          justification: 'Preocupación desmedida por molestias físicas con consultas médicas reiteradas y cogniciones catastróficas.'
+        };
+      }
+
+      // DIAGNÓSTICOS DIFERENCIALES Y COMÓRBIDOS (Top 4)
+      const differentialList = sortedCats.slice(1, 5).map(cat => {
+        const pct = categoryPercentages[cat.id];
+        let status = 'Descartado / Subclínico';
+        if (pct >= 65) status = 'Alta Comorbilidad Coexistente';
+        else if (pct >= 45) status = 'Sospecha Clínica Moderada';
+        else if (pct >= 25) status = 'Rasgos Leves';
+
+        return {
+          categoryName: cat.name,
+          code: cat.code,
+          pct: pct,
+          status: status,
+          criteria: `Puntaje obtenido: ${categoryScores[cat.id]}/${cat.count * 4} puntos (${pct}%).`
+        };
+      });
+
+      // Factores de Riesgo y Protección
+      const riskFactors = [];
+      const protectionFactors = [];
+
+      if (categoryPercentages['cat_dep'] >= 50) riskFactors.push('Ánimo deprimido persistente con riesgo de aislamiento y pérdida de energía.');
+      if (categoryPercentages['cat_sueno'] >= 50) riskFactors.push('Perturbación severa del ciclo circadiano que potencia desregulaciones anímicas.');
+      if (categoryPercentages['cat_sust'] >= 30) riskFactors.push('Consumo problemático de sustancias como estrategia de afrontamiento desadaptativa.');
+      if (redFlagsDetected.length > 0) riskFactors.push('Presencia de banderas rojas clínicas (ideación autolítica o impulsividad severa).');
+      if (riskFactors.length === 0) riskFactors.push('Estrés vital cotidiano moderado sin comorbilidades orgánicas reportadas.');
+
+      protectionFactors.push('Conciencia de enfermedad (insight) y búsqueda activa de apoyo psicoterapéutico.');
+      if (categoryPercentages['cat_sust'] < 20) protectionFactors.push('Ausencia de dependencia química o abuso activo de alcohol/drogas.');
+      if (categoryPercentages['cat_psi'] < 15) protectionFactors.push('Juicio de realidad y funciones ejecutivas corticales conservadas.');
+      protectionFactors.push('Estructura familiar y red de contención social susceptible de activación.');
+
+      // Pronóstico
+      let prognosis = {
+        title: 'Favorable con Tratamiento Especializado',
+        badgeClass: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800',
+        description: 'El paciente cuenta con factores protectores suficientes para responder de manera óptima a psicoterapia cognitivo-conductual estructurada y medidas psicoeducativas.'
+      };
+
+      if (redFlagsDetected.length > 0 || globalSeverityPct >= 65) {
+        prognosis = {
+          title: 'Reservado con Monitoreo Estricto',
+          badgeClass: 'text-amber-600 bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800',
+          description: 'La elevada severidad sintomática y la presencia de banderas rojas requieren abordaje psiquiátrico interdisciplinar inmediato con plan de seguridad de contingencia.'
+        };
+      }
+
+      // Plan Terapéutico
+      const treatmentPlan = [
+        'Interconsulta Psiquiátrica Prioritaria para valoración psicofarmacológica (considerar ISRS / estabilizadores según eje principal).',
+        'Psicoterapia de Primera Línea: Terapia Cognitivo-Conductual (TCC) centrada en reestructuración cognitiva y activación conductual.',
+        'Higiene del Sueño y Ritmos Circadianos: Protocolo de restricción de estímulos nocturnos y regularización horaria.',
+        'Protocolo de Prevención de Crisis: Definir red de apoyo familiar directa y líneas de atención de emergencia.'
+      ];
+
+      return {
+        categoryScores,
+        categoryPercentages,
+        globalSeverityPct,
+        totalQuestionsAnswered,
+        redFlagsDetected,
+        primaryDx,
+        differentialList,
+        riskFactors,
+        protectionFactors,
+        prognosis,
+        treatmentPlan,
+        sortedCats
+      };
+    }
+
+    /**
+     * RENDERIZADO DEL DASHBOARD CLÍNICO
+     */
+    function renderDashboard() {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      const metrics = calculateClinicalMetrics(evalData.answers);
+
+      // KPI: Diagnóstico Principal
+      document.getElementById('kpi-primary-dx').innerText = metrics.primaryDx.name;
+      document.getElementById('kpi-primary-code').innerText = `CIE-10 / DSM-5: ${metrics.primaryDx.code} (${metrics.primaryDx.confidence}%)`;
+
+      // KPI: Severidad Global
+      document.getElementById('kpi-severity-score').innerText = `${metrics.globalSeverityPct}%`;
+      const sevLabel = document.getElementById('kpi-severity-label');
+      const sevBar = document.getElementById('kpi-severity-bar');
+      sevBar.style.width = `${metrics.globalSeverityPct}%`;
+
+      if (metrics.globalSeverityPct < 25) {
+        sevLabel.innerText = 'Subclínico';
+        sevLabel.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+        sevBar.className = 'bg-emerald-500 h-1.5 rounded-full';
+      } else if (metrics.globalSeverityPct < 50) {
+        sevLabel.innerText = 'Leve';
+        sevLabel.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300';
+        sevBar.className = 'bg-amber-500 h-1.5 rounded-full';
+      } else if (metrics.globalSeverityPct < 75) {
+        sevLabel.innerText = 'Moderado';
+        sevLabel.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300';
+        sevBar.className = 'bg-orange-500 h-1.5 rounded-full';
+      } else {
+        sevLabel.innerText = 'Grave / Severo';
+        sevLabel.className = 'text-xs font-semibold px-2 py-0.5 rounded bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300';
+        sevBar.className = 'bg-rose-500 h-1.5 rounded-full';
+      }
+
+      // KPI: Pronóstico
+      document.getElementById('kpi-prognosis-title').innerText = metrics.prognosis.title;
+      document.getElementById('kpi-prognosis-desc').innerText = metrics.prognosis.description;
+
+      // KPI: Respondidas
+      document.getElementById('kpi-answered-count').innerText = metrics.totalQuestionsAnswered;
+
+      // Alerta de Banderas Rojas
+      const redFlagsBox = document.getElementById('red-flags-alert-container');
+      const redFlagsText = document.getElementById('red-flags-text');
+      if (metrics.redFlagsDetected.length > 0) {
+        redFlagsBox.classList.remove('hidden');
+        redFlagsText.innerHTML = metrics.redFlagsDetected.map(rf => 
+          `• <strong>${rf.criteria}:</strong> "${rf.question}" (Nivel reportado: ${rf.severity}/4)`
+        ).join('<br>');
+      } else {
+        redFlagsBox.classList.add('hidden');
+      }
+
+      // Lista de Desglose de Severidad por Dominio
+      const breakdownList = document.getElementById('severity-breakdown-list');
+      breakdownList.innerHTML = metrics.sortedCats.map(cat => {
+        const pct = metrics.categoryPercentages[cat.id];
+        let colorClass = 'bg-emerald-500';
+        if (pct >= 75) colorClass = 'bg-rose-500';
+        else if (pct >= 50) colorClass = 'bg-orange-500';
+        else if (pct >= 25) colorClass = 'bg-amber-500';
+
+        return `
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="font-medium text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">${cat.name}</span>
+              <span class="font-mono font-bold text-zinc-800 dark:text-zinc-200">${pct}%</span>
+            </div>
+            <div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden">
+              <div class="${colorClass} h-1.5 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Factores de Riesgo y Protección en Dashboard
+      document.getElementById('dashboard-risk-factors').innerHTML = metrics.riskFactors.map(rf => `<li>${rf}</li>`).join('');
+      document.getElementById('dashboard-protection-factors').innerHTML = metrics.protectionFactors.map(pf => `<li>${pf}</li>`).join('');
+
+      // Plan Terapéutico en Dashboard
+      document.getElementById('dashboard-therapeutic-plan').innerHTML = metrics.treatmentPlan.map((step, idx) => 
+        `<div class="flex items-start gap-2"><span class="w-4 h-4 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 flex items-center justify-center shrink-0 font-bold text-[10px]">${idx + 1}</span><span>${step}</span></div>`
+      ).join('');
+
+      // Renderizar Gráfica Radar Chart.js
+      renderRadarChart(metrics);
+    }
+
+    /**
+     * RENDERIZAR GRÁFICA RADAR DE SÍNTOMAS MULTIAXIAL
+     */
+    function renderRadarChart(metricsData) {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      const metrics = metricsData || calculateClinicalMetrics(evalData.answers);
+      const ctx = document.getElementById('radarChart');
+      if (!ctx) return;
+
+      const labels = DSM5_CATEGORIES.map(c => c.name.replace('Trastornos ', '').replace('Trastorno ', ''));
+      const dataPoints = DSM5_CATEGORIES.map(c => metrics.categoryPercentages[c.id]);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+      const textColor = isDark ? '#a1a1aa' : '#52525b';
+
+      if (appState.charts.radar) {
+        appState.charts.radar.destroy();
+      }
+
+      appState.charts.radar = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `Evaluación Actual (${evalData.date})`,
+            data: dataPoints,
+            fill: true,
+            backgroundColor: isDark ? 'rgba(2, 132, 199, 0.25)' : 'rgba(2, 132, 199, 0.2)',
+            borderColor: '#0284c7',
+            pointBackgroundColor: '#0369a1',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#0284c7',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Severidad: ${context.raw}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            r: {
+              angleLines: { color: gridColor },
+              grid: { color: gridColor },
+              pointLabels: {
+                color: textColor,
+                font: { size: 10, weight: '500' }
+              },
+              suggestedMin: 0,
+              suggestedMax: 100,
+              ticks: {
+                stepSize: 25,
+                backdropColor: 'transparent',
+                color: textColor,
+                font: { size: 9 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * RENDERIZAR CUESTIONARIO COMPLETO (236 PREGUNTAS)
+     */
+    function renderQuestionnaire() {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      const answers = evalData ? evalData.answers : {};
+
+      const container = document.getElementById('questions-list-container');
+      const filtered = appState.activeCategoryFilter === 'all' 
+        ? DSM5_QUESTIONS 
+        : DSM5_QUESTIONS.filter(q => q.cat === appState.activeCategoryFilter);
+
+      let answeredCount = 0;
+      DSM5_QUESTIONS.forEach(q => {
+        if (answers[q.id] !== undefined && answers[q.id] !== null) answeredCount++;
+      });
+
+      const pct = Math.round((answeredCount / DSM5_QUESTIONS.length) * 100);
+      document.getElementById('questionnaire-progress-text').innerText = `${answeredCount} / ${DSM5_QUESTIONS.length} respondidas (${pct}%)`;
+      document.getElementById('questionnaire-progress-bar').style.width = `${pct}%`;
+      document.getElementById('floating-answered-count').innerText = `${answeredCount} / ${DSM5_QUESTIONS.length}`;
+
+      container.innerHTML = filtered.map((q, index) => {
+        const currentVal = answers[q.id] !== undefined ? answers[q.id] : 0;
+        const catInfo = DSM5_CATEGORIES.find(c => c.id === q.cat);
+
+        return `
+          <div class="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-sm transition hover:border-zinc-300 dark:hover:border-zinc-700 space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-bold uppercase tracking-wider">
+                    ${catInfo ? catInfo.name : ''}
+                  </span>
+                  <span class="text-[10px] text-zinc-400 font-mono">${q.criteria}</span>
+                  ${q.isRedFlag ? '<span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">⚠️ BANDERA ROJA</span>' : ''}
+                </div>
+                <p class="text-xs sm:text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-snug">
+                  ${q.text}
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 px-2 py-1 rounded">
+                ${currentVal} / 4
+              </span>
+            </div>
+
+            <!-- Escala Likert de 0 a 4 -->
+            <div class="grid grid-cols-5 gap-1.5 sm:gap-2 text-[11px] pt-1">
+              ${[0, 1, 2, 3, 4].map(val => {
+                const isSelected = currentVal === val;
+                const labels = ['0: Nunca / Ausente', '1: Leve / Ocasional', '2: Moderado (semanal)', '3: Grave (casi a diario)', '4: Extremo'];
+                const selectedClass = isSelected 
+                  ? 'bg-sky-600 text-white font-bold ring-2 ring-sky-500 shadow-sm' 
+                  : 'bg-zinc-50 dark:bg-zinc-800/80 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700/60';
+                
+                return `
+                  <button type="button" onclick="setAnswerValue('${q.id}', ${val})" class="py-2 px-1 text-center rounded-lg transition text-[10px] sm:text-xs truncate ${selectedClass}">
+                    ${labels[val]}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function setAnswerValue(questionId, value) {
+      const patient = getActivePatient();
+      let evalData = getLatestEvaluation(patient);
+      if (!evalData) {
+        evalData = {
+          id: 'eval_' + Date.now(),
+          date: new Date().toISOString().split('T')[0],
+          label: 'Evaluación Activa',
+          answers: {},
+          notes: ''
+        };
+        patient.evaluations.push(evalData);
+      }
+
+      evalData.answers[questionId] = value;
+      savePatientsToStorage();
+      renderQuestionnaire();
+    }
+
+    function filterQuestionCategory(catId) {
+      appState.activeCategoryFilter = catId;
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-zinc-900', 'text-white', 'dark:bg-white', 'dark:text-zinc-900');
+        btn.classList.add('bg-zinc-100', 'text-zinc-600', 'dark:bg-zinc-800', 'dark:text-zinc-400');
+      });
+      event.target.classList.add('active', 'bg-zinc-900', 'text-white', 'dark:bg-white', 'dark:text-zinc-900');
+      event.target.classList.remove('bg-zinc-100', 'text-zinc-600', 'dark:bg-zinc-800', 'dark:text-zinc-400');
+      renderQuestionnaire();
+    }
+
+    function autoFillRandomEvaluation(level) {
+      const patient = getActivePatient();
+      let evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      DSM5_QUESTIONS.forEach(q => {
+        if (level === 'mild') {
+          evalData.answers[q.id] = Math.random() > 0.6 ? 1 : 0;
+        } else if (level === 'severe') {
+          evalData.answers[q.id] = Math.floor(Math.random() * 2) + 2; // 2 o 3
+        }
+      });
+      savePatientsToStorage();
+      renderQuestionnaire();
+      showToast('Perfil de respuestas cargado exitosamente.', 'success');
+    }
+
+    function resetCurrentEvaluation() {
+      if (!confirm('¿Desea reiniciar a cero todas las respuestas de esta evaluación?')) return;
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (evalData) {
+        evalData.answers = {};
+        savePatientsToStorage();
+        renderQuestionnaire();
+        showToast('Cuestionario reiniciado.', 'info');
+      }
+    }
+
+    function saveAndProcessEvaluation() {
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+      showToast('Evaluación procesada con éxito. Abriendo Informe Clínico...', 'success');
+      setTimeout(() => {
+        navigateTo('diagnostic');
+      }, 700);
+    }
+
+    /**
+     * RENDERIZAR DIAGNÓSTICO DIFERENCIAL
+     */
+    function renderDiagnostic() {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      const metrics = calculateClinicalMetrics(evalData.answers);
+
+      // Tarjeta Principal
+      document.getElementById('dx-primary-name').innerText = metrics.primaryDx.name;
+      document.getElementById('dx-primary-confidence').innerText = `Concordancia Criterial: ${metrics.primaryDx.confidence}%`;
+      document.getElementById('dx-primary-justification').innerText = metrics.primaryDx.justification;
+
+      // Tabla de Diferenciales
+      const tbody = document.getElementById('differential-table-body');
+      tbody.innerHTML = metrics.differentialList.map(item => `
+        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition">
+          <td class="p-3 font-semibold text-zinc-900 dark:text-white">${item.categoryName}</td>
+          <td class="p-3 font-mono text-sky-600 dark:text-sky-400">${item.code}</td>
+          <td class="p-3 font-bold">${item.pct}%</td>
+          <td class="p-3 text-zinc-500 dark:text-zinc-400">${item.criteria}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[11px] font-medium ${item.pct >= 50 ? 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300' : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}">
+              ${item.status}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      // Reglas de Exclusión
+      const rulesBox = document.getElementById('exclusion-rules-container');
+      rulesBox.innerHTML = `
+        <div class="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 space-y-1">
+          <strong class="text-zinc-900 dark:text-white">Regla de Jerarquía Afectiva (DSM-5 Sección II):</strong>
+          <p>Se evaluó la presencia de síntomas expansivos/maníacos concurrentes. ${metrics.categoryPercentages['cat_bip'] > 40 ? '⚠️ DETECCIÓN: Coexistencia de polo maníaco/hipomaníaco incompatible con Trastorno Depresivo Unipolar simple.' : 'Descartado episodio maníaco activo; el cuadro es compatible con polaridad unipolar.'}</p>
+        </div>
+        <div class="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 space-y-1">
+          <strong class="text-zinc-900 dark:text-white">Criterio de Exclusión Orgánica / Sustancias:</strong>
+          <p>Puntaje en adicciones y sustancias: ${metrics.categoryPercentages['cat_sust']}%. ${metrics.categoryPercentages['cat_sust'] > 50 ? '⚠️ Alerta de etiología tóxica o secundaria a abstinencia.' : 'No se evidencia causalidad tóxica directa como factor precipitante exclusivo.'}</p>
+        </div>
+      `;
+    }
+
+    /**
+     * RENDERIZAR INFORME CLÍNICO COMPLETO
+     */
+    function renderReport() {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      const metrics = calculateClinicalMetrics(evalData.answers);
+
+      document.getElementById('report-date').innerText = evalData.date;
+      document.getElementById('report-folio').innerText = patient.folio || 'JR-DSM5-2026-001';
+
+      document.getElementById('rep-patient-name').innerText = patient.name;
+      document.getElementById('rep-patient-age-sex').innerText = `${patient.age} años • ${patient.sex}`;
+      document.getElementById('rep-patient-occ').innerText = patient.occupation || 'No registrada';
+      document.getElementById('rep-patient-id').innerText = patient.id;
+
+      document.getElementById('rep-dx-title').innerText = metrics.primaryDx.name;
+      document.getElementById('rep-dx-badge').innerText = `Compatibilidad ${metrics.primaryDx.confidence}%`;
+      document.getElementById('rep-dx-desc').innerText = metrics.primaryDx.justification;
+
+      // Lista de diferenciales
+      document.getElementById('rep-differential-list').innerHTML = metrics.differentialList.map(item => `
+        <div class="p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/30 flex justify-between items-center">
+          <div>
+            <strong>${item.categoryName}</strong> (${item.code})
+            <p class="text-[11px] text-zinc-500">${item.criteria}</p>
+          </div>
+          <span class="font-bold text-sky-600 dark:text-sky-400 font-mono">${item.pct}%</span>
+        </div>
+      `).join('');
+
+      // Tabla de ejes
+      document.getElementById('rep-axes-table-container').innerHTML = `
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-zinc-200 dark:border-zinc-800 text-zinc-400">
+              <th class="py-1.5">Dominio DSM-5</th>
+              <th class="py-1.5">Puntaje Bruto</th>
+              <th class="py-1.5">Severidad</th>
+              <th class="py-1.5">Nivel Clínico</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800">
+            ${DSM5_CATEGORIES.map(cat => {
+              const pct = metrics.categoryPercentages[cat.id];
+              let label = 'Subclínico';
+              if (pct >= 75) label = 'Grave';
+              else if (pct >= 50) label = 'Moderado';
+              else if (pct >= 25) label = 'Leve';
+
+              return `
+                <tr>
+                  <td class="py-1.5 font-medium">${cat.name}</td>
+                  <td class="py-1.5 font-mono">${metrics.categoryScores[cat.id]}/${cat.count * 4}</td>
+                  <td class="py-1.5 font-bold font-mono">${pct}%</td>
+                  <td class="py-1.5">${label}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      // Factores
+      document.getElementById('rep-risk-list').innerHTML = metrics.riskFactors.map(rf => `<p>• ${rf}</p>`).join('');
+      document.getElementById('rep-protection-list').innerHTML = metrics.protectionFactors.map(pf => `<p>• ${pf}</p>`).join('');
+
+      // Pronóstico
+      document.getElementById('rep-prognosis-box').innerHTML = `
+        <div class="space-y-1">
+          <strong class="text-zinc-900 dark:text-white">${metrics.prognosis.title}</strong>
+          <p class="text-zinc-600 dark:text-zinc-300">${metrics.prognosis.description}</p>
+        </div>
+      `;
+
+      // Tratamiento
+      document.getElementById('rep-treatment-plan').innerHTML = metrics.treatmentPlan.map((step, idx) => 
+        `<div class="flex items-start gap-2"><span>${idx + 1}.</span><span>${step}</span></div>`
+      ).join('');
+    }
+
+    /**
+     * RENDERIZAR SEGUIMIENTO LONGITUDINAL
+     */
+    function renderLongitudinal() {
+      const patient = getActivePatient();
+      const selectA = document.getElementById('longitudinal-eval-a');
+      const selectB = document.getElementById('longitudinal-eval-b');
+
+      if (!patient.evaluations || patient.evaluations.length < 2) {
+        selectA.innerHTML = '<option>Se requieren al menos 2 evaluaciones</option>';
+        selectB.innerHTML = '<option>--</option>';
+        document.getElementById('longitudinal-delta-tbody').innerHTML = `
+          <tr><td colspan="5" class="p-6 text-center text-zinc-400">Este paciente tiene solo 1 evaluación registrada. Registre una nueva evaluación en el Cuestionario para habilitar la comparación longitudinal.</td></tr>
+        `;
+        return;
+      }
+
+      selectA.innerHTML = patient.evaluations.map((ev, i) => `<option value="${ev.id}">${ev.date} - ${ev.label}</option>`).join('');
+      selectB.innerHTML = patient.evaluations.map((ev, i) => `<option value="${ev.id}" ${i === patient.evaluations.length - 1 ? 'selected' : ''}>${ev.date} - ${ev.label}</option>`).join('');
+
+      updateLongitudinalComparison();
+    }
+
+    function updateLongitudinalComparison() {
+      const patient = getActivePatient();
+      const idA = document.getElementById('longitudinal-eval-a').value;
+      const idB = document.getElementById('longitudinal-eval-b').value;
+
+      const evalA = patient.evaluations.find(e => e.id === idA) || patient.evaluations[0];
+      const evalB = patient.evaluations.find(e => e.id === idB) || patient.evaluations[patient.evaluations.length - 1];
+
+      const metricsA = calculateClinicalMetrics(evalA.answers);
+      const metricsB = calculateClinicalMetrics(evalB.answers);
+
+      // Tabla de deltas
+      const tbody = document.getElementById('longitudinal-delta-tbody');
+      tbody.innerHTML = DSM5_CATEGORIES.map(cat => {
+        const pctA = metricsA.categoryPercentages[cat.id];
+        const pctB = metricsB.categoryPercentages[cat.id];
+        const delta = pctB - pctA;
+
+        let deltaBadge = `<span class="text-zinc-400 font-mono">0% (Estable)</span>`;
+        let interp = 'Sin cambio clínico apreciable';
+
+        if (delta < 0) {
+          deltaBadge = `<span class="text-emerald-600 dark:text-emerald-400 font-bold font-mono">↓ ${Math.abs(delta)}%</span>`;
+          interp = 'Mejoría sintomática significativa';
+        } else if (delta > 0) {
+          deltaBadge = `<span class="text-rose-600 dark:text-rose-400 font-bold font-mono">↑ ${delta}%</span>`;
+          interp = 'Exacerbación / Deterioro sintomático';
+        }
+
+        return `
+          <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
+            <td class="p-3 font-semibold text-zinc-900 dark:text-white">${cat.name}</td>
+            <td class="p-3 font-mono">${pctA}%</td>
+            <td class="p-3 font-mono font-bold">${pctB}%</td>
+            <td class="p-3">${deltaBadge}</td>
+            <td class="p-3 text-xs text-zinc-500 dark:text-zinc-400">${interp}</td>
+          </tr>
+        `;
+      }).join('');
+
+      // Gráfica de líneas longitudinales
+      const ctx = document.getElementById('longitudinalChart');
+      if (!ctx) return;
+
+      if (appState.charts.longitudinal) {
+        appState.charts.longitudinal.destroy();
+      }
+
+      const labels = DSM5_CATEGORIES.map(c => c.name.replace('Trastornos ', '').replace('Trastorno ', ''));
+      const isDark = document.documentElement.classList.contains('dark');
+      const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+      const textColor = isDark ? '#a1a1aa' : '#52525b';
+
+      appState.charts.longitudinal = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: `Base: ${evalA.date}`,
+              data: DSM5_CATEGORIES.map(c => metricsA.categoryPercentages[c.id]),
+              backgroundColor: 'rgba(156, 163, 175, 0.6)',
+              borderRadius: 4
+            },
+            {
+              label: `Actual: ${evalB.date}`,
+              data: DSM5_CATEGORIES.map(c => metricsB.categoryPercentages[c.id]),
+              backgroundColor: 'rgba(2, 132, 199, 0.85)',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { color: textColor }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: gridColor },
+              ticks: { color: textColor, font: { size: 10 } }
+            },
+            y: {
+              suggestedMin: 0,
+              suggestedMax: 100,
+              grid: { color: gridColor },
+              ticks: {
+                color: textColor,
+                callback: function(v) { return v + '%'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    /**
+     * RENDERIZAR TABLA DE PACIENTES
+     */
+    function renderPatientsTable() {
+      const tbody = document.getElementById('patients-table-tbody');
+      tbody.innerHTML = appState.patients.map(p => {
+        const latest = getLatestEvaluation(p);
+        const metrics = latest ? calculateClinicalMetrics(latest.answers) : null;
+        const isActive = p.id === appState.activePatientId;
+
+        return `
+          <tr class="${isActive ? 'bg-sky-50/40 dark:bg-sky-950/20' : ''} hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition">
+            <td class="p-3">
+              <div class="font-bold text-zinc-900 dark:text-white flex items-center gap-1.5">
+                ${p.name}
+                ${isActive ? '<span class="text-[9px] bg-sky-600 text-white font-bold px-1.5 py-0.2 rounded">ACTIVO</span>' : ''}
+              </div>
+              <span class="text-[11px] text-zinc-400">${p.occupation || 'General'}</span>
+            </td>
+            <td class="p-3 font-mono text-zinc-500">${p.folio || p.id}</td>
+            <td class="p-3">${p.age}a • ${p.sex}</td>
+            <td class="p-3 font-mono font-bold">${p.evaluations ? p.evaluations.length : 0}</td>
+            <td class="p-3 text-zinc-500">${latest ? latest.date : 'Sin fecha'}</td>
+            <td class="p-3 font-medium text-sky-600 dark:text-sky-400 truncate max-w-[180px]">
+              ${metrics ? metrics.primaryDx.name : 'Pendiente'}
+            </td>
+            <td class="p-3 text-right space-x-1">
+              <button onclick="changeActivePatient('${p.id}')" class="px-2 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded text-[11px] font-medium">
+                Seleccionar
+              </button>
+              ${appState.patients.length > 1 ? `
+                <button onclick="deletePatient('${p.id}')" class="p-1 hover:bg-rose-100 dark:hover:bg-rose-950 text-rose-600 rounded" title="Eliminar paciente">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i>
+                </button>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    /**
+     * SELECTOR DE PACIENTES EN SIDEBAR
+     */
+    function renderPatientSelectors() {
+      const select = document.getElementById('active-patient-select');
+      select.innerHTML = appState.patients.map(p => `
+        <option value="${p.id}" ${p.id === appState.activePatientId ? 'selected' : ''}>
+          ${p.name} (${p.age}a)
+        </option>
+      `).join('');
+
+      const active = getActivePatient();
+      if (active) {
+        document.getElementById('patient-age-sex').innerText = `${active.age} años • ${active.sex}`;
+        document.getElementById('patient-eval-count').innerText = `${active.evaluations ? active.evaluations.length : 0} evals`;
+      }
+    }
+
+    function changeActivePatient(newId) {
+      appState.activePatientId = newId;
+      savePatientsToStorage();
+      renderPatientSelectors();
+      renderCurrentView();
+      showToast(`Paciente activo cambiado a: ${getActivePatient().name}`, 'info');
+    }
+
+    function deletePatient(patientId) {
+      if (!confirm('¿Está seguro de eliminar este paciente y todo su historial de evaluaciones?')) return;
+      appState.patients = appState.patients.filter(p => p.id !== patientId);
+      if (appState.activePatientId === patientId) {
+        appState.activePatientId = appState.patients[0].id;
+      }
+      savePatientsToStorage();
+      renderPatientSelectors();
+      renderPatientsTable();
+      renderCurrentView();
+      showToast('Paciente eliminado.', 'info');
+    }
+
+    function openNewPatientModal() {
+      document.getElementById('modal-new-patient').classList.remove('hidden');
+    }
+
+    function closeNewPatientModal() {
+      document.getElementById('modal-new-patient').classList.add('hidden');
+    }
+
+    function handleCreatePatientSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('inp-pat-name').value.trim();
+      const age = parseInt(document.getElementById('inp-pat-age').value);
+      const sex = document.getElementById('inp-pat-sex').value;
+      const occ = document.getElementById('inp-pat-occ').value.trim();
+      const notes = document.getElementById('inp-pat-notes').value.trim();
+
+      const newId = 'pat_' + Date.now();
+      const newFolio = `JR-DSM5-2026-${String(appState.patients.length + 1).padStart(3, '0')}`;
+
+      const newPatient = {
+        id: newId,
+        folio: newFolio,
+        name,
+        age,
+        sex,
+        occupation: occ,
+        notes,
+        createdAt: new Date().toISOString(),
+        evaluations: [
+          {
+            id: 'eval_' + Date.now(),
+            date: new Date().toISOString().split('T')[0],
+            label: 'Evaluación Inicial',
+            answers: {},
+            notes: 'Primera sesión clínica.'
+          }
+        ]
+      };
+
+      appState.patients.push(newPatient);
+      appState.activePatientId = newId;
+      savePatientsToStorage();
+
+      closeNewPatientModal();
+      document.getElementById('form-new-patient').reset();
+      renderPatientSelectors();
+      navigateTo('questionnaire');
+      showToast('Paciente creado. Comenzando cuestionario DSM-5.', 'success');
+    }
+
+    /**
+     * NAVEGACIÓN Y CAMBIO DE VISTAS
+     */
+    function navigateTo(viewId) {
+      appState.currentView = viewId;
+
+      // Ocultar todas las vistas
+      document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
+
+      // Mostrar vista seleccionada
+      const target = document.getElementById(`view-${viewId}`);
+      if (target) target.classList.remove('hidden');
+
+      // Actualizar botones de navegación
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'text-sky-700', 'bg-sky-50', 'dark:text-sky-300', 'dark:bg-sky-950/60', 'border', 'border-sky-200', 'dark:border-sky-900');
+        btn.classList.add('text-zinc-600', 'dark:text-zinc-400');
+      });
+      const activeNavBtn = document.getElementById(`nav-btn-${viewId}`);
+      if (activeNavBtn) {
+        activeNavBtn.classList.add('active', 'text-sky-700', 'bg-sky-50', 'dark:text-sky-300', 'dark:bg-sky-950/60', 'border', 'border-sky-200', 'dark:border-sky-900');
+        activeNavBtn.classList.remove('text-zinc-600', 'dark:text-zinc-400');
+      }
+
+      // Actualizar títulos de cabecera
+      const titles = {
+        dashboard: { title: 'Dashboard Clínico', subtitle: 'Visión global multiaxial y perfil del paciente activo' },
+        questionnaire: { title: 'Cuestionario DSM-5 Adaptativo', subtitle: 'Protocolo de 236 ítems organizados por 12 ejes clínicos' },
+        diagnostic: { title: 'Diagnóstico Diferencial Automatizado', subtitle: 'Matriz algorítmica de concordancia y reglas de exclusión' },
+        report: { title: 'Informe Clínico Completo', subtitle: 'Documento psicodiagnóstico oficial listo para impresión y archivo' },
+        longitudinal: { title: 'Seguimiento Longitudinal', subtitle: 'Comparador de evolución clínica entre evaluaciones sucesivas' },
+        upload: { title: 'Análisis Documental (PDF/DOCX)', subtitle: 'Extracción semántica de notas clínicas e informes externos' },
+        patients: { title: 'Historial de Pacientes', subtitle: 'Directorio clínico guardado en almacenamiento local cliente' }
+      };
+
+      if (titles[viewId]) {
+        document.getElementById('page-title').innerText = titles[viewId].title;
+        document.getElementById('page-subtitle').innerText = titles[viewId].subtitle;
+      }
+
+      renderCurrentView();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderCurrentView() {
+      if (appState.currentView === 'dashboard') renderDashboard();
+      else if (appState.currentView === 'questionnaire') renderQuestionnaire();
+      else if (appState.currentView === 'diagnostic') renderDiagnostic();
+      else if (appState.currentView === 'report') renderReport();
+      else if (appState.currentView === 'longitudinal') renderLongitudinal();
+      else if (appState.currentView === 'patients') renderPatientsTable();
+      lucide.createIcons();
+    }
+
+    /**
+     * CONTROL DE TEMA (DARK / LIGHT MODE)
+     */
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+    }
+
+    function setTheme(theme) {
+      appState.theme = theme;
+      localStorage.setItem('jair_theme', theme);
+
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
+        if (themeText) themeText.innerText = 'Modo Claro';
+      } else {
+        html.classList.remove('dark');
+        if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
+        if (themeText) themeText.innerText = 'Modo Oscuro';
+      }
+
+      lucide.createIcons();
+      if (appState.charts.radar) renderRadarChart();
+      if (appState.charts.longitudinal) updateLongitudinalComparison();
+    }
+
+    /**
+     * SÍNTESIS DE VOZ CLÍNICA (SPEECHSYNTHESIS)
+     */
+    function playClinicalVoiceSummary() {
+      if (!window.speechSynthesis) {
+        showToast('Su navegador no soporta síntesis de voz Web Speech API.', 'error');
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+      const metrics = calculateClinicalMetrics(evalData.answers);
+
+      const textToRead = `
+        Informe clínico de JAIRRESTAURA DSM-5 AI para el paciente ${patient.name}, de ${patient.age} años.
+        Aviso legal: Esta herramienta es únicamente de apoyo clínico y educativo. No sustituye la evaluación diagnóstica de un profesional de la salud mental.
+        Impresión diagnóstica principal: ${metrics.primaryDx.name}, con una concordancia de criterios de ${metrics.primaryDx.confidence} por ciento.
+        Índice de severidad global: ${metrics.globalSeverityPct} por ciento.
+        Pronóstico estimado: ${metrics.prognosis.title}. ${metrics.prognosis.description}.
+        Recomendaciones terapéuticas clave: ${metrics.treatmentPlan.join('. ')}.
+      `;
+
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      utterance.lang = 'es-ES';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+
+      // Buscar voz natural en español
+      const voices = window.speechSynthesis.getVoices();
+      const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+      if (spanishVoice) utterance.voice = spanishVoice;
+
+      utterance.onstart = () => {
+        appState.speechSynthesis.isSpeaking = true;
+        document.getElementById('speech-status-indicator').className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        showToast('Reproduciendo resumen clínico por voz...', 'info');
+      };
+
+      utterance.onend = () => {
+        appState.speechSynthesis.isSpeaking = false;
+        document.getElementById('speech-status-indicator').className = 'w-2 h-2 rounded-full bg-zinc-400';
+      };
+
+      utterance.onerror = () => {
+        appState.speechSynthesis.isSpeaking = false;
+        document.getElementById('speech-status-indicator').className = 'w-2 h-2 rounded-full bg-rose-500';
+      };
+
+      appState.speechSynthesis.utterance = utterance;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function pauseResumeVoice() {
+      if (!window.speechSynthesis) return;
+      if (window.speechSynthesis.speaking) {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+          showToast('Voz reanudada.', 'info');
+        } else {
+          window.speechSynthesis.pause();
+          showToast('Voz pausada.', 'info');
+        }
+      }
+    }
+
+    function stopVoice() {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        document.getElementById('speech-status-indicator').className = 'w-2 h-2 rounded-full bg-zinc-400';
+        showToast('Lectura por voz detenida.', 'info');
+      }
+    }
+
+    /**
+     * CARGA Y ANÁLISIS DE DOCUMENTOS (PDF, DOCX, TXT)
+     */
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('file-dropzone').classList.add('border-sky-500', 'bg-sky-50/20');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('file-dropzone').classList.remove('border-sky-500', 'bg-sky-50/20');
+    }
+
+    function handleFileDrop(e) {
+      e.preventDefault();
+      document.getElementById('file-dropzone').classList.remove('border-sky-500', 'bg-sky-50/20');
+      if (e.dataTransfer.files.length > 0) {
+        processDocumentFile(e.dataTransfer.files[0]);
+      }
+    }
+
+    function handleFileSelect(e) {
+      if (e.target.files.length > 0) {
+        processDocumentFile(e.target.files[0]);
+      }
+    }
+
+    async function processDocumentFile(file) {
+      const statusBox = document.getElementById('file-upload-status');
+      const statusText = document.getElementById('file-upload-status-text');
+      statusBox.classList.remove('hidden');
+      statusText.innerText = `Leyendo "${file.name}"...`;
+
+      try {
+        let extractedText = '';
+
+        if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+          statusText.innerText = 'Extrayendo páginas del PDF mediante PDF.js...';
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          let fullText = '';
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+          }
+          extractedText = fullText;
+        } else if (file.name.endsWith('.docx') || file.type.includes('wordprocessingml')) {
+          statusText.innerText = 'Extrayendo texto del DOCX mediante Mammoth.js...';
+          const arrayBuffer = await file.arrayBuffer();
+          const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+          extractedText = result.value;
+        } else {
+          // Archivo de texto plano .txt
+          statusText.innerText = 'Leyendo archivo de texto...';
+          extractedText = await file.text();
+        }
+
+        statusBox.classList.add('hidden');
+        analyzeExtractedClinicalText(extractedText);
+        showToast('Documento analizado con éxito.', 'success');
+      } catch (err) {
+        console.error(err);
+        statusBox.classList.remove('hidden');
+        statusText.innerText = `Error al procesar el archivo: ${err.message || 'Formato no soportado'}`;
+        showToast('Error al leer el archivo clínico.', 'error');
+      }
+    }
+
+    let currentExtractedFindings = null;
+
+    function analyzeExtractedClinicalText(text) {
+      document.getElementById('file-analysis-results').classList.remove('hidden');
+      document.getElementById('extracted-text-box').innerText = text;
+
+      const lower = text.toLowerCase();
+
+      // Detección de síntomas clave
+      const detectedSymptoms = [];
+      if (lower.includes('triste') || lower.includes('depre') || lower.includes('desesperanza') || lower.includes('anhedonia')) {
+        detectedSymptoms.push('Síntomas de espectro depresivo y desánimo');
+      }
+      if (lower.includes('angustia') || lower.includes('ansiedad') || lower.includes('pánico') || lower.includes('taquicardia')) {
+        detectedSymptoms.push('Crisis de angustia y ansiedad psicofisiológica');
+      }
+      if (lower.includes('insomnio') || lower.includes('sueño') || lower.includes('despertar precoz')) {
+        detectedSymptoms.push('Alteraciones crónicas del patrón de sueño');
+      }
+      if (lower.includes('obsesi') || lower.includes('compulsi') || lower.includes('lavado') || lower.includes('ritual')) {
+        detectedSymptoms.push('Rituales obsesivo-compulsivos reportados');
+      }
+      if (lower.includes('trauma') || lower.includes('pesadilla') || lower.includes('flashback') || lower.includes('accidente')) {
+        detectedSymptoms.push('Antecedente de vivencia traumática / estrés agudo');
+      }
+      if (lower.includes('atención') || lower.includes('distracción') || lower.includes('tdah') || lower.includes('olvido')) {
+        detectedSymptoms.push('Dificultades ejecutivas atencionales');
+      }
+
+      // Detección de Fármacos
+      const detectedMeds = [];
+      const medList = [
+        'sertralina', 'fluoxetina', 'escitalopram', 'venlafaxina', 'duloxetina',
+        'clonazepam', 'lorazepam', 'alprazolam', 'diazepam',
+        'quetiapina', 'olanzapina', 'risperidona', 'aripiprazol',
+        'metilfenidato', 'lisdexanfetamina', 'modafinilo',
+        'litio', 'valproato', 'lamotrigina', 'carbamazepina'
+      ];
+      medList.forEach(m => {
+        if (lower.includes(m)) detectedMeds.push(`Psicofármaco: ${m.toUpperCase()}`);
+      });
+      if (detectedMeds.length === 0) detectedMeds.push('Sin psicofármacos explícitos identificados en el texto.');
+
+      // Banderas de alerta
+      const detectedAlerts = [];
+      if (lower.includes('suicid') || lower.includes('autolesi') || lower.includes('morir') || lower.includes('cortes')) {
+        detectedAlerts.push('⚠️ Alerta: Mención explícita de ideación o conductas autolíticas.');
+      }
+      if (lower.includes('alucinaci') || lower.includes('voces') || lower.includes('delirio') || lower.includes('persecuci')) {
+        detectedAlerts.push('⚠️ Alerta: Presencia de síntomas psicóticos o alucinaciones.');
+      }
+      if (detectedAlerts.length === 0) detectedAlerts.push('No se detectaron banderas rojas agudas en el texto.');
+
+      currentExtractedFindings = {
+        symptoms: detectedSymptoms,
+        meds: detectedMeds,
+        alerts: detectedAlerts,
+        rawText: text
+      };
+
+      document.getElementById('doc-symptoms-list').innerHTML = detectedSymptoms.map(s => `<li>• ${s}</li>`).join('');
+      document.getElementById('doc-meds-list').innerHTML = detectedMeds.map(m => `<li>• ${m}</li>`).join('');
+      document.getElementById('doc-alerts-list').innerHTML = detectedAlerts.map(a => `<li>• ${a}</li>`).join('');
+    }
+
+    function toggleExtractedText() {
+      const box = document.getElementById('extracted-text-box');
+      box.classList.toggle('hidden');
+    }
+
+    function applyDocumentFindingsToQuestionnaire() {
+      if (!currentExtractedFindings) return;
+
+      const patient = getActivePatient();
+      let evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+
+      const lower = currentExtractedFindings.rawText.toLowerCase();
+
+      // Precalificar preguntas sospechosas
+      if (lower.includes('depre') || lower.includes('triste')) {
+        evalData.answers['q_dep_1'] = 3;
+        evalData.answers['q_dep_2'] = 3;
+      }
+      if (lower.includes('insomnio')) {
+        evalData.answers['q_sue_1'] = 3;
+        evalData.answers['q_sue_4'] = 3;
+      }
+      if (lower.includes('ansiedad') || lower.includes('angustia')) {
+        evalData.answers['q_ans_1'] = 3;
+        evalData.answers['q_ans_7'] = 2;
+      }
+
+      savePatientsToStorage();
+      navigateTo('questionnaire');
+      showToast('Hallazgos del documento cargados al cuestionario activo.', 'success');
+    }
+
+    /**
+     * EXPORTACIÓN A PDF OFICIAL (HTML2PDF)
+     */
+    function exportReportPDF() {
+      const patient = getActivePatient();
+      renderReport();
+
+      const element = document.getElementById('clinical-report-printable');
+      const filename = `Informe_Clinico_DSM5_${patient.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+
+      showToast('Generando documento PDF de alta fidelidad...', 'info');
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (window.html2pdf) {
+        html2pdf().set(opt).from(element).save().then(() => {
+          showToast('PDF descargado exitosamente.', 'success');
+        }).catch(err => {
+          console.error(err);
+          window.print();
+        });
+      } else {
+        window.print();
+      }
+    }
+
+    /**
+     * EXPORTACIÓN A DOCX (COMPATIBLE WORD / GOOGLE DOCS)
+     */
+    function exportReportDOCX() {
+      const patient = getActivePatient();
+      const evalData = getLatestEvaluation(patient);
+      if (!evalData) return;
+      const metrics = calculateClinicalMetrics(evalData.answers);
+
+      showToast('Generando archivo Word (.docx)...', 'info');
+
+      const docContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset="utf-8">
+          <title>Informe Clínico DSM-5 - ${patient.name}</title>
+          <style>
+            body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.4; color: #222; }
+            h1 { font-size: 18pt; color: #0284c7; margin-bottom: 2pt; }
+            h2 { font-size: 14pt; color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 3pt; margin-top: 15pt; }
+            h3 { font-size: 12pt; color: #0369a1; }
+            .legal { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 6pt; font-size: 9pt; margin-bottom: 12pt; }
+            table { width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 12pt; font-size: 10pt; }
+            th, td { border: 1px solid #cbd5e1; padding: 5pt; text-align: left; }
+            th { background: #f1f5f9; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <h1>JAIRRESTAURA DSM-5 AI</h1>
+          <p><strong>INFORME DE EVALUACIÓN PSICODIAGNÓSTICA INTEGRAL</strong><br>
+          Folio: ${patient.folio || 'JR-DSM5-2026-001'} | Fecha: ${evalData.date}</p>
+
+          <div class="legal">
+            <strong>AVISO LEGAL:</strong> Esta herramienta es únicamente de apoyo clínico y educativo. No sustituye la evaluación diagnóstica realizada por un profesional de salud mental colegiado.
+          </div>
+
+          <h2>1. Datos Generales del Paciente</h2>
+          <p>
+            <strong>Nombre:</strong> ${patient.name}<br>
+            <strong>Edad / Sexo:</strong> ${patient.age} años, ${patient.sex}<br>
+            <strong>Ocupación:</strong> ${patient.occupation || 'No registrada'}<br>
+            <strong>Expediente ID:</strong> ${patient.id}
+          </p>
+
+          <h2>2. Impresión Diagnóstica Principal</h2>
+          <p>
+            <strong>Diagnóstico Primario:</strong> ${metrics.primaryDx.name} (Concordancia: ${metrics.primaryDx.confidence}%)<br>
+            <strong>Código CIE-10 / DSM-5:</strong> ${metrics.primaryDx.code}<br>
+            <strong>Justificación Clínica:</strong> ${metrics.primaryDx.justification}
+          </p>
+
+          <h2>3. Diagnóstico Diferencial y Comorbilidades</h2>
+          <table>
+            <tr><th>Trastorno / Categoría</th><th>Código</th><th>Severidad</th><th>Estado</th></tr>
+            ${metrics.differentialList.map(item => `
+              <tr>
+                <td>${item.categoryName}</td>
+                <td>${item.code}</td>
+                <td>${item.pct}%</td>
+                <td>${item.status}</td>
+              </tr>
+            `).join('')}
+          </table>
+
+          <h2>4. Perfil Dimensional Multiaxial (12 Dominios DSM-5)</h2>
+          <table>
+            <tr><th>Dominio</th><th>Puntaje</th><th>Porcentaje</th></tr>
+            ${DSM5_CATEGORIES.map(cat => `
+              <tr>
+                <td>${cat.name}</td>
+                <td>${metrics.categoryScores[cat.id]} / ${cat.count * 4}</td>
+                <td>${metrics.categoryPercentages[cat.id]}%</td>
+              </tr>
+            `).join('')}
+          </table>
+
+          <h2>5. Factores de Riesgo y Protección</h2>
+          <p><strong>Factores de Riesgo:</strong></p>
+          <ul>${metrics.riskFactors.map(rf => `<li>${rf}</li>`).join('')}</ul>
+          <p><strong>Factores de Protección:</strong></p>
+          <ul>${metrics.protectionFactors.map(pf => `<li>${pf}</li>`).join('')}</ul>
+
+          <h2>6. Pronóstico Clínico y Plan Terapéutico</h2>
+          <p><strong>Pronóstico:</strong> ${metrics.prognosis.title} - ${metrics.prognosis.description}</p>
+          <p><strong>Recomendaciones Terapéuticas:</strong></p>
+          <ol>${metrics.treatmentPlan.map(tp => `<li>${tp}</li>`).join('')}</ol>
+
+          <br><br>
+          <p style="border-top: 1px solid #94a3b8; width: 250px; text-align: center; padding-top: 5pt; font-size: 9pt;">
+            Firma del Profesional Evaluador
+          </p>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob(['\ufeff', docContent], {
+        type: 'application/msword;charset=utf-8'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Informe_Clinico_DSM5_${patient.name.replace(/\s+/g, '_')}.doc`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Archivo Word generado y descargado.', 'success');
+    }
+
+    /**
+     * EXPORTAR ESTE ARCHIVO INDEX.HTML PARA GITHUB (SINGLE-FILE DEPLOY)
+     */
+    function exportSingleFileForGitHub() {
+      showToast('Preparando descarga de index.html autónomo para GitHub...', 'info');
+      const htmlContent = '<!doctype html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('index.html descargado. ¡Listo para subir directamente a GitHub!', 'success');
+    }
+
+    /**
+     * RESPALDO Y RESTAURACIÓN DE BASE DE DATOS (JSON)
+     */
+    function exportDatabaseJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState.patients, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `JAIRRESTAURA_Backup_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Copia de seguridad JSON descargada.', 'success');
+    }
+
+    function importDatabaseJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            appState.patients = imported;
+            appState.activePatientId = imported[0].id;
+            savePatientsToStorage();
+            renderPatientSelectors();
+            renderPatientsTable();
+            renderCurrentView();
+            showToast('Base de datos restaurada correctamente.', 'success');
+          } else {
+            showToast('Formato de archivo JSON inválido.', 'error');
+          }
+        } catch (err) {
+          showToast('Error al parsear el archivo JSON.', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /**
+     * SISTEMA DE NOTIFICACIONES TOAST FLOTANTES
+     */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let bg = 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900';
+      if (type === 'success') bg = 'bg-emerald-600 text-white';
+      if (type === 'error') bg = 'bg-rose-600 text-white';
+      if (type === 'info') bg = 'bg-sky-600 text-white';
+
+      toast.className = `${bg} px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 pointer-events-auto opacity-0 translate-y-2`;
+      toast.innerHTML = `<span>${message}</span>`;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    /**
+     * MENÚ MÓVIL RESPONSIVE
+     */
+    function toggleMobileMenu() {
+      const sidebar = document.getElementById('app-sidebar');
+      const nav = document.getElementById('sidebar-nav');
+      nav.classList.toggle('hidden');
+    }
+
+    /**
+     * PWA SERVICE WORKER & INSTALABILIDAD
+     */
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('btn-pwa-install');
+      if (btn) btn.classList.remove('hidden');
+    });
+
+    function triggerPWAInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast('¡Gracias por instalar JAIRRESTAURA DSM-5 AI!', 'success');
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        showToast('Para instalar: Use la opción "Agregar a la pantalla de inicio" o "Instalar aplicación" de su navegador.', 'info');
+      }
+    }
+
+    // REGISTRO DE SERVICE WORKER INLINE DATA-URI PARA PWA OFFLINE
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'jairrestaura-v2';
+        self.addEventListener('install', (e) => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', (e) => {
+          e.waitUntil(clients.claim());
+        });
+        self.addEventListener('fetch', (e) => {
+          e.respondWith(
+            fetch(e.request).catch(() => caches.match(e.request))
+          );
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+
+    // ARRANQUE DE LA APLICACIÓN AL CARGAR LA PÁGINA
+    window.addEventListener('DOMContentLoaded', () => {
+      initDatabase();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
